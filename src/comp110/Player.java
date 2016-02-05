@@ -3,9 +3,9 @@ package comp110;
 import org.jsoup.nodes.Element;
 
 public class Player {
-	private int _jersey, _height, _played, _started, _minutes, _fieldGoals, _fieldGoalsAtt, _threes,
-		_threesAtt, _freeThrows, _freeThrowsAtt, _totalPoints, _oRebs, _dRebs, _totalRebs, _assists,
-		_turnovers, _steals, _blocks, _fouls;
+	private int _jersey, _height, _played, _started, _minutes, _fieldGoals, _fieldGoalsAttempted, _threesMade,
+	    _threesAttempted, _freeThrows, _freeThrowsAttempted, _totalPoints, _oRebounds, _dRebounds, _totalRebounds, _assists,
+		_turnovers, _steals, _blocks, _fouls, _doubleDoubles, _tripleDoubles;
 	private String _first, _last, _year, _position;
 	private double _fgPercent, _threePercent, _ftPercent, _avgPoints, _avgReb;
 	
@@ -32,25 +32,27 @@ public class Player {
 		String rawMinutes = row.child(7).text();
 		_minutes = Integer.parseInt(rawMinutes.substring(0, rawMinutes.length()-3));
 		_fieldGoals = Scraper.getInt(row, 8);
-		_fieldGoalsAtt = Scraper.getInt(row, 9);
+		_fieldGoalsAttempted = Scraper.getInt(row, 9);
 		_fgPercent = Scraper.getDoub(row, 10);
-		_threes = Scraper.getInt(row, 11);
-		_threesAtt = Scraper.getInt(row, 12);
+		_threesMade = Scraper.getInt(row, 11);
+		_threesAttempted = Scraper.getInt(row, 12);
 		_threePercent = Scraper.getDoub(row, 13);
 		_freeThrows = Scraper.getInt(row, 14);
-		_freeThrowsAtt = Scraper.getInt(row, 15);
+		_freeThrowsAttempted = Scraper.getInt(row, 15);
 		_ftPercent = Scraper.getDoub(row, 16);
 		_totalPoints = Scraper.getInt(row, 17);
 		_avgPoints = Scraper.getDoub(row, 18);
-		_oRebs = Scraper.getInt(row, 19);
-		_dRebs = Scraper.getInt(row, 20);
-		_totalRebs = Scraper.getInt(row, 21);
+		_oRebounds = Scraper.getInt(row, 19);
+		_dRebounds = Scraper.getInt(row, 20);
+		_totalRebounds = Scraper.getInt(row, 21);
 		_avgReb = Scraper.getDoub(row, 22);
 		_assists = Scraper.getInt(row, 23);
 		_turnovers = Scraper.getInt(row, 24);
 		_steals = Scraper.getInt(row, 25);
 		_blocks = Scraper.getInt(row, 26);
 		_fouls = Scraper.getInt(row, 27);
+		_doubleDoubles = Scraper.getInt(row, 28);
+		_tripleDoubles = Scraper.getInt(row, 29);
 	}
 	
 
@@ -58,6 +60,193 @@ public class Player {
 	public String toString() {
 		return String.format("%2d %10s %10s %5d %5d %5.2f %5.2f", _jersey, _first, _last, _played, _minutes, _avgPoints, _avgReb);
 	}
+
+
+
+	public int getJersey() {
+		return _jersey;
+	}
+
+
+
+	public int getHeight() {
+		return _height;
+	}
+
+
+
+	public int getPlayed() {
+		return _played;
+	}
+
+
+
+	public int getStarted() {
+		return _started;
+	}
+
+
+
+	public int getMinutes() {
+		return _minutes;
+	}
+
+
+
+	public int getFieldGoals() {
+		return _fieldGoals;
+	}
+
+
+
+	public int getFieldGoalsAtt() {
+		return _fieldGoalsAttempted;
+	}
+
+
+
+	public int getThrees() {
+		return _threesMade;
+	}
+
+
+
+	public int getThreesAtt() {
+		return _threesAttempted;
+	}
+
+
+
+	public int getFreeThrows() {
+		return _freeThrows;
+	}
+
+
+
+	public int getFreeThrowsAtt() {
+		return _freeThrowsAttempted;
+	}
+
+
+
+	public int getTotalPoints() {
+		return _totalPoints;
+	}
+
+
+
+	public int getoRebs() {
+		return _oRebounds;
+	}
+
+
+
+	public int getdRebs() {
+		return _dRebounds;
+	}
+
+
+
+	public int getTotalRebs() {
+		return _totalRebounds;
+	}
+
+
+
+	public int getAssists() {
+		return _assists;
+	}
+
+
+
+	public int getTurnovers() {
+		return _turnovers;
+	}
+
+
+
+	public int getSteals() {
+		return _steals;
+	}
+
+
+
+	public int getBlocks() {
+		return _blocks;
+	}
+
+
+
+	public int getFouls() {
+		return _fouls;
+	}
+
+
+
+	public String getFirst() {
+		return _first;
+	}
+
+
+
+	public String getLast() {
+		return _last;
+	}
+
+
+
+	public String getYear() {
+		return _year;
+	}
+
+
+
+	public String getPosition() {
+		return _position;
+	}
+
+
+
+	public double getFgPercent() {
+		return _fgPercent;
+	}
+
+
+
+	public double getThreePercent() {
+		return _threePercent;
+	}
+
+
+
+	public double getFtPercent() {
+		return _ftPercent;
+	}
+
+
+
+	public double getAvgPoints() {
+		return _avgPoints;
+	}
+
+
+
+	public double getAvgReb() {
+		return _avgReb;
+	}
+
+
+
+	public int getDoubleDoubles() {
+		return _doubleDoubles;
+	}
+
+
+
+	public int getTripleDoubles() {
+		return _tripleDoubles;
+	}
+	
 	
 	
 }
