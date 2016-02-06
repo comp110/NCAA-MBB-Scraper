@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 /**
- * This is where I'm putting the bulk scraping and instantiation of new Matchups for now
+ * This is where I'm putting the bulk scraping, JSON conversion, and instantiation of new Matchups for now
  * I think a lot of this will be replaced by the gui and/or runner
  **/
 
@@ -15,7 +15,7 @@ public class MatchupBackground {
 
 	public static void main(String[] args) throws IOException {
 //	    // The scraping here only needs to be done once and takes about a minute per team
-//		// These are currently all of the ACC teams for testing
+//		// These are currently all of the ACC teams for testing and have been scraped to acc.json as of 02-06
 //		int[] teamIds = {67, 147, 193, 234, 255, 367, 415, 457, 490, 513, 545, 688, 746, 742, 749};
 //		// The rankingPeriod is there to be put into the ncaa website URLs
 //		// It changes periodically so make sure you have the current one before scraping

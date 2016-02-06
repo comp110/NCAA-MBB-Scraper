@@ -2,6 +2,8 @@ package comp110;
 
 /**
  * This is a draft of what the students will do
+ * In the future we can maybe have them instantiate matchups in their own main methods but
+ * this seemed simpler for now
  **/
 
 public class Matchup {
@@ -35,13 +37,18 @@ public class Matchup {
 		double totalAbove12 = totalAbove12(roster, 1.2);
 		double top20Stats = top20Stats(team, 0.8);
 
-		compositeScore = avgOver6ft + totalDoubleDoubles + winScore + scoringMargin + totalAbove12 + top20Stats;
+		compositeScore = avgOver6ft 
+				        + totalDoubleDoubles 
+				        + winScore 
+				        + scoringMargin 
+				        + totalAbove12 
+				        + top20Stats;
 		
 		return compositeScore;
 
 	}
 
-	public static double top20Stats(Team team, double weight) {
+	public double top20Stats(Team team, double weight) {
 		int scoringOffense = team.getScoringOffenseRank();
 		int wonLost = team.getWonLostPercentRank();
 		int turnoverMargin = team.getTurnoverMarginRank();
@@ -59,7 +66,7 @@ public class Matchup {
 		return top20Count*weight;
 	}
 
-	public static double totalAbove12(Player[] roster, double weight) {
+	public double totalAbove12(Player[] roster, double weight) {
 		int countAbove12 = 0;
 		for (Player p : roster) {
 			if (p.getAvgPoints() >= 12.0) {
@@ -69,19 +76,19 @@ public class Matchup {
 		return countAbove12*weight;
 	}
 
-	public static double scoringMargin(Team team, double weight) {
+	public double scoringMargin(Team team, double weight) {
 		double offense = team.getScoringOffense();
 		double defense = team.getScoringDefense();
 		return offense-defense;
 	}
 
-	public static double winScore(Team team, int pointsForWin, int pointsForLoss, double weight) {
+	public double winScore(Team team, int pointsForWin, int pointsForLoss, double weight) {
 		int wins = team.getWins();
 		int losses = team.getLosses();
 		return (pointsForWin*wins + pointsForLoss*losses) * weight;
 	}
 
-	public static double totalDoubleDoubles(Player[] roster, double weight) {
+	public double totalDoubleDoubles(Player[] roster, double weight) {
 		int totalDoubleDoubles = 0;
 		for (Player p : roster) {
 			totalDoubleDoubles += p.getDoubleDoubles();
@@ -89,7 +96,7 @@ public class Matchup {
 		return totalDoubleDoubles*weight;
 	}
 
-	public static double avgInchesOver6ft(Player[] roster, double weight) {
+	public double avgInchesOver6ft(Player[] roster, double weight) {
 		int totalInches = 0;
 		int numPlayers = roster.length;
 		for (Player p : roster) {

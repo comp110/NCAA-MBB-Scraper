@@ -21,9 +21,7 @@ public class Scraper {
 		
 		Team[] teams = bulkScrape(teamIds, rankingPeriod);
 		Gson gson = new Gson();
-		String jsonMap = gson.toJson(teams);
-		
-		outWriter.append(jsonMap);
+		gson.toJson(teams, outWriter);
 		outWriter.close();
 		System.out.println("\nAll teams successfully scraped and serialized!\n");
 	}
@@ -66,7 +64,7 @@ public class Scraper {
 		Document statsPage, rankingsPage;
 		// These servers can be really slow at times so I've set timeout really high and
 		// set the thread to sleep between scraping the two pages
-
+		// And if the connection does time out there are two extra tries for it to work again
 		int maxTries = 3;
 		int count = 1;
 		while (true) {
