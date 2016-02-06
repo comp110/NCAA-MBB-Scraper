@@ -2,6 +2,8 @@ package comp110;
 
 /**
  * This is a draft of what the students will do
+ * In the future we can maybe have them instantiate matchups in their own main methods but
+ * this seemed simpler for now
  **/
 
 public class Matchup {
@@ -35,7 +37,12 @@ public class Matchup {
 		double totalAbove12 = totalAbove12(roster, 1.2);
 		double top20Stats = top20Stats(team, 0.8);
 
-		compositeScore = avgOver6ft + totalDoubleDoubles + winScore + scoringMargin + totalAbove12 + top20Stats;
+		compositeScore = avgOver6ft 
+				        + totalDoubleDoubles 
+				        + winScore 
+				        + scoringMargin 
+				        + totalAbove12 
+				        + top20Stats;
 		
 		return compositeScore;
 
