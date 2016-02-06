@@ -9,7 +9,6 @@ import org.jsoup.select.Elements;
 public class Team {
 	private String _name;
 	private Player[] _roster;
-	private int _wins, _losses;
 	// There are so many fields so that students can call getters for all of these without
 	// needing to know how to use something like maps or needing to deal with array indices
 	private double _threesAttempted, _assistTurnoverRatio, _avgAssists, _avgBlocks, _avgDRebs, 
@@ -26,7 +25,7 @@ public class Team {
 	    _scoringOffenseRank, _avgStealsRank, _threePointDefRank, _avgThreesMadeRank,
 	    _threePercentRank, _threesMadeRank, _totalAssistsRank, _totalBlocksRank,
 	    _totalReboundsRank, _avgReboundsRank, _totalStealsRank, _turnoverMarginRank,
-	    _turnoversForcedRank, _avgTurnoversRank, _wonLostPercentRank;
+	    _turnoversForcedRank, _avgTurnoversRank, _wonLostPercentRank, _wins, _losses, _id;
 	
 	
 	public Team(String header, int numPlayers) {
@@ -400,6 +399,14 @@ public class Team {
 
 	public int getWonLostPercentRank() {
 		return _wonLostPercentRank;
+	}
+
+	public int getId() {
+		return _id;
+	}
+
+	public void setId(int id) {
+		_id = id;
 	}
 	
 	

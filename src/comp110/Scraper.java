@@ -4,31 +4,94 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.SocketTimeoutException;
 
 public class Scraper {
 	
-	public static Team scrapeTeam(int teamID) throws IOException {
+	public static void saveToJSON(String filename, int[] teamIds, int rankingPeriod) throws IOException {
+		File outFile = new File(filename);
+		FileOutputStream outStream = new FileOutputStream(outFile);
+		OutputStreamWriter outWriter = new OutputStreamWriter(outStream, "UTF-8");
+		
+		Team[] teams = bulkScrape(teamIds, rankingPeriod);
+		Gson gson = new Gson();
+		String jsonMap = gson.toJson(teams);
+		
+		outWriter.append(jsonMap);
+		outWriter.close();
+		System.out.println("\nAll teams successfully scraped and serialized!\n");
+	}
+	
+	public static Team[] bulkScrape(int[] teamIds, int rankingPeriod) throws IOException {
+		// Scrapes all of the teams whose ids are in the int[] and returns an id, Team map
+		Team[] teams = new Team[teamIds.length];
+		
+		int index = 0;
+		for (int id : teamIds) {
+			System.out.println("Scraping team " + id + "...");
+			Team currentTeam = scrapeTeam(id, rankingPeriod);
+			currentTeam.setId(id);
+			teams[index] = currentTeam;
+			System.out.println(" " + currentTeam.getName() + " succssfully scraped!");
+			if (index != teams.length-1) {
+				// Sleep for a while to be polite to the servers
+				try { 
+					Thread.sleep(30000);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+			
+			index++;
+		}
+		return teams;
+	}
+	
+	public static Team scrapeTeam(int teamID, int rankingPeriod) throws IOException {
 		// The NCAA website has a unique id for each team that they use in URLS
 		// The scraper uses that id to load two web pages about the same team
 		
+		// The "ranking_period" updates periodically so it's important to check what the current one is
+		// before scraping
 		String statsUrl = "http://stats.ncaa.org/team/stats?org_id=" + teamID + "&sport_year_ctl_id=12260";
 		String rankingsUrl = "http://stats.ncaa.org/rankings/ranking_summary?academic_year=2016&division=1.0&org_id="
-							  + teamID + "&ranking_period=90&sport_code=MBB";
+							  + teamID + "&ranking_period=" + rankingPeriod + "&sport_code=MBB";
 		
 		Document statsPage, rankingsPage;
-		// UNC's pages are saved here to cut down on loading
-		if (teamID == 457) {
-			File localStats = new File("unc.html");
-			statsPage = Jsoup.parse(localStats, "UTF-8", "http://stats.ncaa.org/team/stats?org_id=457&sport_year_ctl_id=12260");
-			File localRankings = new File("uncrankings.html");
-			rankingsPage = Jsoup.parse(localRankings, "UTF-8", "http://stats.ncaa.org/team/stats?org_id=457&sport_year_ctl_id=12260");
-		} else {
-			System.out.println("Loading pages for Team ID " + teamID + "...");
-			statsPage = Jsoup.connect(statsUrl).timeout(10000).get();
-			rankingsPage = Jsoup.connect(rankingsUrl).timeout(10000).get();
+		// These servers can be really slow at times so I've set timeout really high and
+		// set the thread to sleep between scraping the two pages
+
+		int maxTries = 3;
+		int count = 1;
+		while (true) {
+			try {
+				statsPage = Jsoup.connect(statsUrl).timeout(30000).get();
+				System.out.println(" First of two team pages scraped!");
+				try {
+					Thread.sleep(15000);
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
+				rankingsPage = Jsoup.connect(rankingsUrl).timeout(30000).get();
+				break;
+			} catch (SocketTimeoutException ste) {
+				count++;
+				if (count >= maxTries) {
+					throw ste;
+				}
+				System.out.println(" Having trouble connecting to the NCAA server. Trying again after a few seconds...");
+				try {
+					Thread.sleep(15000);
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
+			}
 		}
 		
 		
