@@ -36,12 +36,17 @@ public class Base extends Application{
 	    _teams = readJson();
 	    buildBox();
 	    Tab matchupTab = new Tab();
+	    Tab textStats = new Tab();
+	    Tab graphStats = new Tab();
 	    matchupTab.setText("Matchup");
+	    textStats.setText("Stats");
+	    graphStats.setText("Graphs");
 	    Pane test = new Pane();
 	    test.getChildren().add(_box1);
 	    test.getChildren().add(_box2);
+	    
 	    matchupTab.setContent(test);
-	    _pane.getTabs().add(matchupTab);
+	    _pane.getTabs().addAll(matchupTab, textStats, graphStats);
 	    this.initializeStage();
 
 	    
