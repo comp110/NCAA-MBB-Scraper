@@ -24,7 +24,7 @@ public class Matchup {
 		
 	}
 	
-	public static double calculateScore(Team team){
+	public double calculateScore(Team team){
 
 		double compositeScore = 0;
 		Player[] roster = team.getRoster();
