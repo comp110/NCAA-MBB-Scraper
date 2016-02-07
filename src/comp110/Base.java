@@ -20,8 +20,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -89,6 +92,7 @@ public class Base extends Application {
           winner = new Label("The winnner is: " + _matchup.get_winner().getName());
           winner.setLayoutX(335);
           winner.setLayoutY(700);
+          winner.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
           mainPane.getChildren().add(winner);
         }
       }
@@ -98,7 +102,17 @@ public class Base extends Application {
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);
     Background y = new Background(x);
     run.setBackground(y);
-    mainPane.getChildren().addAll(_box1, _box2, versus, run);
+    Image court = new Image("file:assets/court.jpg");
+    ImageView view = new ImageView(court);
+    view.setLayoutX(200);
+    view.setLayoutY(280);
+    view.setScaleY(800/court.getHeight());
+    view.setScaleX(800/court.getWidth());
+    
+    BackgroundImage background = new BackgroundImage(court, null, null, null, null);
+    Background back = new Background(background);
+   // mainPane.setBackground(back);
+    mainPane.getChildren().addAll(view,_box1, _box2, versus, run);
     matchupTab.setContent(mainPane);
   }
 
