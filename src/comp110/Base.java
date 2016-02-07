@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -25,6 +26,7 @@ public class Base extends Application{
 	Scene _scene;
 	TabPane _pane;
 	Team[] _teams;
+	Map<Integer,Team> teamMap;
 	ComboBox _box1;
 	ComboBox _box2;
 	
@@ -34,6 +36,7 @@ public class Base extends Application{
 		_stage = stage;
 		_pane = new TabPane();
 	    _teams = readJson();
+	    teamMap=readJSON();
 	    buildBox();
 	    Tab matchupTab = new Tab();
 	    Tab textStats = new Tab();
@@ -44,14 +47,16 @@ public class Base extends Application{
 	    Pane test = new Pane();
 	    test.getChildren().add(_box1);
 	    test.getChildren().add(_box2);
-	    
 	    matchupTab.setContent(test);
 	    _pane.getTabs().addAll(matchupTab, textStats, graphStats);
+	    Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));
+	    GridPane goo = Pane2Generator.Pane2(m); //Max: me testing Pane2Gen getting for for FX nothing meaningful yet
+	    textStats.setContent(goo);
 	    this.initializeStage();
 
 	    
 	    
-	   // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW)
+	   // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is a good idea made method for it
 		
 	}
 	
@@ -72,6 +77,19 @@ public class Base extends Application{
 			teamMap.put(team.getId(), team);
 		}
 		return teams;
+				
+	}
+	
+	private static Map<Integer,Team> readJSON() throws FileNotFoundException{
+		JsonReader reader = new JsonReader(new FileReader("acc.json"));
+		Gson gson = new Gson();
+		Team[] teams = gson.fromJson(reader, Team[].class);
+		
+		Map<Integer, Team> teamMap= new HashMap<Integer, Team>();
+		for (Team team : teams) {
+			teamMap.put(team.getId(), team);
+		}
+		return teamMap;
 				
 	}
 	
