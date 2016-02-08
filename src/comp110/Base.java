@@ -38,8 +38,8 @@ public class Base extends Application {
   Tab matchupTab, textStats, graphStats;
   Team[] _teams;
   Map<Integer, Team> teamMap;
-  ComboBox _box1;
-  ComboBox _box2;
+  ComboBox<String> _box1;
+  ComboBox<String> _box2;
   Label winner;
   boolean ran = false;
   Matchup _matchup;
@@ -50,6 +50,7 @@ public class Base extends Application {
     _pane = new TabPane();
     _teams = readJson();
     teamMap = readJSON();
+    initializeStage();
     buildBox();
     matchupTab = new Tab();
     textStats = new Tab();
@@ -63,7 +64,7 @@ public class Base extends Application {
     Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));
     GridPane goo = Pane2Generator.Pane2(m); //Max: me testing Pane2Gen getting for for FX nothing meaningful yet
     textStats.setContent(goo);
-    this.initializeStage();
+    //this.initializeStage();
 
     // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is a good idea made method for it
 
@@ -78,13 +79,21 @@ public class Base extends Application {
     versus.setLayoutX(350);
     versus.setLayoutY(200);
     Button run = new Button("Run Match");
-    run.setOnAction(new EventHandler<ActionEvent>(){
+    run.setOnAction(new EventHandler<ActionEvent>() {
       public void handle(ActionEvent event) {
-        if (ran == false){
-          String homeString = (String) _box1.getSelectionModel().getSelectedItem().toString(); 
-          String awayString = (String) _box2.getSelectionModel().getSelectedItem().toString(); 
+        boolean boxesFilled = true;
+        String homeString = "", awayString = "";
+        //tries to get names of chosen teams
+        try {
+          homeString = (String) _box1.getSelectionModel().getSelectedItem().toString();
+          awayString = (String) _box2.getSelectionModel().getSelectedItem().toString();
+        } catch (NullPointerException e) {
+          boxesFilled = false;
+        }
+        //gets team object based on team name and sets up resulting label accordingly
+        if (!ran && boxesFilled) {
           Team home = null, away = null;
-          for (int i = 0; i < _teams.length; i++){
+          for (int i = 0; i < _teams.length; i++) {
             if (_teams[i].getName().equals(homeString)) home = _teams[i];
             if (_teams[i].getName().equals(awayString)) away = _teams[i];
           }
@@ -96,23 +105,21 @@ public class Base extends Application {
           mainPane.getChildren().add(winner);
         }
       }
+
     });
+    //this part may look a bit weird if you aren't too familiar with fx, it's a lot of formatting stuff
     run.setLayoutX(335);
-    run.setLayoutY(600);
-    BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);
-    Background y = new Background(x);
+    run.setLayoutY(600); //setLayoutX/Y just sets the coordinates of a node on the screen (only works well with a plain pane)
+    BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);//this takes a color, insets, and something else I can't remember but I just leave them null for this
+    Background y = new Background(x);//need a background object which takes any subclass of background (there are others besides backgroundfill
     run.setBackground(y);
     Image court = new Image("file:assets/court.jpg");
-    ImageView view = new ImageView(court);
-    view.setLayoutX(200);
+    ImageView view = new ImageView(court);//put an image in an imageview node so that the size and position can be changed
+    view.setLayoutX(200);//this and the next line will probably need to be changed, i just moved the image manually because it was starting in a weird place
     view.setLayoutY(280);
-    view.setScaleY(800/court.getHeight());
-    view.setScaleX(800/court.getWidth());
-    
-    BackgroundImage background = new BackgroundImage(court, null, null, null, null);
-    Background back = new Background(background);
-   // mainPane.setBackground(back);
-    mainPane.getChildren().addAll(view,_box1, _box2, versus, run);
+    view.setScaleY(_scene.getHeight() / court.getHeight());//scaling the image up/down based on its size compared to the scene
+    view.setScaleX(_scene.getWidth() / court.getWidth());
+    mainPane.getChildren().addAll(view, _box1, _box2, versus, run);
     matchupTab.setContent(mainPane);
   }
 
