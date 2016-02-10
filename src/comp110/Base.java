@@ -63,8 +63,8 @@ public class Base extends Application {
     Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));
     GridPane goo = Pane2Generator.Pane2(m); //Max: me testing Pane2Gen getting for for FX nothing meaningful yet
     textStats.setContent(goo);
-    _pane.getTabs().addAll(matchupTab, textStats, graphStats);
-  
+    //_pane.getTabs().addAll(matchupTab, textStats, graphStats);
+  _pane.getTabs().add(matchupTab);
     //this.initializeStage();
 
     // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is a good idea made method for it
@@ -104,6 +104,9 @@ public class Base extends Application {
           winner.setLayoutY(700);
           winner.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
           mainPane.getChildren().add(winner);
+          GridPane stats = Pane2Generator.Pane2(_matchup);
+          textStats.setContent(stats);
+          _pane.getTabs().add(textStats);
         }
       }
 
