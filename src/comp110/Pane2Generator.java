@@ -1,5 +1,6 @@
 package comp110;
 
+import javafx.scene.control.Label;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -21,10 +22,17 @@ public class Pane2Generator {
 		double[] awayScoreList = new double[methods.length];
 		double[] homeScoreList = new double[methods.length];
 		int index = 0;
+		_grid.add(new Label(m.get_awayTeam().getName()), 0, 0);
+		_grid.add(new Label(m.get_homeTeam().getName()), 1, 0);
+		double awayScore = 0;
+		double homeScore=0;
 		for (Method method : methods) {
 			try {
 				awayScoreList[index] = (double) method.invoke(m, m.get_awayTeam());
+				awayScore+=awayScoreList[index];
 				homeScoreList[index] = (double) method.invoke(m, (Team) m.get_homeTeam());
+				homeScore+=homeScoreList[index];
+				_grid=drawMethodGrid(_grid,method,awayScoreList[index],homeScoreList[index],index+1);
 				index++;
 			} catch (IllegalAccessException e1) {
 				// TODO Auto-generated catch block
@@ -36,10 +44,21 @@ public class Pane2Generator {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
+			
 		}
+		_grid.add(new Label("Total Score: "+awayScore),0,index+1);
+		_grid.add(new Label("Total Score: "+homeScore),1,index+1);
 		return _grid; // have all scores....
 
+	}
+
+	private static GridPane drawMethodGrid(GridPane _grid, Method method, double away, double home, int row) {
+		Label awayLabel = new Label(method.getName() + "(Team t): "+away);
+		Label homeLabel = new Label(method.getName() + "(Team t): "+home);
+		_grid.add(awayLabel, 0, row);
+		_grid.add(homeLabel, 1, row);
+		
+		return _grid;
 	}
 
 	// good reference below for making labels, just keeping it here for now for
