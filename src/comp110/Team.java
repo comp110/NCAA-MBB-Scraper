@@ -113,8 +113,6 @@ public class Team {
 		_avgTurnoversRank = Scraper.getRank(rows.get(30), 1);
 		_wonLostPercent = Scraper.getDoub(rows.get(31), 3);
 		_wonLostPercentRank = Scraper.getRank(rows.get(31), 1);
-		
-		_imagePath = _id + ".png";
 
 		
 	}
@@ -411,7 +409,7 @@ public class Team {
 	}
 	
 	public String getImagePath(){
-	  return _imagePath;
+	  return _id + ".png";
 	}
 
 	public void setId(int id) {
