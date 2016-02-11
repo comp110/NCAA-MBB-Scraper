@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -26,7 +27,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -185,26 +185,33 @@ public class Base extends Application {
           }
          
           
-          Image team1 = new Image("file:assets/" + home.getImagePath());
+          Image team1 = new Image("file:assets/" + home.getImagePath(),200, 200, false, true);
           //new ImageView(team1);
           view1.setImage(team1);
+          Group imageHolder = new Group();
+          imageHolder.getChildren().add(view1);
           view1.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
           view1.setScaleX(_scene.getWidth() / team1.getWidth());
           //view1.setLayoutX(50);    
           //view1.setLayoutY(400);
-          double xScale = 200/team1.getWidth();
-          double yScale = 250/team1.getHeight();
-          view1.setScaleX(xScale);
+          double xScale = 200/imageHolder.getLayoutBounds().getWidth();
+          double yScale = 250/imageHolder.getLayoutBounds().getHeight();
+         /* view1.setScaleX(xScale);
           view1.setScaleY(yScale);
           view1.setLayoutX(0);    
-          view1.setLayoutY(220);
-          
+          view1.setLayoutY(220);*/
+          imageHolder.setScaleX(xScale);
+          imageHolder.setScaleY(yScale);
+          imageHolder.setLayoutX(50);
+          imageHolder.setLayoutY(280);
+          imageHolder.maxWidth(200);
+          System.out.println(imageHolder.getLayoutBounds().getWidth());
           for (int i = 0; i < pane.getChildren().size(); i++){
-            if (pane.getChildren().get(i) == view1){
+            if (pane.getChildren().get(i) == imageHolder){
               return;
             }
           }
-          pane.getChildren().add(view1);
+          pane.getChildren().add(imageHolder);
       }
     });
     
@@ -214,7 +221,7 @@ public class Base extends Application {
           for (int i = 0; i < _teams.length; i++) {
             if (_teams[i].getName().equals(newText)) home = _teams[i];
           }
-          Image team1 = new Image("file:assets/" + home.getImagePath());
+          Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
           view2.setImage(team1);
           view2.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
           view2.setScaleX(_scene.getWidth() / team1.getWidth());
@@ -222,8 +229,8 @@ public class Base extends Application {
           double yScale = 250/team1.getHeight();
           view2.setScaleX(xScale);
           view2.setScaleY(yScale);
-          view2.setLayoutX(400);    
-          view2.setLayoutY(300);
+          view2.setLayoutX(520);    
+          view2.setLayoutY(280);
           for (int i = 0; i < pane.getChildren().size(); i++){
             if (pane.getChildren().get(i) == view2){
               return;
