@@ -99,6 +99,24 @@ public class Base extends Application {
             if (_teams[i].getName().equals(homeString)) home = _teams[i];
             if (_teams[i].getName().equals(awayString)) away = _teams[i];
           }
+          //TODO not working
+          Image team1 = new Image("file:assets/" + home.getImagePath());
+          Image team2 = new Image("file:assets/" + away.getImagePath());
+          ImageView view1 = new ImageView(team1);
+          ImageView view2 = new ImageView(team2);
+          view1.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
+          view1.setScaleX(_scene.getWidth() / team1.getWidth());
+          view2.setScaleY(_scene.getHeight() / team2.getHeight());//scaling the image up/down based on its size compared to the scene
+          view2.setScaleX(_scene.getWidth() / team2.getWidth());
+          view1.setLayoutX(50);    
+          view1.setLayoutY(400);
+          view2.setLayoutX(200);    
+          view2.setLayoutY(400);
+          
+          mainPane.getChildren().addAll(view1, view2);
+          
+          
+          
           _matchup = new Matchup(home, away);
           winner = new Label("The winnner is: " + _matchup.get_winner().getName());
           winner.setLayoutX(335);
@@ -120,7 +138,7 @@ public class Base extends Application {
     run.setBackground(y);
     Image court = new Image("file:assets/courtTry2.jpg");
     ImageView view = new ImageView(court);//put an image in an imageview node so that the size and position can be changed
-    view.setLayoutX(118);//this and the next line will probably need to be changed, i just moved the image manually because it was starting in a weird place
+    view.setLayoutX(118);//this and the next line will probably need to be changed, i just moved the image manually because it was starting in a weird place    
     view.setLayoutY(243);
     view.setScaleY(_scene.getHeight() / court.getHeight());//scaling the image up/down based on its size compared to the scene
     view.setScaleX(_scene.getWidth() / court.getWidth());

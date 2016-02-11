@@ -27,6 +27,8 @@ public class Team {
 	    _totalReboundsRank, _avgReboundsRank, _totalStealsRank, _turnoverMarginRank,
 	    _turnoversForcedRank, _avgTurnoversRank, _wonLostPercentRank, _wins, _losses, _id;
 	
+	private String _imagePath;
+	
 	
 	public Team(String header, int numPlayers) {
 		// The team name and record are in the header in the format "$name ($wins-$losses)"
@@ -41,6 +43,7 @@ public class Team {
 		_losses = Integer.parseInt(rawRecArray[1]);
 		_name = recordMatcher.replaceAll("").trim();
 		_roster = new Player[numPlayers];
+		
 	}
 	
 	public void populateFields(Elements rows) {
@@ -110,6 +113,8 @@ public class Team {
 		_avgTurnoversRank = Scraper.getRank(rows.get(30), 1);
 		_wonLostPercent = Scraper.getDoub(rows.get(31), 3);
 		_wonLostPercentRank = Scraper.getRank(rows.get(31), 1);
+		
+		_imagePath = _id + ".png";
 
 		
 	}
@@ -403,6 +408,10 @@ public class Team {
 
 	public int getId() {
 		return _id;
+	}
+	
+	public String getImagePath(){
+	  return _imagePath;
 	}
 
 	public void setId(int id) {
