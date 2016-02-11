@@ -190,8 +190,15 @@ public class Base extends Application {
           view1.setImage(team1);
           view1.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
           view1.setScaleX(_scene.getWidth() / team1.getWidth());
-          view1.setLayoutX(50);    
-          view1.setLayoutY(400);
+          //view1.setLayoutX(50);    
+          //view1.setLayoutY(400);
+          double xScale = 200/team1.getWidth();
+          double yScale = 250/team1.getHeight();
+          view1.setScaleX(xScale);
+          view1.setScaleY(yScale);
+          view1.setLayoutX(0);    
+          view1.setLayoutY(220);
+          
           for (int i = 0; i < pane.getChildren().size(); i++){
             if (pane.getChildren().get(i) == view1){
               return;
@@ -211,8 +218,12 @@ public class Base extends Application {
           view2.setImage(team1);
           view2.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
           view2.setScaleX(_scene.getWidth() / team1.getWidth());
-          view2.setLayoutX(50);    
-          view2.setLayoutY(400);
+          double xScale = 200/team1.getWidth();
+          double yScale = 250/team1.getHeight();
+          view2.setScaleX(xScale);
+          view2.setScaleY(yScale);
+          view2.setLayoutX(400);    
+          view2.setLayoutY(300);
           for (int i = 0; i < pane.getChildren().size(); i++){
             if (pane.getChildren().get(i) == view2){
               return;
