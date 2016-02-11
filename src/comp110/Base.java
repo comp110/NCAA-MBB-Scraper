@@ -170,22 +170,33 @@ public class Base extends Application {
     for (Team item : _teams) {
       arr.add(item.getName());
     }
+    ImageView view1 = new ImageView();
+    ImageView view2 = new ImageView();
     options = FXCollections.observableArrayList(arr);
     _box1 = new ComboBox(options);
     _box2 = new ComboBox(options);
-    
+   
     _box1.valueProperty().addListener(new ChangeListener<String>() {
       @Override public void changed(ObservableValue o, String oldText, String newText){
+        
           Team home = null;
           for (int i = 0; i < _teams.length; i++) {
             if (_teams[i].getName().equals(newText)) home = _teams[i];
           }
+         
+          
           Image team1 = new Image("file:assets/" + home.getImagePath());
-          ImageView view1 = new ImageView(team1);
+          //new ImageView(team1);
+          view1.setImage(team1);
           view1.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
           view1.setScaleX(_scene.getWidth() / team1.getWidth());
           view1.setLayoutX(50);    
           view1.setLayoutY(400);
+          for (int i = 0; i < pane.getChildren().size(); i++){
+            if (pane.getChildren().get(i) == view1){
+              return;
+            }
+          }
           pane.getChildren().add(view1);
       }
     });
@@ -197,12 +208,17 @@ public class Base extends Application {
             if (_teams[i].getName().equals(newText)) home = _teams[i];
           }
           Image team1 = new Image("file:assets/" + home.getImagePath());
-          ImageView view1 = new ImageView(team1);
-          view1.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
-          view1.setScaleX(_scene.getWidth() / team1.getWidth());
-          view1.setLayoutX(50);    
-          view1.setLayoutY(400);
-          pane.getChildren().add(view1);
+          view2.setImage(team1);
+          view2.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
+          view2.setScaleX(_scene.getWidth() / team1.getWidth());
+          view2.setLayoutX(50);    
+          view2.setLayoutY(400);
+          for (int i = 0; i < pane.getChildren().size(); i++){
+            if (pane.getChildren().get(i) == view2){
+              return;
+            }
+          }
+          pane.getChildren().add(view2);
       }
     });
   }
