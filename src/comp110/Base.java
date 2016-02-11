@@ -79,6 +79,7 @@ public class Base extends Application {
     Label versus = new Label("VERSUS");
     versus.setLayoutX(350);
     versus.setLayoutY(200);
+    versus.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE,null,null)));
     Button run = new Button("Run Match");
     run.setOnAction(new EventHandler<ActionEvent>() {
       public void handle(ActionEvent event) {
@@ -117,10 +118,10 @@ public class Base extends Application {
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);//this takes a color, insets, and something else I can't remember but I just leave them null for this
     Background y = new Background(x);//need a background object which takes any subclass of background (there are others besides backgroundfill
     run.setBackground(y);
-    Image court = new Image("file:assets/court.jpg");
+    Image court = new Image("file:assets/courtTry2.jpg");
     ImageView view = new ImageView(court);//put an image in an imageview node so that the size and position can be changed
-    view.setLayoutX(200);//this and the next line will probably need to be changed, i just moved the image manually because it was starting in a weird place
-    view.setLayoutY(280);
+    view.setLayoutX(118);//this and the next line will probably need to be changed, i just moved the image manually because it was starting in a weird place
+    view.setLayoutY(243);
     view.setScaleY(_scene.getHeight() / court.getHeight());//scaling the image up/down based on its size compared to the scene
     view.setScaleX(_scene.getWidth() / court.getWidth());
     mainPane.getChildren().addAll(view, _box1, _box2, versus, run);
