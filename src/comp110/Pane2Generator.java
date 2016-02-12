@@ -44,6 +44,8 @@ public class Pane2Generator {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			Base.homeScores = homeScoreList;
+			Base.awayScores = awayScoreList;
 			
 		}
 		_grid.add(new Label("Total Score: "+awayScore),0,index+1);
