@@ -26,6 +26,8 @@ public class Pane2Generator {
 		_grid.add(new Label(m.get_homeTeam().getName()), 1, 0);
 		double awayScore = 0;
 		double homeScore=0;
+		int i = 0;
+		Base.scoringFields = new String[methods.length]; 
 		for (Method method : methods) {
 			try {
 				awayScoreList[index] = (double) method.invoke(m, m.get_awayTeam());
@@ -34,6 +36,8 @@ public class Pane2Generator {
 				homeScore+=homeScoreList[index];
 				_grid=drawMethodGrid(_grid,method,awayScoreList[index],homeScoreList[index],index+1);
 				index++;
+				Base.scoringFields[i] = method.getName();
+				i++;
 			} catch (IllegalAccessException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

@@ -18,7 +18,6 @@ public class Scraper {
 		File outFile = new File(filename);
 		FileOutputStream outStream = new FileOutputStream(outFile);
 		OutputStreamWriter outWriter = new OutputStreamWriter(outStream, "UTF-8");
-		
 		Team[] teams = bulkScrape(teamIds, rankingPeriod);
 		Gson gson = new Gson();
 		gson.toJson(teams, outWriter);

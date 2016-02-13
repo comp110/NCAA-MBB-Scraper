@@ -23,7 +23,6 @@ public class Matchup {
 			_winner = _awayTeam;
 		}
 		System.out.println(_winner.getName() + " wins!");
-		
 	}
 	
 	public double calculateScore(Team team){ //moving weights to inside methods will solve reflection problem for now, easiest/quickest fix

@@ -50,9 +50,10 @@ public class Base extends Application {
   private Label winner;
   private boolean ran = false;
   private Matchup _matchup;
-
+  private Team homeTeam, awayTeam;
   public static double[] homeScores;
   public static double[] awayScores;
+  public static String[] scoringFields;
   
 
   @Override
@@ -112,6 +113,8 @@ public class Base extends Application {
           }
 
           _matchup = new Matchup(home, away);
+          homeTeam = home;
+          awayTeam = away;
           winner = new Label("The winnner is: " + _matchup.get_winner().getName());
           winner.setLayoutX(335);
           winner.setLayoutY(700);
@@ -256,29 +259,29 @@ public class Base extends Application {
 
   private Pane generatePane3() {
     Pane pane = new Pane();
-    VBox box = new VBox(10);
+    VBox box = new VBox(5);
     // pane.getChildren().add(new Label("testing"));
     final CategoryAxis xAxis = new CategoryAxis();
     final NumberAxis yAxis = new NumberAxis();
     final BarChart<String, Number> team1 = new BarChart<String, Number>(xAxis, yAxis);
-    team1.setTitle("Team 1 score summary");
+    team1.setTitle(homeTeam.getName() + " Score Summary");
     xAxis.setLabel("Scoring area");
     yAxis.setLabel("Score");
     XYChart.Series seriesHome = new XYChart.Series();
     for (int i = 0; i < homeScores.length; i++) {
-      seriesHome.getData().add(new XYChart.Data("field " + i, homeScores[i]));
+      seriesHome.getData().add(new XYChart.Data(scoringFields[i], homeScores[i]));
     }
     team1.getData().add(seriesHome);
     box.getChildren().add(team1);
     final CategoryAxis xAxis2 = new CategoryAxis();
     final NumberAxis yAxis2 = new NumberAxis();
     final BarChart<String, Number> team2 = new BarChart<String, Number>(xAxis2, yAxis2);
-    team2.setTitle("Team 2 score summary");
+    team2.setTitle(awayTeam.getName() + " Score Summary");
     xAxis2.setLabel("Scoring area");
     yAxis2.setLabel("Score");
     XYChart.Series seriesAway = new XYChart.Series();
     for (int i = 0; i < awayScores.length; i++) {
-      seriesAway.getData().add(new XYChart.Data("field " + i, awayScores[i]));
+      seriesAway.getData().add(new XYChart.Data(scoringFields[i], awayScores[i]));
     }
     team2.getData().add(seriesAway);
     box.getChildren().add(team2);
