@@ -27,6 +27,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -38,28 +39,28 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Base extends Application {
-  //hi
-  private Stage _stage;
-  private Scene _scene;
-  private TabPane _pane;
-  private Tab matchupTab, textStats, graphStats;
-  private Team[] _teams;
+  // hi
+  private Stage              _stage;
+  private Scene              _scene;
+  private TabPane            _pane;
+  private Tab                matchupTab, textStats, graphStats;
+  private Team[]             _teams;
   private Map<Integer, Team> teamMap;
-  private ComboBox<String> _box1;
-  private ComboBox<String> _box2;
-  private Label winner;
-  private boolean ran = false;
-  private Matchup _matchup;
-  private Team homeTeam, awayTeam;
-  public static double[] homeScores;
-  public static double[] awayScores;
-  public static String[] scoringFields;
-  
+  private ComboBox<String>   _box1;
+  private ComboBox<String>   _box2;
+  private Label              winner;
+  private boolean            ran = false;
+  private Matchup            _matchup;
+  private Team               homeTeam, awayTeam;
+  public static double[]     homeScores;
+  public static double[]     awayScores;
+  public static String[]     scoringFields;
 
   @Override
   public void start(Stage stage) throws Exception {
     _stage = stage;
     _pane = new TabPane();
+    _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
     _teams = readJson();
     teamMap = readJSON();
     initializeStage();
@@ -73,13 +74,15 @@ public class Base extends Application {
     buildBox(mainPane);
     setupMainPane(mainPane);
     Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));
-    GridPane goo = Pane2Generator.Pane2(m); //Max: me testing Pane2Gen getting for for FX nothing meaningful yet
+    GridPane goo = Pane2Generator.Pane2(m); // Max: me testing Pane2Gen getting
+                                            // for for FX nothing meaningful yet
     textStats.setContent(goo);
-    //_pane.getTabs().addAll(matchupTab, textStats, graphStats);
+    // _pane.getTabs().addAll(matchupTab, textStats, graphStats);
     _pane.getTabs().add(matchupTab);
-    //this.initializeStage();
+    // this.initializeStage();
 
-    // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is a good idea made method for it
+    // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is
+    // a good idea made method for it
 
   }
 
@@ -97,19 +100,22 @@ public class Base extends Application {
       public void handle(ActionEvent event) {
         boolean boxesFilled = true;
         String homeString = "", awayString = "";
-        //tries to get names of chosen teams
+        // tries to get names of chosen teams
         try {
           homeString = (String) _box1.getSelectionModel().getSelectedItem().toString();
           awayString = (String) _box2.getSelectionModel().getSelectedItem().toString();
         } catch (NullPointerException e) {
           boxesFilled = false;
         }
-        //gets team object based on team name and sets up resulting label accordingly
+        // gets team object based on team name and sets up resulting label
+        // accordingly
         if (!ran && boxesFilled) {
           Team home = null, away = null;
           for (int i = 0; i < _teams.length; i++) {
-            if (_teams[i].getName().equals(homeString)) home = _teams[i];
-            if (_teams[i].getName().equals(awayString)) away = _teams[i];
+            if (_teams[i].getName().equals(homeString))
+              home = _teams[i];
+            if (_teams[i].getName().equals(awayString))
+              away = _teams[i];
           }
 
           _matchup = new Matchup(home, away);
@@ -118,7 +124,8 @@ public class Base extends Application {
           winner = new Label("The winnner is: " + _matchup.get_winner().getName());
           winner.setLayoutX(335);
           winner.setLayoutY(700);
-          winner.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+          winner.setBackground(
+              new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
           mainPane.getChildren().add(winner);
           GridPane stats = Pane2Generator.Pane2(_matchup);
           textStats.setContent(stats);
@@ -130,17 +137,45 @@ public class Base extends Application {
       }
 
     });
-    //this part may look a bit weird if you aren't too familiar with fx, it's a lot of formatting stuff
+    // this part may look a bit weird if you aren't too familiar with fx, it's a
+    // lot of formatting stuff
     run.setLayoutX(335);
-    run.setLayoutY(600); //setLayoutX/Y just sets the coordinates of a node on the screen (only works well with a plain pane)
-    BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);//this takes a color, insets, and something else I can't remember but I just leave them null for this
-    Background y = new Background(x);//need a background object which takes any subclass of background (there are others besides backgroundfill
+    run.setLayoutY(600); // setLayoutX/Y just sets the coordinates of a node on
+                         // the screen (only works well with a plain pane)
+    BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);// this
+                                                                        // takes
+                                                                        // a
+                                                                        // color,
+                                                                        // insets,
+                                                                        // and
+                                                                        // something
+                                                                        // else
+                                                                        // I
+                                                                        // can't
+                                                                        // remember
+                                                                        // but I
+                                                                        // just
+                                                                        // leave
+                                                                        // them
+                                                                        // null
+                                                                        // for
+                                                                        // this
+    Background y = new Background(x);// need a background object which takes any
+                                     // subclass of background (there are others
+                                     // besides backgroundfill
     run.setBackground(y);
     Image court = new Image("file:assets/courtTry2.jpg");
-    ImageView view = new ImageView(court);//put an image in an imageview node so that the size and position can be changed
-    view.setLayoutX(118);//this and the next line will probably need to be changed, i just moved the image manually because it was starting in a weird place    
+    ImageView view = new ImageView(court);// put an image in an imageview node
+                                          // so that the size and position can
+                                          // be changed
+    view.setLayoutX(118);// this and the next line will probably need to be
+                         // changed, i just moved the image manually because it
+                         // was starting in a weird place
     view.setLayoutY(243);
-    view.setScaleY(_scene.getHeight() / court.getHeight());//scaling the image up/down based on its size compared to the scene
+    view.setScaleY(_scene.getHeight() / court.getHeight());// scaling the image
+                                                           // up/down based on
+                                                           // its size compared
+                                                           // to the scene
     view.setScaleX(_scene.getWidth() / court.getWidth());
     mainPane.getChildren().addAll(view, _box1, _box2, versus, run);
     matchupTab.setContent(mainPane);
@@ -197,24 +232,30 @@ public class Base extends Application {
 
         Team home = null;
         for (int i = 0; i < _teams.length; i++) {
-          if (_teams[i].getName().equals(newText)) home = _teams[i];
+          if (_teams[i].getName().equals(newText))
+            home = _teams[i];
         }
 
-        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
-        //new ImageView(team1);
+        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false,
+            true);
+        // new ImageView(team1);
         view1.setImage(team1);
         Group imageHolder = new Group();
         imageHolder.getChildren().add(view1);
-        view1.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
+        view1.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
+                                                                // image up/down
+                                                                // based on its
+                                                                // size compared
+                                                                // to the scene
         view1.setScaleX(_scene.getWidth() / team1.getWidth());
-        //view1.setLayoutX(50);    
-        //view1.setLayoutY(400);
+        // view1.setLayoutX(50);
+        // view1.setLayoutY(400);
         double xScale = 200 / imageHolder.getLayoutBounds().getWidth();
         double yScale = 250 / imageHolder.getLayoutBounds().getHeight();
-        /* view1.setScaleX(xScale);
-         view1.setScaleY(yScale);
-         view1.setLayoutX(0);    
-         view1.setLayoutY(220);*/
+        /*
+         * view1.setScaleX(xScale); view1.setScaleY(yScale);
+         * view1.setLayoutX(0); view1.setLayoutY(220);
+         */
         imageHolder.setScaleX(xScale);
         imageHolder.setScaleY(yScale);
         imageHolder.setLayoutX(50);
@@ -235,11 +276,17 @@ public class Base extends Application {
       public void changed(ObservableValue o, String oldText, String newText) {
         Team home = null;
         for (int i = 0; i < _teams.length; i++) {
-          if (_teams[i].getName().equals(newText)) home = _teams[i];
+          if (_teams[i].getName().equals(newText))
+            home = _teams[i];
         }
-        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
+        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false,
+            true);
         view2.setImage(team1);
-        view2.setScaleY(_scene.getHeight() / team1.getHeight());//scaling the image up/down based on its size compared to the scene
+        view2.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
+                                                                // image up/down
+                                                                // based on its
+                                                                // size compared
+                                                                // to the scene
         view2.setScaleX(_scene.getWidth() / team1.getWidth());
         double xScale = 200 / team1.getWidth();
         double yScale = 250 / team1.getHeight();
