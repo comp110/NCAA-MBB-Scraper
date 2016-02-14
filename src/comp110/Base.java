@@ -63,7 +63,7 @@ public class Base extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     screenBounds = Screen.getPrimary().getBounds();
-    
+    System.out.println(Screen.getPrimary().getBounds().getHeight());
     _stage = stage;
     _pane = new TabPane();
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
@@ -94,7 +94,7 @@ public class Base extends Application {
   private void setupMainPane(Pane mainPane) {
     _box1.setLayoutX(60);
     _box1.setLayoutY(200);
-    _box2.setLayoutX(540);
+    _box2.setLayoutX(500);
     _box2.setLayoutY(200);
     Label versus = new Label("VERSUS");
     versus.setLayoutX(380);
@@ -111,7 +111,6 @@ public class Base extends Application {
           awayString = (String) _box2.getSelectionModel().getSelectedItem().toString();
         } catch (NullPointerException e) {
           boxesFilled = false;
-         
         }
         // gets team object based on team name and sets up resulting label
         // accordingly
@@ -198,11 +197,13 @@ public class Base extends Application {
     _stage.setScene(_scene);
     _stage.show();
     if (800 >= screenBounds.getHeight() * .9) {
-      Scale scale = new Scale(1,  .8);
+      double yTranslate = .001875 * screenBounds.getHeight() -.7;
+      Scale scale = new Scale(1,  yTranslate);
       scale.setPivotX(0);
       scale.setPivotY(0);
       _scene.getRoot().getTransforms().setAll(scale);
-      _stage.setHeight(680);
+      _stage.setHeight(_pane.getPrefHeight() * yTranslate + 45);
+     // _stage.centerOnScreen();
     }
     
    
