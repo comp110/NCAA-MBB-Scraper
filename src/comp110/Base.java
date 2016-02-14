@@ -94,7 +94,7 @@ public class Base extends Application {
   private void setupMainPane(Pane mainPane) {
     _box1.setLayoutX(60);
     _box1.setLayoutY(200);
-    _box2.setLayoutX(500);
+    _box2.setLayoutX(540);
     _box2.setLayoutY(200);
     Label versus = new Label("VERSUS");
     versus.setLayoutX(380);
@@ -176,7 +176,7 @@ public class Base extends Application {
     view.setLayoutX(-157);// this and the next line will probably need to be
                          // changed, i just moved the image manually because it
                          // was starting in a weird place
-    view.setLayoutY(95);
+    view.setLayoutY(100);
     view.setScaleY(_scene.getHeight() / court.getHeight());// scaling the image
                                                            // up/down based on
                                                            // its size compared
