@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -36,6 +37,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Base extends Application {
@@ -55,9 +58,12 @@ public class Base extends Application {
   public static double[]     homeScores;
   public static double[]     awayScores;
   public static String[]     scoringFields;
+  private Rectangle2D screenBounds;
 
   @Override
   public void start(Stage stage) throws Exception {
+    screenBounds = Screen.getPrimary().getBounds();
+    
     _stage = stage;
     _pane = new TabPane();
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
@@ -83,7 +89,6 @@ public class Base extends Application {
 
     // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is
     // a good idea made method for it
-
   }
 
   private void setupMainPane(Pane mainPane) {
@@ -106,6 +111,7 @@ public class Base extends Application {
           awayString = (String) _box2.getSelectionModel().getSelectedItem().toString();
         } catch (NullPointerException e) {
           boxesFilled = false;
+         
         }
         // gets team object based on team name and sets up resulting label
         // accordingly
@@ -183,9 +189,23 @@ public class Base extends Application {
 
   private void initializeStage() {
     _stage.setTitle("COMP110 PS0X - NCAA Bracket");
-    _scene = new Scene(_pane, 800, 800);
+    Group g = new Group();
+    g.getChildren().add(_pane);
+    _pane.setPrefHeight(800);
+    _pane.setPrefWidth(800);
+    g.prefHeight(800);
+    _scene = new Scene(g);
     _stage.setScene(_scene);
     _stage.show();
+    if (800 >= screenBounds.getHeight() * .9) {
+      Scale scale = new Scale(1,  .8);
+      scale.setPivotX(0);
+      scale.setPivotY(0);
+      _scene.getRoot().getTransforms().setAll(scale);
+      _stage.setHeight(680);
+    }
+    
+   
   }
 
   private static Team[] readJson() throws FileNotFoundException {
@@ -261,7 +281,7 @@ public class Base extends Application {
         imageHolder.setLayoutX(50);
         imageHolder.setLayoutY(280);
         imageHolder.maxWidth(200);
-        System.out.println(imageHolder.getLayoutBounds().getWidth());
+        
         for (int i = 0; i < pane.getChildren().size(); i++) {
           if (pane.getChildren().get(i) == imageHolder) {
             return;
