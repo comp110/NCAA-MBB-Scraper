@@ -92,12 +92,12 @@ public class Base extends Application {
   }
 
   private void setupMainPane(Pane mainPane) {
-    _box1.setLayoutX(20);
+    _box1.setLayoutX(60);
     _box1.setLayoutY(200);
-    _box2.setLayoutX(520);
+    _box2.setLayoutX(540);
     _box2.setLayoutY(200);
     Label versus = new Label("VERSUS");
-    versus.setLayoutX(350);
+    versus.setLayoutX(380);
     versus.setLayoutY(200);
     versus.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
     Button run = new Button("Run Match");
@@ -128,7 +128,7 @@ public class Base extends Application {
           homeTeam = home;
           awayTeam = away;
           winner = new Label("The winnner is: " + _matchup.get_winner().getName());
-          winner.setLayoutX(335);
+          winner.setLayoutX(300);
           winner.setLayoutY(700);
           winner.setBackground(
               new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
@@ -145,7 +145,7 @@ public class Base extends Application {
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
-    run.setLayoutX(335);
+    run.setLayoutX(365);
     run.setLayoutY(600); // setLayoutX/Y just sets the coordinates of a node on
                          // the screen (only works well with a plain pane)
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);// this
@@ -170,14 +170,14 @@ public class Base extends Application {
                                      // subclass of background (there are others
                                      // besides backgroundfill
     run.setBackground(y);
-    Image court = new Image("file:assets/courtTry2.jpg");
+    Image court = new Image("file:assets/ncaa_court.jpg");
     ImageView view = new ImageView(court);// put an image in an imageview node
                                           // so that the size and position can
                                           // be changed
-    view.setLayoutX(118);// this and the next line will probably need to be
+    view.setLayoutX(-157);// this and the next line will probably need to be
                          // changed, i just moved the image manually because it
                          // was starting in a weird place
-    view.setLayoutY(243);
+    view.setLayoutY(95);
     view.setScaleY(_scene.getHeight() / court.getHeight());// scaling the image
                                                            // up/down based on
                                                            // its size compared
@@ -278,7 +278,7 @@ public class Base extends Application {
          */
         imageHolder.setScaleX(xScale);
         imageHolder.setScaleY(yScale);
-        imageHolder.setLayoutX(50);
+        imageHolder.setLayoutX(65);
         imageHolder.setLayoutY(280);
         imageHolder.maxWidth(200);
         
@@ -312,7 +312,7 @@ public class Base extends Application {
         double yScale = 250 / team1.getHeight();
         view2.setScaleX(xScale);
         view2.setScaleY(yScale);
-        view2.setLayoutX(520);
+        view2.setLayoutX(540);
         view2.setLayoutY(280);
         for (int i = 0; i < pane.getChildren().size(); i++) {
           if (pane.getChildren().get(i) == view2) {
