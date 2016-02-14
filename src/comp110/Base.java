@@ -202,7 +202,7 @@ public class Base extends Application {
       scale.setPivotX(0);
       scale.setPivotY(0);
       _scene.getRoot().getTransforms().setAll(scale);
-      _stage.setHeight(_pane.getPrefHeight() * yTranslate + 45);
+      _stage.setHeight(_pane.getPrefHeight() * yTranslate + 35);
      // _stage.centerOnScreen();
     }
     
