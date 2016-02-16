@@ -59,6 +59,9 @@ public class Base extends Application {
   public static double[] awayScores;
   public static String[] scoringFields;
   private Rectangle2D screenBounds;
+  private ImageView view2;
+  private ImageView view1;
+  private Pane mainPane;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -76,7 +79,7 @@ public class Base extends Application {
     matchupTab.setText("Matchup");
     textStats.setText("Stats");
     graphStats.setText("Graphs");
-    Pane mainPane = new Pane();
+    mainPane = new Pane();
     buildBox(mainPane);
     setupMainPane(mainPane);
     Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));
@@ -101,43 +104,40 @@ public class Base extends Application {
     versus.setLayoutY(200);
     versus.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
     Button run = new Button("Run Match");
-    //b.setOnAction((event) ->  pane.getChildren().add(x));
-    run.setOnAction((event) -> 
-    {
-      
-        boolean boxesFilled = true;
-        String homeString = "", awayString = "";
-        // tries to get names of chosen teams
-        try {
-          homeString = (String) _box1.getSelectionModel().getSelectedItem().toString();
-          awayString = (String) _box2.getSelectionModel().getSelectedItem().toString();
-        } catch (NullPointerException e) {
-          boxesFilled = false;
+    run.setOnAction((event) -> {
+      boolean boxesFilled = true;
+      String homeString = "", awayString = "";
+      // tries to get names of chosen teams
+      try {
+        homeString = (String) _box1.getSelectionModel().getSelectedItem().toString();
+        awayString = (String) _box2.getSelectionModel().getSelectedItem().toString();
+      } catch (NullPointerException e) {
+        boxesFilled = false;
+      }
+      // gets team object based on team name and sets up resulting label
+      // accordingly
+      if (!ran && boxesFilled) {
+        Team home = null, away = null;
+        for (int i = 0; i < _teams.length; i++) {
+          if (_teams[i].getName().equals(homeString)) home = _teams[i];
+          if (_teams[i].getName().equals(awayString)) away = _teams[i];
         }
-        // gets team object based on team name and sets up resulting label
-        // accordingly
-        if (!ran && boxesFilled) {
-          Team home = null, away = null;
-          for (int i = 0; i < _teams.length; i++) {
-            if (_teams[i].getName().equals(homeString)) home = _teams[i];
-            if (_teams[i].getName().equals(awayString)) away = _teams[i];
-          }
 
-          _matchup = new Matchup(home, away);
-          homeTeam = home;
-          awayTeam = away;
-          winner = new Label("The winnner is: " + _matchup.get_winner().getName());
-          winner.setLayoutX(300);
-          winner.setLayoutY(700);
-          winner.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
-          mainPane.getChildren().add(winner);
-          GridPane stats = Pane2Generator.Pane2(_matchup);
-          textStats.setContent(stats);
-          Pane pane3 = generatePane3();
-          graphStats.setContent(pane3);
-          _pane.getTabs().add(textStats);
-          _pane.getTabs().add(graphStats);
-        }
+        _matchup = new Matchup(home, away);
+        homeTeam = home;
+        awayTeam = away;
+        winner = new Label("The winnner is: " + _matchup.get_winner().getName());
+        winner.setLayoutX(300);
+        winner.setLayoutY(700);
+        winner.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+        mainPane.getChildren().add(winner);
+        GridPane stats = Pane2Generator.Pane2(_matchup);
+        textStats.setContent(stats);
+        Pane pane3 = generatePane3();
+        graphStats.setContent(pane3);
+        _pane.getTabs().add(textStats);
+        _pane.getTabs().add(graphStats);
+      }
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
@@ -238,81 +238,14 @@ public class Base extends Application {
     for (Team item : _teams) {
       arr.add(item.getName());
     }
-    ImageView view1 = new ImageView();
-    ImageView view2 = new ImageView();
+    view1 = new ImageView();
+    view2 = new ImageView();
     options = FXCollections.observableArrayList(arr);
     _box1 = new ComboBox(options);
     _box2 = new ComboBox(options);
-    _box1.valueProperty().addListener((o, oldText, newText) -> 
-    {
-
-      Team home = null;
-      for (int i = 0; i < _teams.length; i++) {
-        if (_teams[i].getName().equals(newText)) home = _teams[i];
-      }
-
-      Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
-      // new ImageView(team1);
-      view1.setImage(team1);
-      Group imageHolder = new Group();
-      imageHolder.getChildren().add(view1);
-      view1.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
-                                                              // image up/down
-                                                              // based on its
-                                                              // size compared
-                                                              // to the scene
-      view1.setScaleX(_scene.getWidth() / team1.getWidth());
-      // view1.setLayoutX(50);
-      // view1.setLayoutY(400);
-      double xScale = 200 / imageHolder.getLayoutBounds().getWidth();
-      double yScale = 250 / imageHolder.getLayoutBounds().getHeight();
-      /*
-       * view1.setScaleX(xScale); view1.setScaleY(yScale);
-       * view1.setLayoutX(0); view1.setLayoutY(220);
-       */
-      imageHolder.setScaleX(xScale);
-      imageHolder.setScaleY(yScale);
-      imageHolder.setLayoutX(65);
-      imageHolder.setLayoutY(280);
-      imageHolder.maxWidth(200);
-
-      for (int i = 0; i < pane.getChildren().size(); i++) {
-        if (pane.getChildren().get(i) == imageHolder) {
-          return;
-        }
-      }
-      pane.getChildren().add(imageHolder);
-    });
-   
+    _box1.valueProperty().addListener(this::changed);
+    _box2.valueProperty().addListener(this::changed);
     
-    _box2.valueProperty().addListener((o, oldText, newText) -> 
-    {
-        Team home = null;
-        for (int i = 0; i < _teams.length; i++) {
-          if (_teams[i].getName().equals(newText)) home = _teams[i];
-        }
-        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
-        view2.setImage(team1);
-        view2.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
-                                                                // image up/down
-                                                                // based on its
-                                                                // size compared
-                                                                // to the scene
-        view2.setScaleX(_scene.getWidth() / team1.getWidth());
-        double xScale = 200 / team1.getWidth();
-        double yScale = 250 / team1.getHeight();
-        view2.setScaleX(xScale);
-        view2.setScaleY(yScale);
-        view2.setLayoutX(540);
-        view2.setLayoutY(280);
-        for (int i = 0; i < pane.getChildren().size(); i++) {
-          if (pane.getChildren().get(i) == view2) {
-            return;
-          }
-        }
-        pane.getChildren().add(view2);
-      
-    });
   }
 
   private Pane generatePane3() {
@@ -345,6 +278,47 @@ public class Base extends Application {
     box.getChildren().add(team2);
     pane.getChildren().add(box);
     return pane;
+  }
+
+  
+  
+  
+  public void changed(ObservableValue o, String old, String newText) {
+    Team home = null;
+    ImageView inFocus = null;
+    if (o == _box1.valueProperty()) {
+      inFocus = view1;
+      System.out.println("test");
+    }
+    else if (o == _box2.valueProperty()) inFocus = view2;
+    else {
+      System.out.println("error");
+      return;
+    }
+    for (int i = 0; i < _teams.length; i++) {
+      if (_teams[i].getName().equals(newText)) home = _teams[i];
+    }
+    Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
+    inFocus.setImage(team1);
+    inFocus.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
+    inFocus.setScaleX(_scene.getWidth() / team1.getWidth());
+    double xScale = 200 / team1.getWidth();
+    double yScale = 250 / team1.getHeight();
+    inFocus.setScaleX(xScale);
+    inFocus.setScaleY(yScale);
+    if (inFocus == view2) {
+      inFocus.setLayoutX(540);
+      inFocus.setLayoutY(280);
+    }else if(inFocus == view1){
+      inFocus.setLayoutX(65);
+      inFocus.setLayoutY(280);
+    }
+    for (int i = 0; i < mainPane.getChildren().size(); i++) {
+      if (mainPane.getChildren().get(i) == inFocus) {
+        return;
+      }
+    }
+    mainPane.getChildren().add(inFocus);
   }
 
 }
