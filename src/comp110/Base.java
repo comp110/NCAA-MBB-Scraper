@@ -43,27 +43,27 @@ import javafx.stage.Stage;
 
 public class Base extends Application {
   // hi
-  private Stage              _stage;
-  private Scene              _scene;
-  private TabPane            _pane;
-  private Tab                matchupTab, textStats, graphStats;
-  private Team[]             _teams;
+  private Stage _stage;
+  private Scene _scene;
+  private TabPane _pane;
+  private Tab matchupTab, textStats, graphStats;
+  private Team[] _teams;
   private Map<Integer, Team> teamMap;
-  private ComboBox<String>   _box1;
-  private ComboBox<String>   _box2;
-  private Label              winner;
-  private boolean            ran = false;
-  private Matchup            _matchup;
-  private Team               homeTeam, awayTeam;
-  public static double[]     homeScores;
-  public static double[]     awayScores;
-  public static String[]     scoringFields;
+  private ComboBox<String> _box1;
+  private ComboBox<String> _box2;
+  private Label winner;
+  private boolean ran = false;
+  private Matchup _matchup;
+  private Team homeTeam, awayTeam;
+  public static double[] homeScores;
+  public static double[] awayScores;
+  public static String[] scoringFields;
   private Rectangle2D screenBounds;
 
   @Override
   public void start(Stage stage) throws Exception {
     screenBounds = Screen.getPrimary().getBounds();
-    System.out.println(Screen.getPrimary().getBounds().getHeight());
+    //System.out.println(Screen.getPrimary().getBounds().getHeight());
     _stage = stage;
     _pane = new TabPane();
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
@@ -117,10 +117,8 @@ public class Base extends Application {
         if (!ran && boxesFilled) {
           Team home = null, away = null;
           for (int i = 0; i < _teams.length; i++) {
-            if (_teams[i].getName().equals(homeString))
-              home = _teams[i];
-            if (_teams[i].getName().equals(awayString))
-              away = _teams[i];
+            if (_teams[i].getName().equals(homeString)) home = _teams[i];
+            if (_teams[i].getName().equals(awayString)) away = _teams[i];
           }
 
           _matchup = new Matchup(home, away);
@@ -129,8 +127,7 @@ public class Base extends Application {
           winner = new Label("The winnner is: " + _matchup.get_winner().getName());
           winner.setLayoutX(300);
           winner.setLayoutY(700);
-          winner.setBackground(
-              new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+          winner.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
           mainPane.getChildren().add(winner);
           GridPane stats = Pane2Generator.Pane2(_matchup);
           textStats.setContent(stats);
@@ -174,8 +171,8 @@ public class Base extends Application {
                                           // so that the size and position can
                                           // be changed
     view.setLayoutX(-157);// this and the next line will probably need to be
-                         // changed, i just moved the image manually because it
-                         // was starting in a weird place
+                          // changed, i just moved the image manually because it
+                          // was starting in a weird place
     view.setLayoutY(100);
     view.setScaleY(_scene.getHeight() / court.getHeight());// scaling the image
                                                            // up/down based on
@@ -196,17 +193,17 @@ public class Base extends Application {
     _scene = new Scene(g);
     _stage.setScene(_scene);
     _stage.show();
-    if (1100 >= screenBounds.getHeight() * .9) {
-      double yTranslate = .001875 * screenBounds.getHeight() -.7;
-      Scale scale = new Scale(1,  yTranslate);
+    if (800 >= screenBounds.getHeight() * .9) {
+      double yTranslate = .001875 * screenBounds.getHeight() - .7;
+      Scale scale = new Scale(1, yTranslate);
       scale.setPivotX(0);
       scale.setPivotY(0);
       _scene.getRoot().getTransforms().setAll(scale);
       _stage.setHeight(_pane.getPrefHeight() * yTranslate + 41);
-     // _stage.centerOnScreen();
+      // _stage.centerOnScreen();
     }
-    
-   
+    _stage.setY(0);
+
   }
 
   private static Team[] readJson() throws FileNotFoundException {
@@ -253,12 +250,10 @@ public class Base extends Application {
 
         Team home = null;
         for (int i = 0; i < _teams.length; i++) {
-          if (_teams[i].getName().equals(newText))
-            home = _teams[i];
+          if (_teams[i].getName().equals(newText)) home = _teams[i];
         }
 
-        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false,
-            true);
+        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
         // new ImageView(team1);
         view1.setImage(team1);
         Group imageHolder = new Group();
@@ -282,7 +277,7 @@ public class Base extends Application {
         imageHolder.setLayoutX(65);
         imageHolder.setLayoutY(280);
         imageHolder.maxWidth(200);
-        
+
         for (int i = 0; i < pane.getChildren().size(); i++) {
           if (pane.getChildren().get(i) == imageHolder) {
             return;
@@ -297,11 +292,9 @@ public class Base extends Application {
       public void changed(ObservableValue o, String oldText, String newText) {
         Team home = null;
         for (int i = 0; i < _teams.length; i++) {
-          if (_teams[i].getName().equals(newText))
-            home = _teams[i];
+          if (_teams[i].getName().equals(newText)) home = _teams[i];
         }
-        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false,
-            true);
+        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
         view2.setImage(team1);
         view2.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
                                                                 // image up/down
