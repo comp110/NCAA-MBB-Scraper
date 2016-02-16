@@ -101,8 +101,10 @@ public class Base extends Application {
     versus.setLayoutY(200);
     versus.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
     Button run = new Button("Run Match");
-    run.setOnAction(new EventHandler<ActionEvent>() {
-      public void handle(ActionEvent event) {
+    //b.setOnAction((event) ->  pane.getChildren().add(x));
+    run.setOnAction((event) -> 
+    {
+      
         boolean boxesFilled = true;
         String homeString = "", awayString = "";
         // tries to get names of chosen teams
@@ -136,8 +138,6 @@ public class Base extends Application {
           _pane.getTabs().add(textStats);
           _pane.getTabs().add(graphStats);
         }
-      }
-
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
@@ -243,53 +243,50 @@ public class Base extends Application {
     options = FXCollections.observableArrayList(arr);
     _box1 = new ComboBox(options);
     _box2 = new ComboBox(options);
+    _box1.valueProperty().addListener((o, oldText, newText) -> 
+    {
 
-    _box1.valueProperty().addListener(new ChangeListener<String>() {
-      @Override
-      public void changed(ObservableValue o, String oldText, String newText) {
-
-        Team home = null;
-        for (int i = 0; i < _teams.length; i++) {
-          if (_teams[i].getName().equals(newText)) home = _teams[i];
-        }
-
-        Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
-        // new ImageView(team1);
-        view1.setImage(team1);
-        Group imageHolder = new Group();
-        imageHolder.getChildren().add(view1);
-        view1.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
-                                                                // image up/down
-                                                                // based on its
-                                                                // size compared
-                                                                // to the scene
-        view1.setScaleX(_scene.getWidth() / team1.getWidth());
-        // view1.setLayoutX(50);
-        // view1.setLayoutY(400);
-        double xScale = 200 / imageHolder.getLayoutBounds().getWidth();
-        double yScale = 250 / imageHolder.getLayoutBounds().getHeight();
-        /*
-         * view1.setScaleX(xScale); view1.setScaleY(yScale);
-         * view1.setLayoutX(0); view1.setLayoutY(220);
-         */
-        imageHolder.setScaleX(xScale);
-        imageHolder.setScaleY(yScale);
-        imageHolder.setLayoutX(65);
-        imageHolder.setLayoutY(280);
-        imageHolder.maxWidth(200);
-
-        for (int i = 0; i < pane.getChildren().size(); i++) {
-          if (pane.getChildren().get(i) == imageHolder) {
-            return;
-          }
-        }
-        pane.getChildren().add(imageHolder);
+      Team home = null;
+      for (int i = 0; i < _teams.length; i++) {
+        if (_teams[i].getName().equals(newText)) home = _teams[i];
       }
-    });
 
-    _box2.valueProperty().addListener(new ChangeListener<String>() {
-      @Override
-      public void changed(ObservableValue o, String oldText, String newText) {
+      Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
+      // new ImageView(team1);
+      view1.setImage(team1);
+      Group imageHolder = new Group();
+      imageHolder.getChildren().add(view1);
+      view1.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
+                                                              // image up/down
+                                                              // based on its
+                                                              // size compared
+                                                              // to the scene
+      view1.setScaleX(_scene.getWidth() / team1.getWidth());
+      // view1.setLayoutX(50);
+      // view1.setLayoutY(400);
+      double xScale = 200 / imageHolder.getLayoutBounds().getWidth();
+      double yScale = 250 / imageHolder.getLayoutBounds().getHeight();
+      /*
+       * view1.setScaleX(xScale); view1.setScaleY(yScale);
+       * view1.setLayoutX(0); view1.setLayoutY(220);
+       */
+      imageHolder.setScaleX(xScale);
+      imageHolder.setScaleY(yScale);
+      imageHolder.setLayoutX(65);
+      imageHolder.setLayoutY(280);
+      imageHolder.maxWidth(200);
+
+      for (int i = 0; i < pane.getChildren().size(); i++) {
+        if (pane.getChildren().get(i) == imageHolder) {
+          return;
+        }
+      }
+      pane.getChildren().add(imageHolder);
+    });
+   
+    
+    _box2.valueProperty().addListener((o, oldText, newText) -> 
+    {
         Team home = null;
         for (int i = 0; i < _teams.length; i++) {
           if (_teams[i].getName().equals(newText)) home = _teams[i];
@@ -314,7 +311,7 @@ public class Base extends Application {
           }
         }
         pane.getChildren().add(view2);
-      }
+      
     });
   }
 
