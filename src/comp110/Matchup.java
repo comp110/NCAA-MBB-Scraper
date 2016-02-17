@@ -15,14 +15,11 @@ public class Matchup {
 		_awayTeam = awayTeam;
 		double homeScore = calculateScore(_homeTeam);
 		double awayScore = calculateScore(_awayTeam);
-		System.out.println(_homeTeam.getName() + ": " + homeScore);
-		System.out.println(_awayTeam.getName() + ": " + awayScore);
 		if (homeScore > awayScore) {
 			_winner = _homeTeam;
 		} else {
 			_winner = _awayTeam;
 		}
-		System.out.println(_winner.getName() + " wins!");
 	}
 	
 	public double calculateScore(Team team){ //moving weights to inside methods will solve reflection problem for now, easiest/quickest fix
@@ -44,18 +41,6 @@ public class Matchup {
 		
 		return compositeScore;
 
-	}
-
-	public Team get_homeTeam() {
-		return _homeTeam;
-	}
-
-	public Team get_awayTeam() {
-		return _awayTeam;
-	}
-
-	public Team get_winner() {
-		return _winner;
 	}
 
 	public double top20Stats(Team team) {
@@ -125,4 +110,17 @@ public class Matchup {
 		}
 		return (totalInches/(double)numPlayers) * weight;
 	}
+	
+	public Team get_homeTeam() {
+		return _homeTeam;
+	}
+
+	public Team get_awayTeam() {
+		return _awayTeam;
+	}
+
+	public Team get_winner() {
+		return _winner;
+	}
+
 }

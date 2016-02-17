@@ -56,8 +56,8 @@ public class Scraper {
 		
 		// The "ranking_period" updates periodically so it's important to check what the current one is
 		// before scraping
-		String statsUrl = "http://stats.ncaa.org/team/stats?org_id=" + teamID + "&sport_year_ctl_id=12260";
-		String rankingsUrl = "http://stats.ncaa.org/rankings/ranking_summary?academic_year=2016&division=1.0&org_id="
+		String statsUrl = "http://stats.ncaa.org/team/" + teamID + "/stats/12260";
+		String rankingsUrl = "http://stats.ncaa.org/rankings/ranking_summary?academic_year=2016&division=1&org_id="
 							  + teamID + "&ranking_period=" + rankingPeriod + "&sport_code=MBB";
 		
 		Document statsPage, rankingsPage;
@@ -93,7 +93,7 @@ public class Scraper {
 		
 		
 		// The team class' constructor puts the info in the header into "name", "wins", and "losses" fields
-		String header = statsPage.select("h1").first().text();
+		String header = statsPage.select("span.org_heading").first().text();
 
 		// Processing of each player's stats is done in the Player class' constructor
 		Elements statRows = statsPage.select("tr.text");

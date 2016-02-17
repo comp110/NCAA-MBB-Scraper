@@ -9,8 +9,7 @@ import org.jsoup.select.Elements;
 public class Team {
 	private String _name;
 	private Player[] _roster;
-	// There are so many fields so that students can call getters for all of these without
-	// needing to know how to use something like maps or needing to deal with array indices
+	
 	private double _threesAttempted, _assistTurnoverRatio, _avgAssists, _avgBlocks, _avgDRebs, 
 	    _fouls, _turnovers, _fgPercent, _fgPercentDef, _freeThrowsAttempted, _freeThrowsMade,
 	    _ftPercent, _avgORebs, _avgPersonalFouls, _reboundMargin, _scoringDefense, _scoringMargin, 

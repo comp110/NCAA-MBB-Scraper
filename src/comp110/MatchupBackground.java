@@ -6,11 +6,6 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-/**
- * This is where I'm putting the bulk scraping, JSON conversion, and instantiation of new Matchups for now
- * I think a lot of this will be replaced by the gui and/or runner
- **/
-
 public class MatchupBackground {
 
 	public static void main(String[] args) throws IOException {
@@ -20,7 +15,7 @@ public class MatchupBackground {
 //		// The rankingPeriod is there to be put into the ncaa website URLs
 //		// It changes periodically so make sure you have the current one before scraping
 //		// or else you will get outdated stats
-//		int rankingPeriod = 95;
+//		int rankingPeriod = 106;
 //		Scraper.saveToJSON("acc.json", teamIds, rankingPeriod);
 		
 		JsonReader reader = new JsonReader(new FileReader("acc.json"));
@@ -32,7 +27,7 @@ public class MatchupBackground {
 			teamMap.put(team.getId(), team);
 		}
 		
-		new Matchup(teamMap.get(457), teamMap.get(193));
+		new Matchup(teamMap.get(67), teamMap.get(147));
 	} 
 
 

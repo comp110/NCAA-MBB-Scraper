@@ -42,7 +42,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Base extends Application {
-  // hi
+  
   private Stage              _stage;
   private Scene              _scene;
   private TabPane            _pane;
@@ -58,12 +58,12 @@ public class Base extends Application {
   public static double[]     homeScores;
   public static double[]     awayScores;
   public static String[]     scoringFields;
-  private Rectangle2D screenBounds;
+  private Rectangle2D        screenBounds;
 
   @Override
   public void start(Stage stage) throws Exception {
     screenBounds = Screen.getPrimary().getBounds();
-    System.out.println(Screen.getPrimary().getBounds().getHeight());
+//    System.out.println(Screen.getPrimary().getBounds().getHeight());
     _stage = stage;
     _pane = new TabPane();
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
