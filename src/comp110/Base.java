@@ -100,9 +100,10 @@ public class Base extends Application {
     _box2.setLayoutX(540);
     _box2.setLayoutY(200);
     Label versus = new Label("VERSUS");
+    versus.getStyleClass().add("whitetext");
     versus.setLayoutX(380);
     versus.setLayoutY(200);
-    versus.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+    versus.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
     Button run = new Button("Run Match");
     run.setOnAction((event) -> {
       boolean boxesFilled = true;
@@ -129,7 +130,8 @@ public class Base extends Application {
         winner = new Label("The winnner is: " + _matchup.get_winner().getName());
         winner.setLayoutX(300);
         winner.setLayoutY(700);
-        winner.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+        winner.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+        winner.getStyleClass().add("whitetext");
         mainPane.getChildren().add(winner);
         GridPane stats = Pane2Generator.Pane2(_matchup);
         textStats.setContent(stats);
@@ -141,7 +143,7 @@ public class Base extends Application {
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
-    run.setLayoutX(365);
+    run.setLayoutX(358);
     run.setLayoutY(600); // setLayoutX/Y just sets the coordinates of a node on
                          // the screen (only works well with a plain pane)
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);// this
@@ -191,6 +193,7 @@ public class Base extends Application {
     _pane.setPrefWidth(800);
     g.prefHeight(800);
     _scene = new Scene(g);
+    _scene.getStylesheets().add("file:assets/fextile.css");
     _stage.setScene(_scene);
     _stage.show();
     if (800 >= screenBounds.getHeight() * .9) {
