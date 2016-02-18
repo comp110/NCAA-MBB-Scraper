@@ -237,18 +237,21 @@ public class Base extends Application {
 
   private void buildBox(Pane pane) {
     ArrayList<String> arr = new ArrayList<String>();
-    ObservableList<String> options;
+    ArrayList<String> arr2 = new ArrayList<String>();
+    ObservableList<String> options, options2;
     for (Team item : _teams) {
       arr.add(item.getName());
+      arr2.add(item.getName());
     }
     view1 = new ImageView();
     view2 = new ImageView();
     options = FXCollections.observableArrayList(arr);
+    options2 = FXCollections.observableArrayList(arr2);
     _box1 = new ComboBox(options);
-    _box2 = new ComboBox(options);
-    _box1.valueProperty().addListener(this::changed);
-    _box2.valueProperty().addListener(this::changed);
-    
+    _box2 = new ComboBox(options2);
+    _box1.getSelectionModel().selectedItemProperty().addListener(this::changed);
+    _box2.getSelectionModel().selectedItemProperty().addListener(this::changed);
+
   }
 
   private Pane generatePane3() {
@@ -283,17 +286,14 @@ public class Base extends Application {
     return pane;
   }
 
-  
-  
-  
   public void changed(ObservableValue o, String old, String newText) {
     Team home = null;
     ImageView inFocus = null;
-    if (o == _box1.valueProperty()) {
+    if (o == _box1.getSelectionModel().selectedItemProperty()) {
       inFocus = view1;
-//      System.out.println("test");
+      //      System.out.println("test");
     }
-    else if (o == _box2.valueProperty()) inFocus = view2;
+    else if (o == _box2.getSelectionModel().selectedItemProperty()) inFocus = view2;
     else {
       System.out.println("error");
       return;
@@ -312,10 +312,21 @@ public class Base extends Application {
     if (inFocus == view2) {
       inFocus.setLayoutX(540);
       inFocus.setLayoutY(280);
-    }else if(inFocus == view1){
+    }
+    else if (inFocus == view1) {
       inFocus.setLayoutX(65);
       inFocus.setLayoutY(280);
     }
+    ComboBox focusBox = null;
+    if (o == _box1.getSelectionModel().selectedItemProperty()) focusBox = _box2;
+    else if (o == _box2.getSelectionModel().selectedItemProperty()) focusBox = _box1;
+    for (int i = 0; i < _box1.getItems().size(); i++) {
+      if (focusBox.getItems().get(i).equals(home.getName())) {
+        focusBox.getItems().remove(i);
+        break;
+      }
+    }
+    if (old != null) focusBox.getItems().add(old);
     for (int i = 0; i < mainPane.getChildren().size(); i++) {
       if (mainPane.getChildren().get(i) == inFocus) {
         return;
