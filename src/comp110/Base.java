@@ -197,12 +197,14 @@ public class Base extends Application {
     _stage.setScene(_scene);
     _stage.show();
     if (800 >= screenBounds.getHeight() * .9) {
-      double yTranslate = .001875 * screenBounds.getHeight() - .7;
-      Scale scale = new Scale(1, yTranslate);
+      double translate = .001875 * screenBounds.getHeight() - .7;
+//      Scale scale = new Scale(translate, translate);
+      Scale scale = new Scale(translate, translate);
       scale.setPivotX(0);
       scale.setPivotY(0);
       _scene.getRoot().getTransforms().setAll(scale);
-      _stage.setHeight(_pane.getPrefHeight() * yTranslate + 41);
+      _stage.setHeight(_pane.getPrefHeight() * translate + 41);
+      _stage.setWidth(_pane.getPrefWidth() * translate + 18);
       // _stage.centerOnScreen();
     }
     _stage.setY(0);
