@@ -31,6 +31,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -66,6 +67,7 @@ public class Base extends Application {
   private ImageView view1;
   private Pane mainPane;
   private ScrollPane _statsScroll;
+  private TableView _outputTable;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -86,10 +88,9 @@ public class Base extends Application {
     mainPane = new Pane();
     buildBox(mainPane);
     setupMainPane(mainPane);
-    Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));
-    GridPane goo = Pane2Generator.Pane2(m); // Max: me testing Pane2Gen getting
+    Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));// Max: me testing Pane2Gen getting
                                             // for for FX nothing meaningful yet
-    textStats.setContent(goo);
+//    textStats.setContent(goo);
     // _pane.getTabs().addAll(matchupTab, textStats, graphStats);
     _pane.getTabs().add(matchupTab);
     // this.initializeStage();
@@ -126,32 +127,38 @@ public class Base extends Application {
         _matchup = new Matchup(home, away);
         homeTeam = home;
         awayTeam = away;
-        // This removes the old winner label before adding the new one so they 
-        // don't pile up on top of each other
-        mainPane.getChildren().remove(winner);
-        winner = new Label("The winnner is: " + _matchup.get_winner().getName());
-        winner.setLayoutX(300);
-        winner.setLayoutY(660);
-        winner.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-        winner.getStyleClass().add("whitetext");        
-        mainPane.getChildren().add(winner);
         
-        _statsScroll = makeScrollPane();
-        _statsScroll.setLayoutX(177);
-        _statsScroll.setLayoutY(350);
-		_statsScroll.setMinWidth(450);
-		_statsScroll.setMinHeight(100);
-		_statsScroll.setMaxHeight(380);
-        mainPane.getChildren().add(_statsScroll);
+        GridPane stats = Pane2Generator.Pane2(_matchup);
+        textStats.setContent(stats);
+        Pane pane3 = generatePane3();
+        graphStats.setContent(pane3);
+        _pane.getTabs().add(textStats);
+        _pane.getTabs().add(graphStats);
+        
+//        _statsScroll = makeScrollPane();
+//        _statsScroll.setLayoutX(177);
+//        _statsScroll.setLayoutY(400);
+//		_statsScroll.setMinWidth(450);
+//		_statsScroll.setMinHeight(100);
+//		_statsScroll.setMaxHeight(330);
+//        mainPane.getChildren().add(_statsScroll);
+        
+        _outputTable = TableViewGenerator.makeTable(_matchup);
+        _outputTable.setLayoutX(177);
+        _outputTable.setLayoutY(430);
+        _outputTable.setMinWidth(450);
+        _outputTable.setMaxHeight(300);
+        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        mainPane.getChildren().add(_outputTable);
         
         homePointsLabel = new Label(Double.toString(_homeTotal));
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(80);
+        homePointsLabel.setLayoutX(130);
         homePointsLabel.setLayoutY(350);
         
         awayPointsLabel = new Label(Double.toString(_awayTotal));
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutX(630);
+        awayPointsLabel.setLayoutX(585);
         awayPointsLabel.setLayoutY(350);
         
         if (_homeTotal > _awayTotal) {
@@ -161,13 +168,6 @@ public class Base extends Application {
         }
         mainPane.getChildren().add(awayPointsLabel);
         mainPane.getChildren().add(homePointsLabel);
-        
-        GridPane stats = Pane2Generator.Pane2(_matchup);
-        textStats.setContent(stats);
-        Pane pane3 = generatePane3();
-        graphStats.setContent(pane3);
-        _pane.getTabs().add(textStats);
-        _pane.getTabs().add(graphStats);
       }
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
@@ -369,9 +369,12 @@ public class Base extends Application {
 	public ScrollPane makeScrollPane() {
 		
 		ScrollPane scrollpane = new ScrollPane();
-		GridPane statsContent = Pane2Generator.Pane2(_matchup);
+		scrollpane.setHbarPolicy(ScrollBarPolicy.NEVER);
+		TableView statsContent = TableViewGenerator.makeTable(_matchup);
 		statsContent.getStyleClass().add("statsscroll");
 		scrollpane.setContent(statsContent);
+		statsContent.setMinWidth(450);
+		statsContent.setMaxHeight(378);
 		
 		return scrollpane;
 	}

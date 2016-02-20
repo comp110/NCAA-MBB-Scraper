@@ -18,16 +18,16 @@ public class MatchupBackground {
 //		int rankingPeriod = 106;
 //		Scraper.saveToJSON("acc.json", teamIds, rankingPeriod);
 		
-		JsonReader reader = new JsonReader(new FileReader("acc.json"));
-		Gson gson = new Gson();
-		Team[] teams = gson.fromJson(reader, Team[].class);
-		
-		Map<Integer, Team> teamMap= new HashMap<Integer, Team>();
-		for (Team team : teams) {
-			teamMap.put(team.getId(), team);
-		}
-		
-		new Matchup(teamMap.get(67), teamMap.get(147));
+//		JsonReader reader = new JsonReader(new FileReader("acc.json"));
+//		Gson gson = new Gson();
+//		Team[] teams = gson.fromJson(reader, Team[].class);
+////		
+//		Map<Integer, Team> teamMap= new HashMap<Integer, Team>();
+//		for (Team team : teams) {
+//			teamMap.put(team.getId(), team);
+//		}
+////		
+//		new Matchup(teamMap.get(67), teamMap.get(147));
 	} 
 
 
