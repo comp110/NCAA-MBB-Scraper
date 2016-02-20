@@ -3,10 +3,15 @@ package comp110;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 
 public class Pane2Generator {
@@ -22,14 +27,15 @@ public class Pane2Generator {
     double[] awayScoreList = new double[methods.length];
     double[] homeScoreList = new double[methods.length];
     int index = 0;
-    _grid.add(new Label(m.get_awayTeam().getName()), 0, 0);
-    _grid.add(new Label(m.get_homeTeam().getName()), 1, 0);
+    _grid.add(new Label(m.get_awayTeam().getName()), 1, 0);
+    _grid.add(new Label(m.get_homeTeam().getName()), 0, 0);
     double awayScore = 0;
     double homeScore = 0;
     int i = 0;
     Base.scoringFields = new String[methods.length];
 
     DecimalFormat df2 = new DecimalFormat("###.##");
+    DecimalFormat df1 = new DecimalFormat("###.#");
 
     for (Method method : methods) {
       try {
@@ -55,11 +61,22 @@ public class Pane2Generator {
       }
       Base.homeScores = homeScoreList;
       Base.awayScores = awayScoreList;
+      
+      // Setting these to the base total score fields so they can be added to the
+      // appropriate labels
+      
 
     }
-    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(awayScore))), 0,
+    
+    // Setting these total scores to static fields in Base so they can be put in
+    // the scoreboard labels
+    double roundedHome = Double.valueOf(df1.format(homeScore));
+    double roundedAway = Double.valueOf(df1.format(awayScore));
+    Base.setHomeScore(roundedHome);
+    Base.setAwayScore(roundedAway);
+    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(awayScore))), 1,
         index + 1);
-    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(homeScore))), 1,
+    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(homeScore))), 0,
         index + 1);
     return _grid; // have all scores....
 
@@ -69,8 +86,8 @@ public class Pane2Generator {
       double home, int row) {
     Label awayLabel = new Label(method.getName() + "(Team t): " + away);
     Label homeLabel = new Label(method.getName() + "(Team t): " + home);
-    _grid.add(awayLabel, 0, row);
-    _grid.add(homeLabel, 1, row);
+    _grid.add(awayLabel, 1, row);
+    _grid.add(homeLabel, 0, row);
 
     return _grid;
   }

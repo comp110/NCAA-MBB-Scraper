@@ -2,6 +2,7 @@ package comp110;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +27,12 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -51,17 +55,20 @@ public class Base extends Application {
   private Map<Integer, Team> teamMap;
   private ComboBox<String> _box1;
   private ComboBox<String> _box2;
-  private Label winner;
+  private Label winner, homePointsLabel, awayPointsLabel;
   private boolean ran = false;
   private Matchup _matchup;
   private Team homeTeam, awayTeam;
   public static double[] homeScores;
   public static double[] awayScores;
   public static String[] scoringFields;
+  private static double _homeTotal, _awayTotal;
   private Rectangle2D screenBounds;
   private ImageView view2;
   private ImageView view1;
   private Pane mainPane;
+  private ScrollPane _statsScroll;
+  private TableView _outputTable;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -82,10 +89,9 @@ public class Base extends Application {
     mainPane = new Pane();
     buildBox(mainPane);
     setupMainPane(mainPane);
-    Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));
-    GridPane goo = Pane2Generator.Pane2(m); // Max: me testing Pane2Gen getting
+    Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));// Max: me testing Pane2Gen getting
                                             // for for FX nothing meaningful yet
-    textStats.setContent(goo);
+//    textStats.setContent(goo);
     // _pane.getTabs().addAll(matchupTab, textStats, graphStats);
     _pane.getTabs().add(matchupTab);
     // this.initializeStage();
@@ -96,15 +102,11 @@ public class Base extends Application {
 
   private void setupMainPane(Pane mainPane) {
     _box1.setLayoutX(60);
-    _box1.setLayoutY(200);
-    _box2.setLayoutX(540);
-    _box2.setLayoutY(200);
-    Label versus = new Label("VERSUS");
-    versus.getStyleClass().add("whitetext");
-    versus.setLayoutX(380);
-    versus.setLayoutY(200);
-    versus.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+    _box1.setLayoutY(310);
+    _box2.setLayoutX(507);
+    _box2.setLayoutY(310);
     Button run = new Button("Run Match");
+    // All of the following happens when the "Run match" button is pressed
     run.setOnAction((event) -> {
       boolean boxesFilled = true;
       String homeString = "", awayString = "";
@@ -127,24 +129,51 @@ public class Base extends Application {
         _matchup = new Matchup(home, away);
         homeTeam = home;
         awayTeam = away;
-        winner = new Label("The winnner is: " + _matchup.get_winner().getName());
-        winner.setLayoutX(300);
-        winner.setLayoutY(700);
-        winner.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-        winner.getStyleClass().add("whitetext");
-        mainPane.getChildren().add(winner);
+        
+        // All of the following is just adding various nodes to the stage
         GridPane stats = Pane2Generator.Pane2(_matchup);
         textStats.setContent(stats);
         Pane pane3 = generatePane3();
         graphStats.setContent(pane3);
         _pane.getTabs().add(textStats);
         _pane.getTabs().add(graphStats);
+        
+        _outputTable = TableViewGenerator.makeTable(_matchup);
+        _outputTable.setLayoutX(177);
+        _outputTable.setLayoutY(430);
+        _outputTable.setMinWidth(450);
+        _outputTable.setMaxHeight(300);
+//        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        mainPane.getChildren().add(_outputTable);
+
+		DecimalFormat df1 = new DecimalFormat("###.#");
+		
+        homePointsLabel = new Label(Double.toString(
+        		Double.valueOf(df1.format(_homeTotal))));
+        homePointsLabel.getStyleClass().add("scorelabel");
+        homePointsLabel.setLayoutX(130);
+        homePointsLabel.setLayoutY(350);
+        
+        awayPointsLabel = new Label(Double.toString(
+        		Double.valueOf(df1.format(_awayTotal))));
+        awayPointsLabel.getStyleClass().add("scorelabel");
+        awayPointsLabel.setLayoutX(585);
+        awayPointsLabel.setLayoutY(350);
+        
+        // Turns the scoreboard label blue if the team won and leaves it red otherwise
+        if (_homeTotal > _awayTotal) {
+        	homePointsLabel.getStyleClass().add("winner_score_label");
+        } else {
+        	awayPointsLabel.getStyleClass().add("winner_score_label");
+        }
+        mainPane.getChildren().add(awayPointsLabel);
+        mainPane.getChildren().add(homePointsLabel);
       }
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
     run.setLayoutX(358);
-    run.setLayoutY(600); // setLayoutX/Y just sets the coordinates of a node on
+    run.setLayoutY(310); // setLayoutX/Y just sets the coordinates of a node on
                          // the screen (only works well with a plain pane)
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);// this
                                                                         // takes
@@ -181,7 +210,7 @@ public class Base extends Application {
                                                            // its size compared
                                                            // to the scene
     view.setScaleX(_scene.getWidth() / court.getWidth());
-    mainPane.getChildren().addAll(view, _box1, _box2, versus, run);
+    mainPane.getChildren().addAll(view, _box1, _box2, run);
     matchupTab.setContent(mainPane);
   }
 
@@ -312,12 +341,12 @@ public class Base extends Application {
     inFocus.setScaleX(xScale);
     inFocus.setScaleY(yScale);
     if (inFocus == view2) {
-      inFocus.setLayoutX(540);
-      inFocus.setLayoutY(280);
+      inFocus.setLayoutX(528);
+      inFocus.setLayoutY(75);
     }
     else if (inFocus == view1) {
-      inFocus.setLayoutX(65);
-      inFocus.setLayoutY(280);
+      inFocus.setLayoutX(74);
+      inFocus.setLayoutY(75);
     }
     ComboBox focusBox = null;
     if (o == _box1.getSelectionModel().selectedItemProperty()) focusBox = _box2;
@@ -335,6 +364,14 @@ public class Base extends Application {
       }
     }
     mainPane.getChildren().add(inFocus);
+  }
+  
+  public static void setHomeScore(double score) {
+	  _homeTotal = score;
+  }
+  
+  public static void setAwayScore(double score) {
+	  _awayTotal = score;
   }
 
 }
