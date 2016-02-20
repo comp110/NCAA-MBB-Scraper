@@ -13,17 +13,17 @@ public class Pane2Generator {
 
   public static GridPane Pane2(Matchup m) {
     GridPane _grid = new GridPane();
-//    _grid.setHgap(10);
-//    _grid.setVgap(10);
-//    _grid.setPadding(new Insets(5, 10, 5, 10));
+    _grid.setHgap(10);
+    _grid.setVgap(10);
+    _grid.setPadding(new Insets(5, 10, 5, 10));
 
     Method[] methods = m.getClass().getDeclaredMethods();
     methods = filterMethods(methods);
     double[] awayScoreList = new double[methods.length];
     double[] homeScoreList = new double[methods.length];
     int index = 0;
-    _grid.add(new Label(m.get_awayTeam().getName()), 0, 0);
-    _grid.add(new Label(m.get_homeTeam().getName()), 1, 0);
+    _grid.add(new Label(m.get_awayTeam().getName()), 1, 0);
+    _grid.add(new Label(m.get_homeTeam().getName()), 0, 0);
     double awayScore = 0;
     double homeScore = 0;
     int i = 0;
@@ -69,9 +69,9 @@ public class Pane2Generator {
     double roundedAway = Double.valueOf(df1.format(awayScore));
     Base.setHomeScore(roundedHome);
     Base.setAwayScore(roundedAway);
-    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(awayScore))), 0,
+    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(awayScore))), 1,
         index + 1);
-    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(homeScore))), 1,
+    _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(homeScore))), 0,
         index + 1);
     return _grid; // have all scores....
 
@@ -81,8 +81,8 @@ public class Pane2Generator {
       double home, int row) {
     Label awayLabel = new Label(method.getName() + "(Team t): " + away);
     Label homeLabel = new Label(method.getName() + "(Team t): " + home);
-    _grid.add(awayLabel, 0, row);
-    _grid.add(homeLabel, 1, row);
+    _grid.add(awayLabel, 1, row);
+    _grid.add(homeLabel, 0, row);
 
     return _grid;
   }

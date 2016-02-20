@@ -137,21 +137,30 @@ public class Base extends Application {
         mainPane.getChildren().add(winner);
         
         _statsScroll = makeScrollPane();
-        _statsScroll.setLayoutX(200);
+        _statsScroll.setLayoutX(177);
         _statsScroll.setLayoutY(350);
+		_statsScroll.setMinWidth(450);
+		_statsScroll.setMinHeight(100);
+		_statsScroll.setMaxHeight(380);
         mainPane.getChildren().add(_statsScroll);
         
         homePointsLabel = new Label(Double.toString(_homeTotal));
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(280);
-        homePointsLabel.setLayoutY(200);
-        mainPane.getChildren().add(homePointsLabel);
+        homePointsLabel.setLayoutX(80);
+        homePointsLabel.setLayoutY(350);
         
         awayPointsLabel = new Label(Double.toString(_awayTotal));
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutX(430);
-        awayPointsLabel.setLayoutY(200);
+        awayPointsLabel.setLayoutX(630);
+        awayPointsLabel.setLayoutY(350);
+        
+        if (_homeTotal > _awayTotal) {
+        	homePointsLabel.getStyleClass().add("winner_score_label");
+        } else {
+        	awayPointsLabel.getStyleClass().add("winner_score_label");
+        }
         mainPane.getChildren().add(awayPointsLabel);
+        mainPane.getChildren().add(homePointsLabel);
         
         GridPane stats = Pane2Generator.Pane2(_matchup);
         textStats.setContent(stats);
@@ -360,13 +369,9 @@ public class Base extends Application {
 	public ScrollPane makeScrollPane() {
 		
 		ScrollPane scrollpane = new ScrollPane();
-		scrollpane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		GridPane statsContent = Pane2Generator.Pane2(_matchup);
 		statsContent.getStyleClass().add("statsscroll");
 		scrollpane.setContent(statsContent);
-		scrollpane.setMinWidth(300);
-		scrollpane.setMinHeight(100);
-		scrollpane.setMaxHeight(300);
 		
 		return scrollpane;
 	}
