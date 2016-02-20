@@ -35,11 +35,11 @@ public class TableViewGenerator {
 		for (Method method : methods) {
 			try {
 				String name = method.getName();
-				double awayValue = (double) method.invoke(m, m.get_awayTeam());
+				double awayValue = (double) method.invoke(m, m.getAwayTeam());
 				awayTotal += awayValue;
 				awayValue = Double.valueOf(df2.format(awayValue));
 				
-				double homeValue =(double) method.invoke(m, (Team) m.get_homeTeam());
+				double homeValue =(double) method.invoke(m, (Team) m.getHomeTeam());
 				homeTotal += homeValue;
 				homeValue = Double.valueOf(df2.format(homeValue));
 				
@@ -63,6 +63,8 @@ public class TableViewGenerator {
 		// the scoreboard labels
 		Base.setHomeScore(homeTotal);
 		Base.setAwayScore(awayTotal);
+		Base.setMethodOutputs(outputs);
+		
 		return fillTable(m, outputs); // have all scores....
 
 	}
@@ -79,11 +81,11 @@ public class TableViewGenerator {
 		methodCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		methodCol.setPrefWidth(colWidth);
 		
-		TableColumn homeCol = new TableColumn(m.get_homeTeam().getName());
+		TableColumn homeCol = new TableColumn(m.getHomeTeam().getName());
 		homeCol.setCellValueFactory(new PropertyValueFactory<>("homeValue"));
 		homeCol.setPrefWidth(colWidth);
 		
-		TableColumn awayCol = new TableColumn(m.get_awayTeam().getName());
+		TableColumn awayCol = new TableColumn(m.getAwayTeam().getName());
 		awayCol.setCellValueFactory(new PropertyValueFactory<>("awayValue"));
 		awayCol.setPrefWidth(colWidth);
 		
@@ -91,6 +93,7 @@ public class TableViewGenerator {
 		// At the end you just setItems to your ObservableList and JavaFX does all the
 		// work of getting the fields from each individual list element
 		methodTable.setItems(outputs);
+		methodTable.getSortOrder().add(methodCol);
 		
 		
 		return methodTable;

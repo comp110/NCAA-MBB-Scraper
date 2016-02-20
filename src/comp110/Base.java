@@ -18,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -63,12 +64,16 @@ public class Base extends Application {
   public static double[] awayScores;
   public static String[] scoringFields;
   private static double _homeTotal, _awayTotal;
+  private static ObservableList<MethodOutput> _methodOutputs;
+  private static String _homeScoreString, _awayScoreString;
   private Rectangle2D screenBounds;
   private ImageView view2;
   private ImageView view1;
   private Pane mainPane;
   private ScrollPane _statsScroll;
   private TableView _outputTable;
+  private BarChart _horizontalChart;
+  
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -130,13 +135,13 @@ public class Base extends Application {
         homeTeam = home;
         awayTeam = away;
         
+        mainPane.getChildren().removeAll(_outputTable, homePointsLabel, awayPointsLabel);
+        
         // All of the following is just adding various nodes to the stage
         GridPane stats = Pane2Generator.Pane2(_matchup);
         textStats.setContent(stats);
-        Pane pane3 = generatePane3();
-        graphStats.setContent(pane3);
         _pane.getTabs().add(textStats);
-        _pane.getTabs().add(graphStats);
+        
         
         _outputTable = TableViewGenerator.makeTable(_matchup);
         _outputTable.setLayoutX(177);
@@ -145,19 +150,33 @@ public class Base extends Application {
         _outputTable.setMaxHeight(300);
 //        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         mainPane.getChildren().add(_outputTable);
+        
 
 		DecimalFormat df1 = new DecimalFormat("###.#");
+		_homeScoreString = Double.toString(Double.valueOf(df1.format(_homeTotal)));
+		_awayScoreString = Double.toString(Double.valueOf(df1.format(_awayTotal)));
 		
-        homePointsLabel = new Label(Double.toString(
-        		Double.valueOf(df1.format(_homeTotal))));
+        homePointsLabel = new Label(_homeScoreString);
+        // Positions score label in center even if it is 5 chars or 3 chars
+        if (_homeScoreString.length() == 5) {
+        	homePointsLabel.setLayoutX(110);
+        } else if (_homeScoreString.length() == 3) {
+        	homePointsLabel.setLayoutX(130);
+        } else {
+        	homePointsLabel.setLayoutX(120);
+        }
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(130);
         homePointsLabel.setLayoutY(350);
         
-        awayPointsLabel = new Label(Double.toString(
-        		Double.valueOf(df1.format(_awayTotal))));
+        awayPointsLabel = new Label(_awayScoreString);
+        if (_awayScoreString.length() == 5) {
+        	awayPointsLabel.setLayoutX(560);
+        } else if (_awayScoreString.length() == 3) {
+        	awayPointsLabel.setLayoutX(583);
+        } else {
+            awayPointsLabel.setLayoutX(573);;
+        }
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutX(585);
         awayPointsLabel.setLayoutY(350);
         
         // Turns the scoreboard label blue if the team won and leaves it red otherwise
@@ -166,8 +185,11 @@ public class Base extends Application {
         } else {
         	awayPointsLabel.getStyleClass().add("winner_score_label");
         }
-        mainPane.getChildren().add(awayPointsLabel);
-        mainPane.getChildren().add(homePointsLabel);
+        mainPane.getChildren().addAll(awayPointsLabel, homePointsLabel);
+        
+        Pane pane3 = generatePane3();
+        graphStats.setContent(pane3);
+        _pane.getTabs().add(graphStats);
       }
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
@@ -284,35 +306,41 @@ public class Base extends Application {
     _box2.getSelectionModel().selectedItemProperty().addListener(this::changed);
 
   }
+  
+  
 
   private Pane generatePane3() {
     Pane pane = new Pane();
     VBox box = new VBox(5);
-    // pane.getChildren().add(new Label("testing"));
-    final CategoryAxis xAxis = new CategoryAxis();
-    final NumberAxis yAxis = new NumberAxis();
-    final BarChart<String, Number> team1 = new BarChart<String, Number>(xAxis, yAxis);
-    team1.setTitle(homeTeam.getName() + " Score Summary");
-    xAxis.setLabel("Scoring area");
-    yAxis.setLabel("Score");
-    XYChart.Series seriesHome = new XYChart.Series();
-    for (int i = 0; i < homeScores.length; i++) {
-      seriesHome.getData().add(new XYChart.Data(scoringFields[i], homeScores[i]));
-    }
-    team1.getData().add(seriesHome);
-    box.getChildren().add(team1);
-    final CategoryAxis xAxis2 = new CategoryAxis();
-    final NumberAxis yAxis2 = new NumberAxis();
-    final BarChart<String, Number> team2 = new BarChart<String, Number>(xAxis2, yAxis2);
-    team2.setTitle(awayTeam.getName() + " Score Summary");
-    xAxis2.setLabel("Scoring area");
-    yAxis2.setLabel("Score");
-    XYChart.Series seriesAway = new XYChart.Series();
-    for (int i = 0; i < awayScores.length; i++) {
-      seriesAway.getData().add(new XYChart.Data(scoringFields[i], awayScores[i]));
-    }
-    team2.getData().add(seriesAway);
-    box.getChildren().add(team2);
+    NumberAxis xAxis = new NumberAxis();
+	CategoryAxis yAxis = new CategoryAxis();
+	BarChart<Number,String> barChart = 
+			new BarChart<Number,String>(xAxis,yAxis);
+	barChart.setTitle("Method Outputs");
+	xAxis.setLabel("Value");
+	yAxis.setLabel("");    
+	
+	XYChart.Series homeSeries = new XYChart.Series();
+	homeSeries.setName(
+			_matchup.getHomeTeam().getName() + " (" + _homeScoreString + ")");
+
+	XYChart.Series awaySeries = new XYChart.Series();
+	awaySeries.setName(_matchup.getAwayTeam().getName() + " (" + _awayScoreString + ")");
+	
+	for (MethodOutput out : _methodOutputs) {
+		homeSeries.getData().add(new XYChart.Data(out.getHomeValue(), out.getName()));
+		awaySeries.getData().add(new XYChart.Data(out.getAwayValue(), out.getName()));
+	}
+	
+	if (_matchup.getWinner().getName().equals(_matchup.getHomeTeam().getName())) {
+		barChart.getData().addAll(homeSeries, awaySeries);
+	} else {
+		barChart.getData().addAll(awaySeries, homeSeries);
+	}
+	barChart.setLegendSide(Side.BOTTOM);
+	barChart.setMinHeight(600);
+	barChart.setMinWidth(790);
+    box.getChildren().add(barChart);
     pane.getChildren().add(box);
     return pane;
   }
@@ -373,5 +401,11 @@ public class Base extends Application {
   public static void setAwayScore(double score) {
 	  _awayTotal = score;
   }
+
+  public static void setMethodOutputs(ObservableList<MethodOutput> methodOutputs) {
+	  _methodOutputs = methodOutputs;
+}
+  
+  
 
 }

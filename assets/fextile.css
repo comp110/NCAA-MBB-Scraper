@@ -426,8 +426,15 @@
     -fx-text-fill: #a93034;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-background-radius: 5;
+    -fx-padding: 10px;
 }
 .winner_score_label {
 	-fx-text-fill: #3071a9
+}
+
+.default-color0.chart-bar { 
+	-fx-bar-fill: #3071a9
+}
+.default-color1.chart-bar { 
+	-fx-bar-fill: #a93034
 }

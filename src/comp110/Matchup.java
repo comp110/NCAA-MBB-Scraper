@@ -159,15 +159,15 @@ public class Matchup {
 		return 0.0;
 	}
 	
-	public Team get_homeTeam() {
+	public Team getHomeTeam() {
 		return _homeTeam;
 	}
 
-	public Team get_awayTeam() {
+	public Team getAwayTeam() {
 		return _awayTeam;
 	}
 
-	public Team get_winner() {
+	public Team getWinner() {
 		return _winner;
 	}
 
