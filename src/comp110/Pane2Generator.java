@@ -13,9 +13,9 @@ public class Pane2Generator {
 
   public static GridPane Pane2(Matchup m) {
     GridPane _grid = new GridPane();
-    _grid.setHgap(10);
-    _grid.setVgap(10);
-    _grid.setPadding(new Insets(5, 10, 5, 10));
+//    _grid.setHgap(10);
+//    _grid.setVgap(10);
+//    _grid.setPadding(new Insets(5, 10, 5, 10));
 
     Method[] methods = m.getClass().getDeclaredMethods();
     methods = filterMethods(methods);
@@ -30,6 +30,7 @@ public class Pane2Generator {
     Base.scoringFields = new String[methods.length];
 
     DecimalFormat df2 = new DecimalFormat("###.##");
+    DecimalFormat df1 = new DecimalFormat("###.#");
 
     for (Method method : methods) {
       try {
@@ -55,8 +56,19 @@ public class Pane2Generator {
       }
       Base.homeScores = homeScoreList;
       Base.awayScores = awayScoreList;
+      
+      // Setting these to the base total score fields so they can be added to the
+      // appropriate labels
+      
 
     }
+    
+    // Setting these total scores to static fields in Base so they can be put in
+    // the scoreboard labels
+    double roundedHome = Double.valueOf(df1.format(homeScore));
+    double roundedAway = Double.valueOf(df1.format(awayScore));
+    Base.setHomeScore(roundedHome);
+    Base.setAwayScore(roundedAway);
     _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(awayScore))), 0,
         index + 1);
     _grid.add(new Label("Total Score: " + Double.valueOf(df2.format(homeScore))), 1,

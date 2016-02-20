@@ -420,3 +420,16 @@
 .whitetext {
 	-fx-text-fill: #ffffff;	
 }
+.scorelabel {
+	-fx-font-family: Consolas, monospace;
+    -fx-font-size: 40px;
+    -fx-text-fill: red;
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-background-radius: 5;
+}
+.statsscroll {
+	-fx-padding: 0px;
+	-fx-spacing: 0px;
+	-fx-text-fill: green;
+}
