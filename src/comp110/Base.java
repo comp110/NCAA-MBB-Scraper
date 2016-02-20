@@ -96,13 +96,13 @@ public class Base extends Application {
 
   private void setupMainPane(Pane mainPane) {
     _box1.setLayoutX(60);
-    _box1.setLayoutY(200);
-    _box2.setLayoutX(540);
-    _box2.setLayoutY(200);
+    _box1.setLayoutY(40);
+    _box2.setLayoutX(507);
+    _box2.setLayoutY(40);
     Label versus = new Label("VERSUS");
     versus.getStyleClass().add("whitetext");
     versus.setLayoutX(380);
-    versus.setLayoutY(200);
+    versus.setLayoutY(40);
     versus.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
     Button run = new Button("Run Match");
     run.setOnAction((event) -> {
@@ -129,9 +129,9 @@ public class Base extends Application {
         awayTeam = away;
         winner = new Label("The winnner is: " + _matchup.get_winner().getName());
         winner.setLayoutX(300);
-        winner.setLayoutY(700);
+        winner.setLayoutY(650);
         winner.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-        winner.getStyleClass().add("whitetext");
+        winner.getStyleClass().add("whitetext");        
         mainPane.getChildren().add(winner);
         GridPane stats = Pane2Generator.Pane2(_matchup);
         textStats.setContent(stats);
@@ -144,7 +144,7 @@ public class Base extends Application {
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
     run.setLayoutX(358);
-    run.setLayoutY(600); // setLayoutX/Y just sets the coordinates of a node on
+    run.setLayoutY(700); // setLayoutX/Y just sets the coordinates of a node on
                          // the screen (only works well with a plain pane)
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);// this
                                                                         // takes
@@ -313,11 +313,11 @@ public class Base extends Application {
     inFocus.setScaleY(yScale);
     if (inFocus == view2) {
       inFocus.setLayoutX(540);
-      inFocus.setLayoutY(280);
+      inFocus.setLayoutY(120);
     }
     else if (inFocus == view1) {
       inFocus.setLayoutX(65);
-      inFocus.setLayoutY(280);
+      inFocus.setLayoutY(120);
     }
     ComboBox focusBox = null;
     if (o == _box1.getSelectionModel().selectedItemProperty()) focusBox = _box2;
