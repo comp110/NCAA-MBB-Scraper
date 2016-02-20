@@ -135,13 +135,13 @@ public class Player {
 
 
 
-	public int getoRebs() {
+	public int getORebounds() {
 		return _oRebounds;
 	}
 
 
 
-	public int getdRebs() {
+	public int getDRebounds() {
 		return _dRebounds;
 	}
 
@@ -196,7 +196,15 @@ public class Player {
 
 
 	public String getYear() {
-		return _year;
+		if (_year.equals("Sr")){
+			return "Senior";
+		} else if (_year.equals("Jr")) {
+			return "Junior";
+		} else if (_year.equals("So")) {
+			return "Sophomore";
+		} else if (_year.equals("Fr")) {
+			return "Freshman";
+		} else return _year;
 	}
 
 

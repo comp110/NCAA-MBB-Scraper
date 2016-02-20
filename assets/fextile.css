@@ -431,8 +431,3 @@
 .winner_score_label {
 	-fx-text-fill: #3071a9
 }
-.statsscroll {
-	-fx-padding: 0px;
-	-fx-spacing: 0px;
-	-fx-background-color: rgba(255, 255, 255, .7);
-}

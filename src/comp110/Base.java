@@ -2,6 +2,7 @@ package comp110;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +106,7 @@ public class Base extends Application {
     _box2.setLayoutX(507);
     _box2.setLayoutY(310);
     Button run = new Button("Run Match");
+    // All of the following happens when the "Run match" button is pressed
     run.setOnAction((event) -> {
       boolean boxesFilled = true;
       String homeString = "", awayString = "";
@@ -128,6 +130,7 @@ public class Base extends Application {
         homeTeam = home;
         awayTeam = away;
         
+        // All of the following is just adding various nodes to the stage
         GridPane stats = Pane2Generator.Pane2(_matchup);
         textStats.setContent(stats);
         Pane pane3 = generatePane3();
@@ -135,32 +138,29 @@ public class Base extends Application {
         _pane.getTabs().add(textStats);
         _pane.getTabs().add(graphStats);
         
-//        _statsScroll = makeScrollPane();
-//        _statsScroll.setLayoutX(177);
-//        _statsScroll.setLayoutY(400);
-//		_statsScroll.setMinWidth(450);
-//		_statsScroll.setMinHeight(100);
-//		_statsScroll.setMaxHeight(330);
-//        mainPane.getChildren().add(_statsScroll);
-        
         _outputTable = TableViewGenerator.makeTable(_matchup);
         _outputTable.setLayoutX(177);
         _outputTable.setLayoutY(430);
         _outputTable.setMinWidth(450);
         _outputTable.setMaxHeight(300);
-        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         mainPane.getChildren().add(_outputTable);
-        
-        homePointsLabel = new Label(Double.toString(_homeTotal));
+
+		DecimalFormat df1 = new DecimalFormat("###.#");
+		
+        homePointsLabel = new Label(Double.toString(
+        		Double.valueOf(df1.format(_homeTotal))));
         homePointsLabel.getStyleClass().add("scorelabel");
         homePointsLabel.setLayoutX(130);
         homePointsLabel.setLayoutY(350);
         
-        awayPointsLabel = new Label(Double.toString(_awayTotal));
+        awayPointsLabel = new Label(Double.toString(
+        		Double.valueOf(df1.format(_awayTotal))));
         awayPointsLabel.getStyleClass().add("scorelabel");
         awayPointsLabel.setLayoutX(585);
         awayPointsLabel.setLayoutY(350);
         
+        // Turns the scoreboard label blue if the team won and leaves it red otherwise
         if (_homeTotal > _awayTotal) {
         	homePointsLabel.getStyleClass().add("winner_score_label");
         } else {
@@ -341,11 +341,11 @@ public class Base extends Application {
     inFocus.setScaleX(xScale);
     inFocus.setScaleY(yScale);
     if (inFocus == view2) {
-      inFocus.setLayoutX(540);
+      inFocus.setLayoutX(528);
       inFocus.setLayoutY(75);
     }
     else if (inFocus == view1) {
-      inFocus.setLayoutX(75);
+      inFocus.setLayoutX(74);
       inFocus.setLayoutY(75);
     }
     ComboBox focusBox = null;
@@ -365,19 +365,6 @@ public class Base extends Application {
     }
     mainPane.getChildren().add(inFocus);
   }
-  
-	public ScrollPane makeScrollPane() {
-		
-		ScrollPane scrollpane = new ScrollPane();
-		scrollpane.setHbarPolicy(ScrollBarPolicy.NEVER);
-		TableView statsContent = TableViewGenerator.makeTable(_matchup);
-		statsContent.getStyleClass().add("statsscroll");
-		scrollpane.setContent(statsContent);
-		statsContent.setMinWidth(450);
-		statsContent.setMaxHeight(378);
-		
-		return scrollpane;
-	}
   
   public static void setHomeScore(double score) {
 	  _homeTotal = score;

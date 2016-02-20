@@ -61,6 +61,24 @@ public class Matchup {
 		
 		return top20Count*weight;
 	}
+	
+	public double experienceAdvantage(Team team) {
+		int total = 0;
+		double weight = 0.6;
+		Player[] roster = team.getRoster();
+		for (int i=0; i<roster.length; i++) {
+			if (roster[i].getYear().equals("Senior")) {
+				total += 2;
+			} else if (roster[i].getYear().equals("Junior")) {
+				total += 1;
+			} else if (roster[i].getYear().equals("Sophomore")) {
+				
+			} else {
+				total -= 1;
+			}
+		}
+		return total*weight;
+	}
 
 	public double totalAbove12(Team team) {
 		Player[] roster = team.getRoster();
@@ -89,6 +107,26 @@ public class Matchup {
 		int losses = team.getLosses();
 		return (pointsForWin*wins + pointsForLoss*losses) * weight;
 	}
+	
+	public double totalPointsScored(Team team) {
+		int total = 0;
+		double weight = 0.01;
+		for (int i=0; i<team.getRoster().length; i++) {
+			Player current = team.getRoster()[i];
+			total += current.getTotalPoints();
+		}
+		return total*weight;
+	}
+	
+	public double totalRebounds(Team team) {
+		int total = 0;
+		double weight = 0.01;
+		for (int i=0; i<team.getRoster().length; i++) {
+			Player current = team.getRoster()[i];
+			total += current.getORebounds() + current.getDRebounds();
+		}
+		return total*weight;
+	}
 
 	public double totalDoubleDoubles(Team team) {
 		Player[] roster = team.getRoster(); 
@@ -109,6 +147,16 @@ public class Matchup {
 			totalInches += p.getHeight() - 72;
 		}
 		return (totalInches/(double)numPlayers) * weight;
+	}
+	
+	public double hasBriceJohnson(Team team) {
+		double weight = 1.0;
+		for (Player p : team.getRoster()) {
+			if (p.getFirst().equals("Brice") && p.getLast().equals("Johnson")) {
+				return 10.0*weight;
+			}
+		}
+		return 0.0;
 	}
 	
 	public Team get_homeTeam() {
