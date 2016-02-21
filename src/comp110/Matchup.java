@@ -62,24 +62,24 @@ public class Matchup {
 		return top20Count*weight;
 	}
 	
-	public double test8(Team team){
-	  return 0.0;
-	}
-	public double test7(Team team){
-    return 0.0;
-  }
-	public double test5(Team team){
-    return 0.0;
-  }
-	public double test4(Team team){
-    return 0.0;
-  }
-	public double test3(Team team){
-    return 0.0;
-  }
-	public double test2(Team team){
-    return 0.0;
-  }
+//	public double test8(Team team){
+//	  return 0.0;
+//	}
+//	public double test7(Team team){
+//    return 0.0;
+//  }
+//	public double test5(Team team){
+//    return 0.0;
+//  }
+//	public double test4(Team team){
+//    return 0.0;
+//  }
+//	public double test3(Team team){
+//    return 0.0;
+//  }
+//	public double test2(Team team){
+//    return 0.0;
+//  }
 	
 	public double experienceAdvantage(Team team) {
 		int total = 0;

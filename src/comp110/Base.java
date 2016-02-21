@@ -151,7 +151,7 @@ public class Base extends Application {
         homeTeam = home;
         awayTeam = away;
 
-        // All of the following is just adding various nodes to the stage
+        // Adding various nodes to the stage
 
         _outputTable = TableViewGenerator.makeTable(_matchup);
         //_outputTable.setMinWidth(450);
@@ -191,11 +191,21 @@ public class Base extends Application {
         //        mainPane.getChildren().add(awayPointsLabel);
         //        mainPane.getChildren().add(homePointsLabel);
         scoreLabels.getChildren().addAll(awayPointsLabel, homePointsLabel);
+        
+        Button showChart = new Button("Show Chart");
+        showChart.setOnAction((showGraphEvent) -> {
+          Stage chartStage = new Stage();
+          Scene chartScene = new Scene(generateChart());
+          chartStage.setTitle(_matchup.getHomeTeam().getName()
+              + " vs. " +_matchup.getAwayTeam().getName());
+          chartStage.setScene(chartScene);
+          chartStage.show();
+        });
+        showChart.setLayoutX(width * .595);
+        showChart.setLayoutY(height * .35);
+        nodeGroup.getChildren().add(showChart);
+        
       }
-      
-      Pane pane3 = generatePane3();
-      graphStats.setContent(pane3);
-      _pane.getTabs().add(graphStats);
       
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
@@ -260,7 +270,8 @@ public class Base extends Application {
     courtGroup.getChildren().add(view);
     //nodeGroup.getChildren().add(view);
 
-    mainPane.getChildren().addAll(courtGroup, nodeGroup, logoGroup1, logoGroup2, scoreLabels, cboxGroup1, cboxGroup2, scrollGroup);
+    mainPane.getChildren().addAll(courtGroup, nodeGroup, logoGroup1, logoGroup2,
+        scoreLabels, cboxGroup1, cboxGroup2, scrollGroup);
 
     for (Node x : mainPane.getChildren()) {
       System.out.println("check");
@@ -330,7 +341,7 @@ public class Base extends Application {
 
   }
 
-  private Pane generatePane3() {
+  private Pane generateChart() {
 	  Pane pane = new Pane();
 	  VBox box = new VBox(5);
 	  NumberAxis xAxis = new NumberAxis();
