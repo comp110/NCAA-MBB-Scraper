@@ -73,6 +73,9 @@ public class Base extends Application {
   private ScrollPane _statsScroll;
   private TableView _outputTable;
   private BarChart _horizontalChart;
+ private Group cboxGroup1, cboxGroup2, logoGroup1, logoGroup2, courtGroup, labelGroup, scrollGroup, scoreLabels;
+  private Group nodeGroup;
+  private ImageView view;
   
 
   @Override
@@ -159,25 +162,29 @@ public class Base extends Application {
         homePointsLabel = new Label(_homeScoreString);
         // Positions score label in center even if it is 5 chars or 3 chars
         if (_homeScoreString.length() == 5) {
-        	homePointsLabel.setLayoutX(110);
+        homePointsLabel.setLayoutX(width * .09);
+        homePointsLabel.setLayoutY(height * .46);
         } else if (_homeScoreString.length() == 3) {
-        	homePointsLabel.setLayoutX(130);
+        homePointsLabel.setLayoutX(width * .09);
+        homePointsLabel.setLayoutY(height * .46);
         } else {
-        	homePointsLabel.setLayoutX(120);
+        homePointsLabel.setLayoutX(width * .09);
+        homePointsLabel.setLayoutY(height * .46);
         }
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutY(350);
         
         awayPointsLabel = new Label(_awayScoreString);
         if (_awayScoreString.length() == 5) {
-        	awayPointsLabel.setLayoutX(560);
+        awayPointsLabel.setLayoutX(width * .85);
+        awayPointsLabel.setLayoutY(height * .46);
         } else if (_awayScoreString.length() == 3) {
-        	awayPointsLabel.setLayoutX(583);
+        awayPointsLabel.setLayoutX(width * .85);
+        awayPointsLabel.setLayoutY(height * .46);
         } else {
-            awayPointsLabel.setLayoutX(573);;
+        awayPointsLabel.setLayoutX(width * .85);
+        awayPointsLabel.setLayoutY(height * .46);
         }
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutY(350);
         
         // Turns the scoreboard label blue if the team won and leaves it red otherwise
         if (_homeTotal > _awayTotal) {
@@ -185,7 +192,7 @@ public class Base extends Application {
         } else {
         	awayPointsLabel.getStyleClass().add("winner_score_label");
         }
-        mainPane.getChildren().addAll(awayPointsLabel, homePointsLabel);
+        scoreLabels.getChildren().addAll(awayPointsLabel, homePointsLabel);
         
         Pane pane3 = generatePane3();
         graphStats.setContent(pane3);

@@ -422,7 +422,7 @@
 }
 .scorelabel {
 	-fx-font-family: Consolas, monospace;
-    -fx-font-size: 40px;
+    -fx-font-size: 30px;
     -fx-text-fill: #a93034;
     -fx-background-color: black;
     -fx-border-color: white;
