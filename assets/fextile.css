@@ -422,11 +422,18 @@
 }
 .scorelabel {
 	-fx-font-family: monospace;
+	-fx-padding: 10px 10px;
     -fx-font-size: 50px;
-    -fx-text-fill: #a93034;
+    -fx-text-fill: 	#C44D46;
     -fx-background-color: black;
     -fx-border-color: white;
 }
 .winner_score_label {
-	-fx-text-fill: #3071a9
+	-fx-text-fill: #57b757
+}
+.default-color0.chart-bar { 
+	-fx-bar-fill: #57b757
+}
+.default-color1.chart-bar { 
+	-fx-bar-fill: 	#C44D46
 }

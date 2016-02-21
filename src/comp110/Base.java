@@ -173,12 +173,12 @@ public class Base extends Application {
         
         homePointsLabel = new Label(_homeScoreString);
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(width * .035);
+        homePointsLabel.setLayoutX(width * .033);
         homePointsLabel.setLayoutY(height * .46);
 
         awayPointsLabel = new Label(_awayScoreString);
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutX(width * .855);
+        awayPointsLabel.setLayoutX(width * .853);
         awayPointsLabel.setLayoutY(height * .46);
 
         // Turns the scoreboard label blue if the team won and leaves it red otherwise
@@ -196,6 +196,7 @@ public class Base extends Application {
         showChart.setOnAction((showGraphEvent) -> {
           Stage chartStage = new Stage();
           Scene chartScene = new Scene(generateChart());
+          chartScene.getStylesheets().add("file:assets/fextile.css");
           chartStage.setTitle(_matchup.getHomeTeam().getName()
               + " vs. " +_matchup.getAwayTeam().getName());
           chartStage.setScene(chartScene);
