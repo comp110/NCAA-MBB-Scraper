@@ -11,14 +11,13 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -30,7 +29,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
@@ -41,12 +39,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Base extends Application {
-
+  boolean x = false;
+  private double width, height;
   private Stage _stage;
   private Scene _scene;
   private TabPane _pane;
@@ -69,9 +67,13 @@ public class Base extends Application {
   private Pane mainPane;
   private ScrollPane _statsScroll;
   private TableView _outputTable;
+  private Group cboxGroup1, cboxGroup2, logoGroup1, logoGroup2, courtGroup, labelGroup, scrollGroup, scoreLabels;
+  private Group nodeGroup;
+  private ImageView view;
 
   @Override
   public void start(Stage stage) throws Exception {
+    initializeGroups();
     screenBounds = Screen.getPrimary().getBounds();
     //System.out.println(Screen.getPrimary().getBounds().getHeight());
     _stage = stage;
@@ -79,6 +81,7 @@ public class Base extends Application {
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
     _teams = readJson();
     teamMap = readJSON();
+    mainPane = new Pane();
     initializeStage();
     matchupTab = new Tab();
     textStats = new Tab();
@@ -86,25 +89,38 @@ public class Base extends Application {
     matchupTab.setText("Matchup");
     textStats.setText("Stats");
     graphStats.setText("Graphs");
-    mainPane = new Pane();
     buildBox(mainPane);
     setupMainPane(mainPane);
     Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));// Max: me testing Pane2Gen getting
-                                            // for for FX nothing meaningful yet
-//    textStats.setContent(goo);
+    // for for FX nothing meaningful yet
+    //    textStats.setContent(goo);
     // _pane.getTabs().addAll(matchupTab, textStats, graphStats);
-    _pane.getTabs().add(matchupTab);
+    // _pane.getTabs().add(matchupTab);
     // this.initializeStage();
 
     // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is
     // a good idea made method for it
   }
 
+  private void initializeGroups() {
+    cboxGroup1 = new Group();
+    cboxGroup2 = new Group();
+    logoGroup1 = new Group();
+    logoGroup2 = new Group();
+    courtGroup = new Group();
+    labelGroup = new Group();
+    scrollGroup = new Group();
+    nodeGroup = new Group();
+    scoreLabels = new Group();
+  }
+
   private void setupMainPane(Pane mainPane) {
-    _box1.setLayoutX(60);
-    _box1.setLayoutY(310);
-    _box2.setLayoutX(507);
-    _box2.setLayoutY(310);
+    _box1.setLayoutX(width * .065);
+    _box1.setLayoutY(height * .41);
+    _box2.setLayoutX(width * .725);
+    _box2.setLayoutY(height * .41);
+    cboxGroup1.getChildren().addAll(_box1);
+    cboxGroup2.getChildren().addAll(_box2);
     Button run = new Button("Run Match");
     // All of the following happens when the "Run match" button is pressed
     run.setOnAction((event) -> {
@@ -129,7 +145,7 @@ public class Base extends Application {
         _matchup = new Matchup(home, away);
         homeTeam = home;
         awayTeam = away;
-        
+
         // All of the following is just adding various nodes to the stage
         GridPane stats = Pane2Generator.Pane2(_matchup);
         textStats.setContent(stats);
@@ -137,44 +153,49 @@ public class Base extends Application {
         graphStats.setContent(pane3);
         _pane.getTabs().add(textStats);
         _pane.getTabs().add(graphStats);
-        
-        _outputTable = TableViewGenerator.makeTable(_matchup);
-        _outputTable.setLayoutX(177);
-        _outputTable.setLayoutY(430);
-        _outputTable.setMinWidth(450);
-        _outputTable.setMaxHeight(300);
-//        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        mainPane.getChildren().add(_outputTable);
 
-		DecimalFormat df1 = new DecimalFormat("###.#");
-		
-        homePointsLabel = new Label(Double.toString(
-        		Double.valueOf(df1.format(_homeTotal))));
+        _outputTable = TableViewGenerator.makeTable(_matchup);
+        //_outputTable.setMinWidth(450);
+        //_outputTable.setMaxHeight(300);
+        //        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        // mainPane.getChildren().add(_outputTable);
+        _statsScroll = new ScrollPane();
+         _statsScroll.setContent(_outputTable);
+         _statsScroll.setMaxHeight(200);
+         
+        _statsScroll.resize(_outputTable.getMaxHeight(), _outputTable.getMaxHeight());
+        scrollGroup.getChildren().add(_outputTable);
+        scrollGroup.setLayoutX(width * .3);
+        scrollGroup.setLayoutY(height * .34);
+        DecimalFormat df1 = new DecimalFormat("###.#");
+
+        homePointsLabel = new Label(Double.toString(Double.valueOf(df1.format(_homeTotal))));
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(130);
-        homePointsLabel.setLayoutY(350);
-        
-        awayPointsLabel = new Label(Double.toString(
-        		Double.valueOf(df1.format(_awayTotal))));
+        homePointsLabel.setLayoutX(width * .09);
+        homePointsLabel.setLayoutY(height * .46);
+
+        awayPointsLabel = new Label(Double.toString(Double.valueOf(df1.format(_awayTotal))));
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutX(585);
-        awayPointsLabel.setLayoutY(350);
-        
+        awayPointsLabel.setLayoutX(width * .85);
+        awayPointsLabel.setLayoutY(height * .46);
+
         // Turns the scoreboard label blue if the team won and leaves it red otherwise
         if (_homeTotal > _awayTotal) {
-        	homePointsLabel.getStyleClass().add("winner_score_label");
-        } else {
-        	awayPointsLabel.getStyleClass().add("winner_score_label");
+          homePointsLabel.getStyleClass().add("winner_score_label");
         }
-        mainPane.getChildren().add(awayPointsLabel);
-        mainPane.getChildren().add(homePointsLabel);
+        else {
+          awayPointsLabel.getStyleClass().add("winner_score_label");
+        }
+        //        mainPane.getChildren().add(awayPointsLabel);
+        //        mainPane.getChildren().add(homePointsLabel);
+        scoreLabels.getChildren().addAll(awayPointsLabel, homePointsLabel);
       }
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
-    run.setLayoutX(358);
-    run.setLayoutY(310); // setLayoutX/Y just sets the coordinates of a node on
-                         // the screen (only works well with a plain pane)
+    run.setLayoutX(width * .46);
+    run.setLayoutY(height * .35); // setLayoutX/Y just sets the coordinates of a node on
+    // the screen (only works well with a plain pane)
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);// this
                                                                         // takes
                                                                         // a
@@ -197,46 +218,76 @@ public class Base extends Application {
                                      // subclass of background (there are others
                                      // besides backgroundfill
     run.setBackground(y);
-    Image court = new Image("file:assets/ncaa_court.jpg");
-    ImageView view = new ImageView(court);// put an image in an imageview node
-                                          // so that the size and position can
-                                          // be changed
-    view.setLayoutX(-157);// this and the next line will probably need to be
-                          // changed, i just moved the image manually because it
-                          // was starting in a weird place
-    view.setLayoutY(100);
-    view.setScaleY(_scene.getHeight() / court.getHeight());// scaling the image
-                                                           // up/down based on
-                                                           // its size compared
-                                                           // to the scene
-    view.setScaleX(_scene.getWidth() / court.getWidth());
-    mainPane.getChildren().addAll(view, _box1, _box2, run);
+
+    //    view.setLayoutX(-157);
+    //    view.setLayoutY(100);
+    //    view.setScaleY(_scene.getHeight() / court.getHeight());
+    //    view.setScaleX(_scene.getWidth() / court.getWidth());
+    //mainPane.getChildren().addAll(_box1, _box2, run);
+    nodeGroup.getChildren().addAll(run);
     matchupTab.setContent(mainPane);
   }
 
   private void initializeStage() {
     _stage.setTitle("COMP110 PS0X - NCAA Bracket");
+    Image court = new Image("file:assets/ncaa_court.jpg");
+    view = new ImageView(court);
+
+    if (800 <= screenBounds.getHeight() * .9) {
+      view.setFitWidth(1100);
+      cboxGroup1.setScaleX(.9);
+      cboxGroup1.setScaleY(.9);
+      cboxGroup2.setScaleX(.9);
+      cboxGroup2.setScaleY(.9);
+      nodeGroup.setScaleX(.9);
+      nodeGroup.setScaleY(.9);
+      logoGroup1.setScaleX(.9);
+      logoGroup1.setScaleY(.7);
+      logoGroup2.setScaleX(.9);
+      logoGroup2.setScaleY(.7);
+      scoreLabels.setScaleX(.8);
+      scoreLabels.setScaleY(.8);
+      scrollGroup.setScaleX(.8);
+      scrollGroup.setScaleY(.8);
+    }
+    else if (800 >= screenBounds.getHeight() * .9) {
+      double translate = .001875 * screenBounds.getHeight() - .7;
+      view.setFitWidth(1100 * translate);
+      nodeGroup.setScaleX(translate);
+      nodeGroup.setScaleY(translate);
+    }
+    width = view.getLayoutBounds().getWidth();
+    height = view.getLayoutBounds().getHeight();
+    view.setPreserveRatio(true);
+    _pane.setPrefSize(view.getFitWidth(), view.getFitHeight());
+    view.setPreserveRatio(true);
+    _pane.setPrefSize(view.getFitWidth(), view.getFitHeight());
+
+    // mainPane.setPrefWidth(view.getFitWidth());
+    //mainPane.setPrefHeight(view.getFitHeight());
+    //matchupTab.setContent(view);
+    //courtGroup.getChildren().add(matchupTab);
+    courtGroup.getChildren().add(view);
+    //nodeGroup.getChildren().add(view);
+
+    mainPane.getChildren().addAll(courtGroup, nodeGroup, logoGroup1, logoGroup2, scoreLabels, cboxGroup1, cboxGroup2, scrollGroup);
+
+    for (Node x : mainPane.getChildren()) {
+      System.out.println("check");
+    }
+    // _pane.getTabs().add(matchupTab);
     Group g = new Group();
-    g.getChildren().add(_pane);
-    _pane.setPrefHeight(800);
-    _pane.setPrefWidth(800);
-    g.prefHeight(800);
+    g.getChildren().add(mainPane);
+    // _pane.setPrefHeight(800);
+    // _pane.setPrefWidth(800);
+    // g.prefHeight(800);
     _scene = new Scene(g);
     _scene.getStylesheets().add("file:assets/fextile.css");
     _stage.setScene(_scene);
     _stage.show();
-    if (800 >= screenBounds.getHeight() * .9) {
-      double translate = .001875 * screenBounds.getHeight() - .7;
-//      Scale scale = new Scale(translate, translate);
-      Scale scale = new Scale(translate, translate);
-      scale.setPivotX(0);
-      scale.setPivotY(0);
-      _scene.getRoot().getTransforms().setAll(scale);
-      _stage.setHeight(_pane.getPrefHeight() * translate + 41);
-      _stage.setWidth(_pane.getPrefWidth() * translate + 18);
-      // _stage.centerOnScreen();
-    }
-    _stage.setY(0);
+    //scales based on screen size
+
+    //_stage.setResizable(false);
 
   }
 
@@ -276,6 +327,10 @@ public class Base extends Application {
     }
     view1 = new ImageView();
     view2 = new ImageView();
+    view1.scaleXProperty().addListener((r, x, y) -> {
+      view1.setLayoutX(width * .065);
+      view1.setLayoutY(height * .05);
+    });
     options = FXCollections.observableArrayList(arr);
     options2 = FXCollections.observableArrayList(arr2);
     _box1 = new ComboBox(options);
@@ -332,21 +387,25 @@ public class Base extends Application {
     for (int i = 0; i < _teams.length; i++) {
       if (_teams[i].getName().equals(newText)) home = _teams[i];
     }
+    if (x) {
+      System.out.println();
+    }
+    x = true;
     Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
     inFocus.setImage(team1);
-    inFocus.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
-    inFocus.setScaleX(_scene.getWidth() / team1.getWidth());
-    double xScale = 200 / team1.getWidth();
-    double yScale = 250 / team1.getHeight();
-    inFocus.setScaleX(xScale);
-    inFocus.setScaleY(yScale);
+    //inFocus.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
+    //inFocus.setScaleX(_scene.getWidth() / team1.getWidth());
+    // double xScale = 200 / team1.getWidth();
+    // double yScale = 250 / team1.getHeight();
+    //inFocus.setScaleX(xScale);
+    //inFocus.setScaleY(yScale);
     if (inFocus == view2) {
-      inFocus.setLayoutX(528);
-      inFocus.setLayoutY(75);
+      inFocus.setLayoutX(width * .7);
+      inFocus.setLayoutY(height * .05);
     }
     else if (inFocus == view1) {
-      inFocus.setLayoutX(74);
-      inFocus.setLayoutY(75);
+      inFocus.setLayoutX(width * .1);
+      inFocus.setLayoutY(height * .05);
     }
     ComboBox focusBox = null;
     if (o == _box1.getSelectionModel().selectedItemProperty()) focusBox = _box2;
@@ -358,20 +417,36 @@ public class Base extends Application {
       }
     }
     if (old != null) focusBox.getItems().add(old);
-    for (int i = 0; i < mainPane.getChildren().size(); i++) {
-      if (mainPane.getChildren().get(i) == inFocus) {
-        return;
+    if (o == _box1.getSelectionModel().selectedItemProperty()) {
+      for (int i = 0; i < logoGroup1.getChildren().size(); i++) {
+        if (logoGroup1.getChildren().get(i) == inFocus) {
+          return;
+        }
       }
     }
-    mainPane.getChildren().add(inFocus);
+    else {
+      for (int i = 0; i < logoGroup2.getChildren().size(); i++) {
+        if (logoGroup2.getChildren().get(i) == inFocus) {
+          return;
+        }
+      }
+    }
+    //logoGroup.getChildren().add(inFocus);
+    if (o == _box1.getSelectionModel().selectedItemProperty()) {
+      logoGroup1.getChildren().add(inFocus);
+    }
+    else {
+      logoGroup2.getChildren().add(inFocus);
+    }
+
   }
-  
+
   public static void setHomeScore(double score) {
-	  _homeTotal = score;
+    _homeTotal = score;
   }
-  
+
   public static void setAwayScore(double score) {
-	  _awayTotal = score;
+    _awayTotal = score;
   }
 
 }
