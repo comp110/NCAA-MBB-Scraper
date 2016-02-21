@@ -71,7 +71,7 @@ public class Base extends Application {
   private ScrollPane _statsScroll;
   private TableView _outputTable;
   private Group cboxGroup1, cboxGroup2, logoGroup1, logoGroup2, courtGroup, labelGroup, scrollGroup, scoreLabels;
-  private Group nodeGroup;
+  private Group nodeGroup, showChartGroup;
   private ImageView view;
   private String _awayScoreString;
   private String _homeScoreString;
@@ -117,6 +117,7 @@ public class Base extends Application {
     scrollGroup = new Group();
     nodeGroup = new Group();
     scoreLabels = new Group();
+    showChartGroup = new Group();
   }
 
   private void setupMainPane(Pane mainPane) {
@@ -202,9 +203,9 @@ public class Base extends Application {
           chartStage.setScene(chartScene);
           chartStage.show();
         });
-        showChart.setLayoutX(width * .595);
+        showChart.setLayoutX(width * .59);
         showChart.setLayoutY(height * .35);
-        nodeGroup.getChildren().add(showChart);
+        showChartGroup.getChildren().add(showChart);
         
       }
       
@@ -250,12 +251,16 @@ public class Base extends Application {
       scoreLabels.setScaleY(.8);
       scrollGroup.setScaleX(.8);
       scrollGroup.setScaleY(.8);
+      showChartGroup.setScaleX(.9);
+      showChartGroup.setScaleY(.9);
     }
     else if (800 >= screenBounds.getHeight() * .9) {
       double translate = .001875 * screenBounds.getHeight() - .7;
       view.setFitWidth(1100 * translate);
       nodeGroup.setScaleX(translate);
       nodeGroup.setScaleY(translate);
+      showChartGroup.setScaleX(translate);
+      showChartGroup.setScaleY(translate);
     }
     width = view.getLayoutBounds().getWidth();
     height = view.getLayoutBounds().getHeight();
@@ -272,7 +277,7 @@ public class Base extends Application {
     //nodeGroup.getChildren().add(view);
 
     mainPane.getChildren().addAll(courtGroup, nodeGroup, logoGroup1, logoGroup2,
-        scoreLabels, cboxGroup1, cboxGroup2, scrollGroup);
+        scoreLabels, cboxGroup1, cboxGroup2, scrollGroup, showChartGroup);
 
     for (Node x : mainPane.getChildren()) {
       System.out.println("check");
