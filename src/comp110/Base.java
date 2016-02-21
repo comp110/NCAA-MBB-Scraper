@@ -61,6 +61,9 @@ public class Base extends Application {
   public static double[] awayScores;
   public static String[] scoringFields;
   private static double _homeTotal, _awayTotal;
+  private static ObservableList<MethodOutput> _methodOutputs;
+  private String _homePointsString, _awayPointsString;
+  
   private Rectangle2D screenBounds;
   private ImageView view2;
   private ImageView view1;
@@ -70,6 +73,8 @@ public class Base extends Application {
   private Group cboxGroup1, cboxGroup2, logoGroup1, logoGroup2, courtGroup, labelGroup, scrollGroup, scoreLabels;
   private Group nodeGroup;
   private ImageView view;
+  private String _awayScoreString;
+  private String _homeScoreString;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -147,12 +152,6 @@ public class Base extends Application {
         awayTeam = away;
 
         // All of the following is just adding various nodes to the stage
-        GridPane stats = Pane2Generator.Pane2(_matchup);
-        textStats.setContent(stats);
-        Pane pane3 = generatePane3();
-        graphStats.setContent(pane3);
-        _pane.getTabs().add(textStats);
-        _pane.getTabs().add(graphStats);
 
         _outputTable = TableViewGenerator.makeTable(_matchup);
         //_outputTable.setMinWidth(450);
@@ -166,17 +165,20 @@ public class Base extends Application {
         _statsScroll.resize(_outputTable.getMaxHeight(), _outputTable.getMaxHeight());
         scrollGroup.getChildren().add(_outputTable);
         scrollGroup.setLayoutX(width * .3);
-        scrollGroup.setLayoutY(height * .34);
+        scrollGroup.setLayoutY(height * .36);
+        
         DecimalFormat df1 = new DecimalFormat("###.#");
-
-        homePointsLabel = new Label(Double.toString(Double.valueOf(df1.format(_homeTotal))));
+        _homeScoreString = Double.toString(Double.valueOf(df1.format(_homeTotal)));
+        _awayScoreString = Double.toString(Double.valueOf(df1.format(_awayTotal)));
+        
+        homePointsLabel = new Label(_homeScoreString);
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(width * .09);
+        homePointsLabel.setLayoutX(width * .035);
         homePointsLabel.setLayoutY(height * .46);
 
-        awayPointsLabel = new Label(Double.toString(Double.valueOf(df1.format(_awayTotal))));
+        awayPointsLabel = new Label(_awayScoreString);
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutX(width * .85);
+        awayPointsLabel.setLayoutX(width * .855);
         awayPointsLabel.setLayoutY(height * .46);
 
         // Turns the scoreboard label blue if the team won and leaves it red otherwise
@@ -190,30 +192,18 @@ public class Base extends Application {
         //        mainPane.getChildren().add(homePointsLabel);
         scoreLabels.getChildren().addAll(awayPointsLabel, homePointsLabel);
       }
+      
+      Pane pane3 = generatePane3();
+      graphStats.setContent(pane3);
+      _pane.getTabs().add(graphStats);
+      
     });
     // this part may look a bit weird if you aren't too familiar with fx, it's a
     // lot of formatting stuff
     run.setLayoutX(width * .46);
     run.setLayoutY(height * .35); // setLayoutX/Y just sets the coordinates of a node on
     // the screen (only works well with a plain pane)
-    BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);// this
-                                                                        // takes
-                                                                        // a
-                                                                        // color,
-                                                                        // insets,
-                                                                        // and
-                                                                        // something
-                                                                        // else
-                                                                        // I
-                                                                        // can't
-                                                                        // remember
-                                                                        // but I
-                                                                        // just
-                                                                        // leave
-                                                                        // them
-                                                                        // null
-                                                                        // for
-                                                                        // this
+    BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);
     Background y = new Background(x);// need a background object which takes any
                                      // subclass of background (there are others
                                      // besides backgroundfill
@@ -341,35 +331,38 @@ public class Base extends Application {
   }
 
   private Pane generatePane3() {
-    Pane pane = new Pane();
-    VBox box = new VBox(5);
-    // pane.getChildren().add(new Label("testing"));
-    final CategoryAxis xAxis = new CategoryAxis();
-    final NumberAxis yAxis = new NumberAxis();
-    final BarChart<String, Number> team1 = new BarChart<String, Number>(xAxis, yAxis);
-    team1.setTitle(homeTeam.getName() + " Score Summary");
-    xAxis.setLabel("Scoring area");
-    yAxis.setLabel("Score");
-    XYChart.Series seriesHome = new XYChart.Series();
-    for (int i = 0; i < homeScores.length; i++) {
-      seriesHome.getData().add(new XYChart.Data(scoringFields[i], homeScores[i]));
-    }
-    team1.getData().add(seriesHome);
-    box.getChildren().add(team1);
-    final CategoryAxis xAxis2 = new CategoryAxis();
-    final NumberAxis yAxis2 = new NumberAxis();
-    final BarChart<String, Number> team2 = new BarChart<String, Number>(xAxis2, yAxis2);
-    team2.setTitle(awayTeam.getName() + " Score Summary");
-    xAxis2.setLabel("Scoring area");
-    yAxis2.setLabel("Score");
-    XYChart.Series seriesAway = new XYChart.Series();
-    for (int i = 0; i < awayScores.length; i++) {
-      seriesAway.getData().add(new XYChart.Data(scoringFields[i], awayScores[i]));
-    }
-    team2.getData().add(seriesAway);
-    box.getChildren().add(team2);
-    pane.getChildren().add(box);
-    return pane;
+	  Pane pane = new Pane();
+	  VBox box = new VBox(5);
+	  NumberAxis xAxis = new NumberAxis();
+	  CategoryAxis yAxis = new CategoryAxis();
+	  BarChart<Number,String> barChart = 
+			  new BarChart<Number,String>(xAxis,yAxis);
+	  barChart.setTitle("Method Outputs");
+	  xAxis.setLabel("Value");
+	  yAxis.setLabel("");    
+
+	  XYChart.Series homeSeries = new XYChart.Series();
+	  homeSeries.setName(
+			  _matchup.getHomeTeam().getName() + " (" + _homeScoreString + ")");
+
+	  XYChart.Series awaySeries = new XYChart.Series();
+	  awaySeries.setName(_matchup.getAwayTeam().getName() + " (" + _awayScoreString + ")");
+
+	  for (MethodOutput out : _methodOutputs) {
+		  homeSeries.getData().add(new XYChart.Data(out.getHomeValue(), out.getName()));
+		  awaySeries.getData().add(new XYChart.Data(out.getAwayValue(), out.getName()));
+	  }
+
+	  if (_matchup.getWinner().getName().equals(_matchup.getHomeTeam().getName())) {
+		  barChart.getData().addAll(homeSeries, awaySeries);
+	  } else {
+		  barChart.getData().addAll(awaySeries, homeSeries);
+	  }
+	  barChart.setMinHeight(600);
+	  barChart.setMinWidth(790);
+	  box.getChildren().add(barChart);
+	  pane.getChildren().add(box);
+	  return pane;
   }
 
   public void changed(ObservableValue o, String old, String newText) {
@@ -400,11 +393,11 @@ public class Base extends Application {
     //inFocus.setScaleX(xScale);
     //inFocus.setScaleY(yScale);
     if (inFocus == view2) {
-      inFocus.setLayoutX(width * .7);
+      inFocus.setLayoutX(width * .74);
       inFocus.setLayoutY(height * .05);
     }
     else if (inFocus == view1) {
-      inFocus.setLayoutX(width * .1);
+      inFocus.setLayoutX(width * .08);
       inFocus.setLayoutY(height * .05);
     }
     ComboBox focusBox = null;
@@ -448,5 +441,9 @@ public class Base extends Application {
   public static void setAwayScore(double score) {
     _awayTotal = score;
   }
+  
+  public static void setMethodOutputs(ObservableList<MethodOutput> methodOutputs) {
+    _methodOutputs = methodOutputs;
+}
 
 }

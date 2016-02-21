@@ -27,8 +27,8 @@ public class Pane2Generator {
     double[] awayScoreList = new double[methods.length];
     double[] homeScoreList = new double[methods.length];
     int index = 0;
-    _grid.add(new Label(m.get_awayTeam().getName()), 1, 0);
-    _grid.add(new Label(m.get_homeTeam().getName()), 0, 0);
+    _grid.add(new Label(m.getAwayTeam().getName()), 1, 0);
+    _grid.add(new Label(m.getHomeTeam().getName()), 0, 0);
     double awayScore = 0;
     double homeScore = 0;
     int i = 0;
@@ -39,9 +39,9 @@ public class Pane2Generator {
 
     for (Method method : methods) {
       try {
-        awayScoreList[index] = (double) method.invoke(m, m.get_awayTeam());
+        awayScoreList[index] = (double) method.invoke(m, m.getAwayTeam());
         awayScore += awayScoreList[index];
-        homeScoreList[index] = (double) method.invoke(m, (Team) m.get_homeTeam());
+        homeScoreList[index] = (double) method.invoke(m, (Team) m.getHomeTeam());
         homeScore += homeScoreList[index];
         _grid = drawMethodGrid(_grid, method,
             Double.valueOf(df2.format(awayScoreList[index])),

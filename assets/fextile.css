@@ -421,12 +421,11 @@
 	-fx-text-fill: #ffffff;	
 }
 .scorelabel {
-	-fx-font-family: Consolas, monospace;
-    -fx-font-size: 30px;
+	-fx-font-family: monospace;
+    -fx-font-size: 50px;
     -fx-text-fill: #a93034;
     -fx-background-color: black;
     -fx-border-color: white;
-    -fx-background-radius: 5;
 }
 .winner_score_label {
 	-fx-text-fill: #3071a9
