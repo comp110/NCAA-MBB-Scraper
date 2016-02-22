@@ -13,13 +13,13 @@ public class Matchup {
 	public Matchup(Team homeTeam, Team awayTeam) {
 		_homeTeam = homeTeam;
 		_awayTeam = awayTeam;
-//		double homeScore = getHomeScore();
+		double homeScore = getHomeScore();
 		double awayScore = getAwayScore();
-//		if (homeScore > awayScore) {
-//			_winner = _homeTeam;
-//		} else {
-//			_winner = _awayTeam;
-//		}
+		if (homeScore > awayScore) {
+			_winner = _homeTeam;
+		} else {
+			_winner = _awayTeam;
+		}
 	}
 	
 //	public double getHomeScore() {
@@ -28,6 +28,10 @@ public class Matchup {
 	
 	public double getAwayScore() {
 		return calculateScore(_awayTeam);
+	}
+
+	public double getHomeScore() {
+		return calculateScore(_homeTeam);
 	}
 	
 	public double calculateScore(Team team){ //moving weights to inside methods will solve reflection problem for now, easiest/quickest fix
@@ -50,7 +54,7 @@ public class Matchup {
 		return compositeScore;
 
 	}
-
+	
 	public double top20Stats(Team team) {
 		double weight=0.8;
 		int scoringOffense = team.getScoringOffenseRank();

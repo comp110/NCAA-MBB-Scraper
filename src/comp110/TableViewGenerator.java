@@ -25,15 +25,12 @@ public class TableViewGenerator {
 
 		Method[] methods = m.getClass().getDeclaredMethods();
 		
-
-		double[] homeAwayMethodOuts = new double[2];
-		
 		methods = filterMethods(methods);
 		double awayTotal = 0;
 		double homeTotal = 0;
 		Base.scoringFields = new String[methods.length];
 		DecimalFormat df2 = new DecimalFormat("###.##");
-
+		double[] homeAwayMethodOuts = new double[2];
 		// For each method in the student's matchup class create an instance
 		// of MethodOutput and add that instance to the outputs ObservableList
 		for (Method method : methods) {
