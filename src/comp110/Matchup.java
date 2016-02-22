@@ -42,7 +42,15 @@ public class Matchup {
 		return compositeScore;
 
 	}
-
+	
+	public double getHomeScore() {
+		return calculateScore(_homeTeam);
+	}
+	
+	public double getAwayScore() {
+		return calculateScore(_awayTeam);
+	}
+	
 	public double top20Stats(Team team) {
 		double weight=0.8;
 		int scoringOffense = team.getScoringOffenseRank();
