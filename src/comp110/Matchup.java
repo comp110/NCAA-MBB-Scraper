@@ -13,13 +13,21 @@ public class Matchup {
 	public Matchup(Team homeTeam, Team awayTeam) {
 		_homeTeam = homeTeam;
 		_awayTeam = awayTeam;
-		double homeScore = calculateScore(_homeTeam);
-		double awayScore = calculateScore(_awayTeam);
-		if (homeScore > awayScore) {
-			_winner = _homeTeam;
-		} else {
-			_winner = _awayTeam;
-		}
+//		double homeScore = getHomeScore();
+		double awayScore = getAwayScore();
+//		if (homeScore > awayScore) {
+//			_winner = _homeTeam;
+//		} else {
+//			_winner = _awayTeam;
+//		}
+	}
+	
+//	public double getHomeScore() {
+//		return calculateScore(_homeTeam);
+//	}
+	
+	public double getAwayScore() {
+		return calculateScore(_awayTeam);
 	}
 	
 	public double calculateScore(Team team){ //moving weights to inside methods will solve reflection problem for now, easiest/quickest fix

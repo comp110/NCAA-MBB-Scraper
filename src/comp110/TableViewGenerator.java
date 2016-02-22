@@ -24,6 +24,10 @@ public class TableViewGenerator {
 		ObservableList<MethodOutput> outputs = FXCollections.observableArrayList();
 
 		Method[] methods = m.getClass().getDeclaredMethods();
+		
+
+		double[] homeAwayMethodOuts = new double[2];
+		
 		methods = filterMethods(methods);
 		double awayTotal = 0;
 		double homeTotal = 0;
@@ -34,17 +38,23 @@ public class TableViewGenerator {
 		// of MethodOutput and add that instance to the outputs ObservableList
 		for (Method method : methods) {
 			try {
-				String name = method.getName();
-				double awayValue = (double) method.invoke(m, m.getAwayTeam());
-				awayTotal += awayValue;
-				awayValue = Double.valueOf(df2.format(awayValue));
-
-				double homeValue =(double) method.invoke(m, (Team) m.getHomeTeam());
-				homeTotal += homeValue;
-				homeValue = Double.valueOf(df2.format(homeValue));
-
-				MethodOutput output = new MethodOutput(name, homeValue, awayValue);
-				outputs.add(output);
+				if (method.getName().equals("getHomeScore")) {
+					homeAwayMethodOuts[0] = (double) method.invoke(m);
+				} else if (method.getName().equals("getAwayScore")) {
+					homeAwayMethodOuts[1] = (double) method.invoke(m);
+				} else {
+					String name = method.getName();
+					double awayValue = (double) method.invoke(m, m.getAwayTeam());
+					awayTotal += awayValue;
+					awayValue = Double.valueOf(df2.format(awayValue));
+	
+					double homeValue =(double) method.invoke(m, (Team) m.getHomeTeam());
+					homeTotal += homeValue;
+					homeValue = Double.valueOf(df2.format(homeValue));
+	
+					MethodOutput output = new MethodOutput(name, homeValue, awayValue);
+					outputs.add(output);
+				}
 			} catch (IllegalAccessException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -61,6 +71,7 @@ public class TableViewGenerator {
 
 		// Setting these total scores to static fields in Base so they can be put in
 		// the scoreboard labels
+		Base.setHomeAwayScoreOutputs(homeAwayMethodOuts);
 		Base.setMethodOutputs(outputs);
 		Base.setHomeScore(homeTotal);
 		Base.setAwayScore(awayTotal);
@@ -103,8 +114,7 @@ public class TableViewGenerator {
 		int filteredCount = 0;
 
 		for (Method method : methods) {
-			if (method.getReturnType() == Double.TYPE
-					&& !method.getName().equals("calculateScore")) {
+			if (method.getReturnType() == Double.TYPE) {
 				filtered[filteredCount] = method;
 				filteredCount++;
 			}

@@ -59,6 +59,7 @@ public class Base extends Application {
   private Team homeTeam, awayTeam;
   public static double[] homeScores;
   public static double[] awayScores;
+  private static double[] getHomeAwayScore;
   public static String[] scoringFields;
   private static double _homeTotal, _awayTotal;
   private static ObservableList<MethodOutput> _methodOutputs;
@@ -162,8 +163,12 @@ public class Base extends Application {
         scrollGroup.setLayoutY(height * .36);
         
         DecimalFormat df1 = new DecimalFormat("###.#");
-        _homeScoreString = Double.toString(Double.valueOf(df1.format(_homeTotal)));
-        _awayScoreString = Double.toString(Double.valueOf(df1.format(_awayTotal)));
+        double getHomeScoreOut = getHomeAwayScore[0];
+        double getAwayScoreOut = getHomeAwayScore[1];
+        _homeScoreString = Double.toString(Double.valueOf(df1.format(getHomeScoreOut)));
+        _awayScoreString = Double.toString(Double.valueOf(df1.format(getAwayScoreOut)));
+        
+        scoreLabels.getChildren().removeAll(awayPointsLabel, homePointsLabel);
         
         homePointsLabel = new Label(_homeScoreString);
         homePointsLabel.getStyleClass().add("scorelabel");
@@ -176,11 +181,13 @@ public class Base extends Application {
         awayPointsLabel.setLayoutY(height * .46);
 
         // Turns the scoreboard label blue if the team won and leaves it red otherwise
-        if (_homeTotal > _awayTotal) {
-          homePointsLabel.getStyleClass().add("winner_score_label");
-        }
-        else {
-          awayPointsLabel.getStyleClass().add("winner_score_label");
+        if (_matchup.getWinner() != null) {
+        	if (_matchup.getWinner().getName().equals(_matchup.getHomeTeam().getName())) {
+        		homePointsLabel.getStyleClass().add("winner_score_label");
+        	}
+        	else {
+        		awayPointsLabel.getStyleClass().add("winner_score_label");
+        	}
         }
         //        mainPane.getChildren().add(awayPointsLabel);
         //        mainPane.getChildren().add(homePointsLabel);
@@ -449,6 +456,12 @@ public class Base extends Application {
   
   public static void setMethodOutputs(ObservableList<MethodOutput> methodOutputs) {
     _methodOutputs = methodOutputs;
-}
+  }
+
+	public static void setHomeAwayScoreOutputs(double[] homeAwayScoreOutputs) {
+		getHomeAwayScore = homeAwayScoreOutputs;
+	}
+  
+  
 
 }
