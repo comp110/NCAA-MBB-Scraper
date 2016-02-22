@@ -235,7 +235,7 @@ public class Base extends Application {
     Image court = new Image("file:assets/ncaa_court.jpg");
     view = new ImageView(court);
 
-//    if (800 <= screenBounds.getHeight() * .9) {
+    if (1100 <= screenBounds.getHeight() * .9) {
       view.setFitWidth(1100);
       cboxGroup1.setScaleX(.9);
       cboxGroup1.setScaleY(.9);
@@ -251,15 +251,42 @@ public class Base extends Application {
       scoreLabels.setScaleY(.8);
       showChartGroup.setScaleX(.9);
       showChartGroup.setScaleY(.9);
-//    }
-//    else if (800 >= screenBounds.getHeight() * .9) {
-//      double translate = .001875 * screenBounds.getHeight() - .7;
-//      view.setFitWidth(1100 * translate);
-//      nodeGroup.setScaleX(translate);
-//      nodeGroup.setScaleY(translate);
-//      showChartGroup.setScaleX(translate);
-//      showChartGroup.setScaleY(translate);
-//    }
+      
+    }
+    else {
+      //double translate = .001875 * screenBounds.getHeight() - .7;
+      double translate = 800.0/1100.0;
+      view.setFitWidth(800);
+      cboxGroup1.setScaleX(.9 * translate);
+      cboxGroup1.setScaleY(.9 * translate);
+      cboxGroup2.setScaleX(.9 * translate);
+      cboxGroup2.setScaleY(.9 * translate);
+      nodeGroup.setScaleX(.9 * translate);
+      nodeGroup.setScaleY(.9 * translate);
+      logoGroup1.setScaleX(.9 * translate);
+      logoGroup1.setScaleY(.7 * translate);
+      logoGroup2.setScaleX(.9 * translate);
+      logoGroup2.setScaleY(.7 * translate);
+      scoreLabels.setScaleX(.8 * translate);
+      scoreLabels.setScaleY(.8 * translate);
+      showChartGroup.setScaleX(.9 * translate);
+      showChartGroup.setScaleY(.9 * translate);
+      scrollGroup.setScaleX(translate);
+      scrollGroup.setScaleY(translate);
+      cboxGroup1.setTranslateY(-56);
+      cboxGroup1.setTranslateX(-25);
+      cboxGroup2.setTranslateY(-56);
+      cboxGroup2.setTranslateX(-25);
+      nodeGroup.setTranslateY(-50);
+      scrollGroup.setTranslateY(-85);
+      scrollGroup.setTranslateX(-30);
+      logoGroup1.setTranslateY(-40);
+      logoGroup1.setTranslateX(-20);
+      logoGroup2.setTranslateY(-40);
+      logoGroup2.setTranslateX(-20);
+      scoreLabels.setTranslateX(20);
+      showChartGroup.setTranslateY(-50);
+    }
     width = view.getLayoutBounds().getWidth();
     height = view.getLayoutBounds().getHeight();
     view.setPreserveRatio(true);
