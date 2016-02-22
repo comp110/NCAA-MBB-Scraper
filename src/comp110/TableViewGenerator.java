@@ -29,20 +29,20 @@ public class TableViewGenerator {
 		double homeTotal = 0;
 		Base.scoringFields = new String[methods.length];
 		DecimalFormat df2 = new DecimalFormat("###.##");
-		
+
 		// For each method in the student's matchup class create an instance
-	    // of MethodOutput and add that instance to the outputs ObservableList
+		// of MethodOutput and add that instance to the outputs ObservableList
 		for (Method method : methods) {
 			try {
 				String name = method.getName();
 				double awayValue = (double) method.invoke(m, m.getAwayTeam());
 				awayTotal += awayValue;
 				awayValue = Double.valueOf(df2.format(awayValue));
-				
+
 				double homeValue =(double) method.invoke(m, (Team) m.getHomeTeam());
 				homeTotal += homeValue;
 				homeValue = Double.valueOf(df2.format(homeValue));
-				
+
 				MethodOutput output = new MethodOutput(name, homeValue, awayValue);
 				outputs.add(output);
 			} catch (IllegalAccessException e1) {
@@ -75,29 +75,28 @@ public class TableViewGenerator {
 		// of the field you want to be in that column
 		TableView<MethodOutput> methodTable = new TableView();
 		int colWidth = 152;
-		
+
 		TableColumn methodCol = new TableColumn("Method");
 		methodCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		methodCol.setPrefWidth(colWidth);
-		
+
 		TableColumn homeCol = new TableColumn(m.getHomeTeam().getName());
 		homeCol.setCellValueFactory(new PropertyValueFactory<>("homeValue"));
 		homeCol.setPrefWidth(colWidth);
-		
+
 		TableColumn awayCol = new TableColumn(m.getAwayTeam().getName());
 		awayCol.setCellValueFactory(new PropertyValueFactory<>("awayValue"));
 		awayCol.setPrefWidth(colWidth);
-		
+
 		methodTable.getColumns().addAll(methodCol, homeCol, awayCol);
 		// At the end you just setItems to your ObservableList and JavaFX does all the
 		// work of getting the fields from each individual list element
 		methodTable.setItems(outputs);
 		methodTable.getSortOrder().add(methodCol);
-		
-		
+
 		return methodTable;
 	}
-	
+
 	private static Method[] filterMethods(Method[] methods) {
 		// only want doubles that are not calculateScore
 		Method[] filtered = new Method[methods.length];

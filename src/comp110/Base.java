@@ -153,17 +153,10 @@ public class Base extends Application {
         awayTeam = away;
 
         // Adding various nodes to the stage
-
         _outputTable = TableViewGenerator.makeTable(_matchup);
-        //_outputTable.setMinWidth(450);
-        //_outputTable.setMaxHeight(300);
-        //        _outputTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        // mainPane.getChildren().add(_outputTable);
-        _statsScroll = new ScrollPane();
-         _statsScroll.setContent(_outputTable);
-         _statsScroll.setMaxHeight(200);
-         
-        _statsScroll.resize(_outputTable.getMaxHeight(), _outputTable.getMaxHeight());
+        _outputTable.setScaleX(.8);
+        _outputTable.setScaleY(.8);
+
         scrollGroup.getChildren().add(_outputTable);
         scrollGroup.setLayoutX(width * .3);
         scrollGroup.setLayoutY(height * .36);
@@ -174,7 +167,7 @@ public class Base extends Application {
         
         homePointsLabel = new Label(_homeScoreString);
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(width * .033);
+        homePointsLabel.setLayoutX(width * .018);
         homePointsLabel.setLayoutY(height * .46);
 
         awayPointsLabel = new Label(_awayScoreString);
@@ -235,7 +228,7 @@ public class Base extends Application {
     Image court = new Image("file:assets/ncaa_court.jpg");
     view = new ImageView(court);
 
-    if (800 <= screenBounds.getHeight() * .9) {
+//    if (800 <= screenBounds.getHeight() * .9) {
       view.setFitWidth(1100);
       cboxGroup1.setScaleX(.9);
       cboxGroup1.setScaleY(.9);
@@ -249,19 +242,17 @@ public class Base extends Application {
       logoGroup2.setScaleY(.7);
       scoreLabels.setScaleX(.8);
       scoreLabels.setScaleY(.8);
-      scrollGroup.setScaleX(.8);
-      scrollGroup.setScaleY(.8);
       showChartGroup.setScaleX(.9);
       showChartGroup.setScaleY(.9);
-    }
-    else if (800 >= screenBounds.getHeight() * .9) {
-      double translate = .001875 * screenBounds.getHeight() - .7;
-      view.setFitWidth(1100 * translate);
-      nodeGroup.setScaleX(translate);
-      nodeGroup.setScaleY(translate);
-      showChartGroup.setScaleX(translate);
-      showChartGroup.setScaleY(translate);
-    }
+//    }
+//    else if (800 >= screenBounds.getHeight() * .9) {
+//      double translate = .001875 * screenBounds.getHeight() - .7;
+//      view.setFitWidth(1100 * translate);
+//      nodeGroup.setScaleX(translate);
+//      nodeGroup.setScaleY(translate);
+//      showChartGroup.setScaleX(translate);
+//      showChartGroup.setScaleY(translate);
+//    }
     width = view.getLayoutBounds().getWidth();
     height = view.getLayoutBounds().getHeight();
     view.setPreserveRatio(true);
@@ -277,11 +268,8 @@ public class Base extends Application {
     //nodeGroup.getChildren().add(view);
 
     mainPane.getChildren().addAll(courtGroup, nodeGroup, logoGroup1, logoGroup2,
-        scoreLabels, cboxGroup1, cboxGroup2, scrollGroup, showChartGroup);
+        scoreLabels, cboxGroup1, cboxGroup2, showChartGroup, scrollGroup);
 
-    for (Node x : mainPane.getChildren()) {
-      System.out.println("check");
-    }
     // _pane.getTabs().add(matchupTab);
     Group g = new Group();
     g.getChildren().add(mainPane);
