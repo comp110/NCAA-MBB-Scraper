@@ -165,7 +165,7 @@ public class Base extends Application {
         homeTeam = home;
         awayTeam = away;
 
-        // Adding various nodes to the stage
+        // Adding table to its group (called scrollGroup b/c it used to be a ScrollPane)
         _outputTable = TableViewGenerator.makeTable(_matchup);
         _outputTable.setScaleX(.8);
         _outputTable.setScaleY(.8);
@@ -174,6 +174,7 @@ public class Base extends Application {
         scrollGroup.setLayoutX(width * .3);
         scrollGroup.setLayoutY(height * .36);
 
+        // Adding the scoreboard labels to their group
         DecimalFormat df1 = new DecimalFormat("###.#");
         double getHomeScoreOut = getHomeAwayScore[0];
         double getAwayScoreOut = getHomeAwayScore[1];
@@ -183,12 +184,27 @@ public class Base extends Application {
         scoreLabels.getChildren().removeAll(awayPointsLabel, homePointsLabel);
         homePointsLabel = new Label(_homeScoreString);
         homePointsLabel.getStyleClass().add("scorelabel");
-        homePointsLabel.setLayoutX(width * .018);
+        
+        // Adjusts the position of the scoreboard label according to its length so
+        // that it is always centered under its combobox
+        if (_homeScoreString.length() == 3) {
+          homePointsLabel.setLayoutX(width * .03);
+        } else if (_homeScoreString.length() == 4) {
+          homePointsLabel.setLayoutX(width * .018);
+        } else {
+          homePointsLabel.setLayoutX(width * .006);
+        }
         homePointsLabel.setLayoutY(height * .46);
 
         awayPointsLabel = new Label(_awayScoreString);
         awayPointsLabel.getStyleClass().add("scorelabel");
-        awayPointsLabel.setLayoutX(width * .853);
+        if (_awayScoreString.length() == 3) {
+          awayPointsLabel.setLayoutX(width * .865);
+        } else if (_awayScoreString.length() == 4) {
+          awayPointsLabel.setLayoutX(width * .853);
+        } else {
+          awayPointsLabel.setLayoutX(width * .841);
+        }
         awayPointsLabel.setLayoutY(height * .46);
 
         // Turns the scoreboard label blue if the team won and leaves it red
