@@ -347,7 +347,7 @@ public class Base extends Application {
   }
 
   private static Team[] readJson() throws FileNotFoundException {
-    JsonReader reader = new JsonReader(new FileReader("acc.json"));
+    JsonReader reader = new JsonReader(new FileReader("accplustop25.json"));
     Gson gson = new Gson();
     Team[] teams = gson.fromJson(reader, Team[].class);
 
@@ -360,7 +360,7 @@ public class Base extends Application {
   }
 
   private static Map<Integer, Team> readJSON() throws FileNotFoundException {
-    JsonReader reader = new JsonReader(new FileReader("acc.json"));
+    JsonReader reader = new JsonReader(new FileReader("accplustop25.json"));
     Gson gson = new Gson();
     Team[] teams = gson.fromJson(reader, Team[].class);
 
