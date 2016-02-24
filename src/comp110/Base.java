@@ -142,10 +142,7 @@ public class Base extends Application {
       for (int i = 0; i < _teams.length; i++){
         if (_box1.getSelectionModel().getSelectedItem() == _teams[i].getName()) selected = _teams[i];
       }
-      statsScene = new Scene(creator.makeStatsStage(selected));
-      statsStage = new Stage();
-      statsStage.setScene(statsScene);
-      statsStage.show();
+     creator.makeStatsStage(selected);
     });
     getStats.setLayoutX(width * .028);
     getStats.setLayoutY(height * .06);

@@ -23,18 +23,28 @@ import javafx.stage.Stage;
 public class StatsStage extends Base {
 
   private Stage _stage;
+  private Scene _scene;
   private boolean started = false;
   private ComboBox<String> teamBox, playerBox;
   private TableView teamView, playerView;
+  VBox container;
+  HBox combosHolder;
+  HBox tablesHolder;
   
   private ObservableList<TeamStat> teamStats;
   private Team selected;
 
-  public VBox makeStatsStage(Team selected) {
+  public void makeStatsStage(Team t){
+    _stage = new Stage();
+    makeStatsGroup(t);
+    tablesHolder.getChildren().add(teamView);
+    container.getChildren().addAll(combosHolder, tablesHolder);
+    _scene = new Scene(container);
+    _stage.setScene(_scene);
+    _stage.show();
+  }
+  public void makeStatsGroup(Team selected) {
     this.selected = selected;
-    
-
- 
 
     try {
       _teams = readJson();
@@ -42,10 +52,10 @@ public class StatsStage extends Base {
       e.printStackTrace();
     }
 
-    VBox container = new VBox(10);
-    HBox combosHolder = new HBox(10);
-    HBox tablesHolder = new HBox(10);
-    container.getChildren().addAll(combosHolder, tablesHolder);
+    container = new VBox(10);
+    combosHolder = new HBox(10);
+    tablesHolder = new HBox(10);
+    
 
     teamBox = buildTeamBox();
     teamBox.getSelectionModel().selectedItemProperty().addListener(this::teamChanged);
@@ -58,13 +68,19 @@ public class StatsStage extends Base {
     teamBox.getSelectionModel().select(startIndex);
     combosHolder.getChildren().add(teamBox);
     playerBox = buildPlayerBox();
-    combosHolder.getChildren().add(playerBox);
-    teamView = makeTeamTable();
-    tablesHolder.getChildren().add(teamView);
+    ObservableList<TeamStat> y = null;
+    try {
+      y = setupStats();
+    } catch (IllegalArgumentException | IllegalAccessException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    teamView = makeTeamTable(y);
+    
     
     
 
-    return container;
+    
   }
 
   private ObservableList<TeamStat> setupStats() throws IllegalArgumentException, IllegalAccessException {
@@ -130,17 +146,12 @@ public class StatsStage extends Base {
     return Arrays.copyOf(filtered, filteredCount);
   }
 
-  private TableView makeTeamTable() {
-    try {
-      teamStats = setupStats();
-    } catch (IllegalArgumentException | IllegalAccessException e1) {
-      e1.printStackTrace();
-    }
+  private TableView makeTeamTable(ObservableList<TeamStat> y) {
     int colWidth = 152;
-    System.out.println(teamStats.size());
-    for (TeamStat stat : teamStats){
-      System.out.println(stat.stat + " g " + stat.value + " " + stat.rank);
-    }
+//    System.out.println(teamStats.size());
+//    for (TeamStat stat : teamStats){
+//      System.out.println(stat.stat + " g " + stat.value + " " + stat.rank);
+//    }
    
     TableView<TeamStat> teamStatsTable = new TableView<TeamStat>();
     TableColumn statCol = new TableColumn("Stat");
@@ -150,14 +161,15 @@ public class StatsStage extends Base {
     TableColumn valueCol = new TableColumn("Value");
     valueCol.setCellValueFactory(new PropertyValueFactory<>("Value"));
     valueCol.setPrefWidth(colWidth);
-
+String hi = "";
     TableColumn rankCol = new TableColumn("Rank");
-    rankCol.setCellValueFactory(new PropertyValueFactory<>("Rank"));
+    rankCol.setCellValueFactory(new PropertyValueFactory<>("Rank" + hi));
     rankCol.setPrefWidth(colWidth);
     // TableRow row = new TableRow();
     teamStatsTable.getColumns().addAll(statCol, valueCol, rankCol);
-    teamStatsTable.setItems(teamStats);
-
+    teamStatsTable.getItems().removeAll();
+    teamStatsTable.setItems(y);
+hi += "hello";
     return teamStatsTable;
   }
 
@@ -202,12 +214,19 @@ public class StatsStage extends Base {
       started = true;
       return;
     }
-    
+  
     for (int i = 0; i < _teams.length; i++){
       if (newText.equals(_teams[i].getName())) selected = _teams[i];
     }
-    teamView = makeTeamTable();
-    
+    System.out.println(selected.getName());
+    ObservableList<TeamStat> y = null;
+    try {
+      y = setupStats();
+    } catch (IllegalArgumentException | IllegalAccessException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    teamView.setItems(y);
     }
 
 }
