@@ -46,7 +46,7 @@ public class Base extends Application {
   private Scene _scene;
   private TabPane _pane;
   private Tab matchupTab, textStats, graphStats;
-  private Team[] _teams;
+  protected Team[] _teams;
   private Map<Integer, Team> teamMap;
   private ComboBox<String> _box1;
   private ComboBox<String> _box2;
@@ -61,18 +61,23 @@ public class Base extends Application {
   private static ObservableList<MethodOutput> _methodOutputs;
   private static double[] getHomeAwayScore;
   private String _homePointsString, _awayPointsString;
-
+  private Button getStatsButton;
   private Rectangle2D screenBounds;
   private ImageView view2;
   private ImageView view1;
   private Pane mainPane;
   private ScrollPane _statsScroll;
   private TableView _outputTable;
-  private Group cboxGroup1, cboxGroup2, logoGroup1, logoGroup2, courtGroup, labelGroup, scrollGroup, scoreLabels;
+  private Group cboxGroup1, cboxGroup2, logoGroup1, logoGroup2, courtGroup, labelGroup, scrollGroup, scoreLabels,
+      getStats;
   private Group nodeGroup, showChartGroup;
   private ImageView view;
   private String _awayScoreString;
   private String _homeScoreString;
+  protected Stage statsStage;
+  protected Scene statsScene;
+
+ 
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -94,10 +99,10 @@ public class Base extends Application {
     graphStats.setText("Graphs");
     buildBox(mainPane);
     setupMainPane(mainPane);
-    Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));// Max: me
-                                                                // testing
-                                                                // Pane2Gen
-                                                                // getting
+    // Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));// Max: me
+    // testing
+    // Pane2Gen
+    // getting
     // for for FX nothing meaningful yet
     // textStats.setContent(goo);
     // _pane.getTabs().addAll(matchupTab, textStats, graphStats);
@@ -119,6 +124,7 @@ public class Base extends Application {
     nodeGroup = new Group();
     scoreLabels = new Group();
     showChartGroup = new Group();
+    getStats = new Group();
   }
 
   private void setupMainPane(Pane mainPane) {
@@ -128,6 +134,21 @@ public class Base extends Application {
     _box2.setLayoutY(height * .41);
     cboxGroup1.getChildren().addAll(_box1);
     cboxGroup2.getChildren().addAll(_box2);
+    getStatsButton = new Button("Get Stats");
+    getStats.getChildren().add(getStatsButton);
+    getStatsButton.setOnAction((event) -> {
+      StatsStage creator = new StatsStage();
+      Team selected = null;
+      for (int i = 0; i < _teams.length; i++){
+        if (_box1.getSelectionModel().getSelectedItem() == _teams[i].getName()) selected = _teams[i];
+      }
+      statsScene = new Scene(creator.makeStatsStage(selected));
+      statsStage = new Stage();
+      statsStage.setScene(statsScene);
+      statsStage.show();
+    });
+    getStats.setLayoutX(width * .028);
+    getStats.setLayoutY(height * .06);
 
     // Gives the comboboxes initial values of random team names
     // Uses do while to ensure the same team is not chosen for home and away
@@ -160,12 +181,13 @@ public class Base extends Application {
           if (_teams[i].getName().equals(awayString))
             away = _teams[i];
         }
-
+        ImageView x = new ImageView();
         _matchup = new Matchup(home, away);
         homeTeam = home;
         awayTeam = away;
 
-        // Adding table to its group (called scrollGroup b/c it used to be a ScrollPane)
+        // Adding table to its group (called scrollGroup b/c it used to be a
+        // ScrollPane)
         _outputTable = TableViewGenerator.makeTable(_matchup);
         _outputTable.setScaleX(.8);
         _outputTable.setScaleY(.8);
@@ -184,8 +206,9 @@ public class Base extends Application {
         scoreLabels.getChildren().removeAll(awayPointsLabel, homePointsLabel);
         homePointsLabel = new Label(_homeScoreString);
         homePointsLabel.getStyleClass().add("scorelabel");
-        
-        // Adjusts the position of the scoreboard label according to its length so
+
+        // Adjusts the position of the scoreboard label according to its length
+        // so
         // that it is always centered under its combobox
         if (_homeScoreString.length() == 3) {
           homePointsLabel.setLayoutX(width * .03);
@@ -278,6 +301,8 @@ public class Base extends Application {
       scoreLabels.setScaleY(.8);
       showChartGroup.setScaleX(.9);
       showChartGroup.setScaleY(.9);
+      getStats.setScaleX(.9);
+      getStats.setScaleY(.9);
 
     } else {
       // double translate = .001875 * screenBounds.getHeight() - .7;
@@ -299,6 +324,8 @@ public class Base extends Application {
       showChartGroup.setScaleY(.9 * translate);
       scrollGroup.setScaleX(translate);
       scrollGroup.setScaleY(translate);
+      getStats.setScaleX(.9 * translate);
+      getStats.setScaleY(.9 * translate);
       cboxGroup1.setTranslateY(-56);
       cboxGroup1.setTranslateX(-25);
       cboxGroup2.setTranslateY(-56);
@@ -328,7 +355,7 @@ public class Base extends Application {
     // nodeGroup.getChildren().add(view);
 
     mainPane.getChildren().addAll(courtGroup, nodeGroup, logoGroup1, logoGroup2, scoreLabels, cboxGroup1, cboxGroup2,
-        showChartGroup, scrollGroup);
+        showChartGroup, scrollGroup, getStats);
 
     // _pane.getTabs().add(matchupTab);
     Group g = new Group();
@@ -346,7 +373,7 @@ public class Base extends Application {
 
   }
 
-  private static Team[] readJson() throws FileNotFoundException {
+  public static Team[] readJson() throws FileNotFoundException {
     JsonReader reader = new JsonReader(new FileReader("accplustop25.json"));
     Gson gson = new Gson();
     Team[] teams = gson.fromJson(reader, Team[].class);

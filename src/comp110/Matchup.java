@@ -22,9 +22,7 @@ public class Matchup {
 		}
 	}
 	
-//	public double getHomeScore() {
-//		return calculateScore(_homeTeam);
-//	}
+
 	
 	public double getAwayScore() {
 		return calculateScore(_awayTeam);

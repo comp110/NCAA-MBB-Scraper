@@ -10,7 +10,7 @@ public class Team {
 	private String _name;
 	private Player[] _roster;
 	
-	private double _threesAttempted, _assistTurnoverRatio, _avgAssists, _avgBlocks, _avgDRebs, 
+	public double _threesAttempted, _assistTurnoverRatio, _avgAssists, _avgBlocks, _avgDRebs, 
 	    _fouls, _turnovers, _fgPercent, _fgPercentDef, _freeThrowsAttempted, _freeThrowsMade,
 	    _ftPercent, _avgORebs, _avgPersonalFouls, _reboundMargin, _scoringDefense, _scoringMargin, 
 	    _scoringOffense, _avgSteals, _threePointDef, _avgThreesMade, _threePercent, _threesMade, 
