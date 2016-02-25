@@ -13,9 +13,11 @@ public class PlayerStatsStage {
   
   public static TableView<Player> makeDetailedPlayerTable(ObservableList<Player> players) {
     TableView detailedStats = new TableView<Player>();
-    System.out.println("is this running");
     ArrayList<String> getters = getGetters();
     
+    for (Player p : players) {
+      System.out.println(p);
+    }
     
     for (String getter : getters) {
       System.out.println(getter);
@@ -33,7 +35,7 @@ public class PlayerStatsStage {
   public static ArrayList<String> getGetters() {
     Class playerClass = null;
     try {
-      playerClass = Class.forName("comp110.Team");
+      playerClass = Class.forName("comp110.Player");
     } catch (ClassNotFoundException e) {
       System.out.println("crap"); 
     }
