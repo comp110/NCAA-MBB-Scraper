@@ -4,6 +4,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.sun.javafx.tk.FontLoader;
+import com.sun.javafx.tk.Toolkit;
+
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -13,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PlayerStatsStage {
 
+  @SuppressWarnings("restriction")
   public static TableView<Player> makeDetailedPlayerTable(ObservableList<Player> players) {
     TableView detailedStats = new TableView<Player>();
     ArrayList<String> getters = getGetters();
@@ -21,18 +25,29 @@ public class PlayerStatsStage {
     for (Player p : players) {
       System.out.println(p);
     }
+    FontLoader fontloader = Toolkit.getToolkit().getFontLoader();
 
+    double width = 0;
+    double totalWidth = 0;
     for (String getter : getters) {
       Label insert = new Label(abbreviation.get(getter));
+      System.out.println(insert.getFont());
+      width = fontloader.computeStringWidth(abbreviation.get(getter), insert.getFont());
+      System.out.println(width);
+      width += 10;
       insert.setTooltip(new Tooltip(getter));
       TableColumn currentColumn = new TableColumn<>();
       currentColumn.setCellValueFactory(new PropertyValueFactory<>(getter.substring(3)));
       currentColumn.setGraphic(insert);
+      currentColumn.setPrefWidth(width);
       detailedStats.getColumns().add(currentColumn);
+      System.out.println(currentColumn.getWidth());
+      totalWidth += width;
+
     }
 
     detailedStats.setItems(players);
-
+    detailedStats.setPrefWidth(totalWidth + 33);
     return detailedStats;
   }
 

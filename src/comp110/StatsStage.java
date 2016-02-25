@@ -38,6 +38,7 @@ public class StatsStage extends Base {
 
   public void makeStatsStage(Team t){
     _stage = new Stage();
+    _stage.setResizable(false);
     makeStatsGroup(t);
     tablesHolder.getChildren().addAll(teamView, playerView);
     container.getChildren().addAll(combosHolder, tablesHolder);
@@ -78,9 +79,11 @@ public class StatsStage extends Base {
     Button showStats = new Button("Detailed Player Stats");
     showStats.setOnAction((playerStatsEvent) -> {
       Stage playerStatStage = new Stage();
+      playerStatStage.setResizable(false);
       Scene chartScene = new Scene(PlayerStatsStage.makeDetailedPlayerTable(_playerObsList));
       chartScene.getStylesheets().add("file:assets/fextile.css");
-      playerStatStage.setTitle(selected.getName() + " Players");
+      
+      playerStatStage.setTitle(this.selected.getName() + " Players");
       playerStatStage.setScene(chartScene);
       playerStatStage.show();
     });
@@ -256,14 +259,16 @@ hi += "hello";
   }
 
   private void teamChanged(ObservableValue o, String oldText, String newText) {
+    for (int i = 0; i < _teams.length; i++){
+      if (newText.equals(_teams[i].getName())) selected = _teams[i];
+    }
     if (!started) {
       started = true;
       return;
     }
   
-    for (int i = 0; i < _teams.length; i++){
-      if (newText.equals(_teams[i].getName())) selected = _teams[i];
-    }
+    
+    System.out.println(selected.getName());
 //    System.out.println(selected.getName());
     ObservableList<TeamStat> y = null;
     try {
