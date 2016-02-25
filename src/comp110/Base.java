@@ -77,8 +77,6 @@ public class Base extends Application {
   protected Stage statsStage;
   protected Scene statsScene;
 
- 
-
   @Override
   public void start(Stage stage) throws Exception {
     initializeGroups();
@@ -139,10 +137,11 @@ public class Base extends Application {
     getStatsButton.setOnAction((event) -> {
       StatsStage creator = new StatsStage();
       Team selected = null;
-      for (int i = 0; i < _teams.length; i++){
-        if (_box1.getSelectionModel().getSelectedItem() == _teams[i].getName()) selected = _teams[i];
+      for (int i = 0; i < _teams.length; i++) {
+        if (_box1.getSelectionModel().getSelectedItem() == _teams[i].getName())
+          selected = _teams[i];
       }
-     creator.makeStatsStage(selected);
+      creator.makeStatsStage(selected);
     });
     getStats.setLayoutX(width * .028);
     getStats.setLayoutY(height * .06);
@@ -291,9 +290,9 @@ public class Base extends Application {
       nodeGroup.setScaleX(.9);
       nodeGroup.setScaleY(.9);
       logoGroup1.setScaleX(.9);
-      logoGroup1.setScaleY(.7);
+      logoGroup1.setScaleY(.9);
       logoGroup2.setScaleX(.9);
-      logoGroup2.setScaleY(.7);
+      logoGroup2.setScaleY(.9);
       scoreLabels.setScaleX(.8);
       scoreLabels.setScaleY(.8);
       showChartGroup.setScaleX(.9);
@@ -312,9 +311,9 @@ public class Base extends Application {
       nodeGroup.setScaleX(.9 * translate);
       nodeGroup.setScaleY(.9 * translate);
       logoGroup1.setScaleX(.9 * translate);
-      logoGroup1.setScaleY(.7 * translate);
+      logoGroup1.setScaleY(.9 * translate);
       logoGroup2.setScaleX(.9 * translate);
-      logoGroup2.setScaleY(.7 * translate);
+      logoGroup2.setScaleY(.9 * translate);
       scoreLabels.setScaleX(.8 * translate);
       scoreLabels.setScaleY(.8 * translate);
       showChartGroup.setScaleX(.9 * translate);
