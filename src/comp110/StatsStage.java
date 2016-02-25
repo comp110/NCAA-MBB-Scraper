@@ -30,19 +30,20 @@ public class StatsStage extends Base {
   VBox container;
   HBox combosHolder;
   HBox tablesHolder;
-  
+  private ObservableList<Player> _playerObsList;
   private ObservableList<TeamStat> teamStats;
   private Team selected;
 
   public void makeStatsStage(Team t){
     _stage = new Stage();
     makeStatsGroup(t);
-    tablesHolder.getChildren().add(teamView);
+    tablesHolder.getChildren().addAll(teamView, playerView);
     container.getChildren().addAll(combosHolder, tablesHolder);
     _scene = new Scene(container);
     _stage.setScene(_scene);
     _stage.show();
   }
+  
   public void makeStatsGroup(Team selected) {
     this.selected = selected;
 
@@ -75,12 +76,48 @@ public class StatsStage extends Base {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    _playerObsList = FXCollections.observableArrayList();
+    for (int i = 0; i < selected.getRoster().length; i++) {
+      _playerObsList.add(selected.getRoster()[i]);
+    }
     teamView = makeTeamTable(y);
+    playerView = makePlayerTable(_playerObsList);
+  }
+ 
+  
+  private TableView<Player> makePlayerTable(ObservableList<Player> players) {
+    TableView<Player> playerStats = new TableView<Player>();
+    int colWidth = 100;
     
+    TableColumn jerseyCol = new TableColumn("Jersey");
+    jerseyCol.setCellValueFactory(new PropertyValueFactory<>("Jersey"));
     
+    TableColumn nameCol = new TableColumn("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("FullName"));
+//    nameCol.setPrefWidth(colWidth);
     
-
+    TableColumn yearCol = new TableColumn("Year");
+    yearCol.setCellValueFactory(new PropertyValueFactory<>("Year"));
+//    yearCol.setPrefWidth(colWidth);
     
+    TableColumn playedCol = new TableColumn("Played");
+    playedCol.setCellValueFactory(new PropertyValueFactory<>("Played"));
+//    yearCol.setPrefWidth(colWidth);
+    
+    TableColumn avgPoints = new TableColumn("Avg Points");
+    avgPoints.setCellValueFactory(new PropertyValueFactory<>("avgPoints"));
+//    avgPoints.setPrefWidth(colWidth);
+    
+//    TableColumn avgRebs = new TableColumn("Avg Rebs");
+//    avgPoints.setCellValueFactory(new PropertyValueFactory<>("avgRebs"));
+//    avgPoints.setPrefWidth(colWidth);
+    
+    playerStats.getColumns().addAll(jerseyCol, nameCol, yearCol, playedCol,
+        avgPoints);
+    playerStats.setItems(players);
+    playerStats.getSortOrder().add(jerseyCol);
+    
+    return playerStats;
   }
 
   private ObservableList<TeamStat> setupStats() throws IllegalArgumentException, IllegalAccessException {
@@ -88,7 +125,7 @@ public class StatsStage extends Base {
     try {
       klass = Class.forName("comp110.Team");
     } catch (ClassNotFoundException e) {
-      System.out.println("crap");
+      System.out.println("crap"); // lol
     }
     Method[] methods = klass.getDeclaredMethods();
     Method[] getterMethodsDoubles = getGetters(methods);
@@ -169,6 +206,7 @@ String hi = "";
     teamStatsTable.getColumns().addAll(statCol, valueCol, rankCol);
     teamStatsTable.getItems().removeAll();
     teamStatsTable.setItems(y);
+    teamStatsTable.getSortOrder().add(statCol);
 hi += "hello";
     return teamStatsTable;
   }
@@ -218,7 +256,7 @@ hi += "hello";
     for (int i = 0; i < _teams.length; i++){
       if (newText.equals(_teams[i].getName())) selected = _teams[i];
     }
-    System.out.println(selected.getName());
+//    System.out.println(selected.getName());
     ObservableList<TeamStat> y = null;
     try {
       y = setupStats();

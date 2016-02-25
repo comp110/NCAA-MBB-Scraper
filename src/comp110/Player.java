@@ -239,7 +239,7 @@ public class Player {
 
 
 
-	public double getAvgReb() {
+	public double getAvgRebs() {
 		return _avgReb;
 	}
 
@@ -255,6 +255,8 @@ public class Player {
 		return _tripleDoubles;
 	}
 	
-	
+	public String getFullName() {
+	  return _first + " " + _last;
+	}
 	
 }
