@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -89,31 +90,24 @@ public class StatsStage extends Base {
     TableView<Player> playerStats = new TableView<Player>();
     int colWidth = 100;
     
+    String[][] stats = {
+        {"Name", "FullName"},
+        {"Year", "Year"},
+        {"Played", "Played"},
+        {"Avg Points", "avgPoints"},
+        {"Avg Rebs", "avgRebs"}
+    };
+    
     TableColumn jerseyCol = new TableColumn("Jersey");
     jerseyCol.setCellValueFactory(new PropertyValueFactory<>("Jersey"));
+    playerStats.getColumns().add(jerseyCol);
     
-    TableColumn nameCol = new TableColumn("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<>("FullName"));
-//    nameCol.setPrefWidth(colWidth);
-    
-    TableColumn yearCol = new TableColumn("Year");
-    yearCol.setCellValueFactory(new PropertyValueFactory<>("Year"));
-//    yearCol.setPrefWidth(colWidth);
-    
-    TableColumn playedCol = new TableColumn("Played");
-    playedCol.setCellValueFactory(new PropertyValueFactory<>("Played"));
-//    yearCol.setPrefWidth(colWidth);
-    
-    TableColumn avgPoints = new TableColumn("Avg Points");
-    avgPoints.setCellValueFactory(new PropertyValueFactory<>("avgPoints"));
-//    avgPoints.setPrefWidth(colWidth);
-    
-//    TableColumn avgRebs = new TableColumn("Avg Rebs");
-//    avgPoints.setCellValueFactory(new PropertyValueFactory<>("avgRebs"));
-//    avgPoints.setPrefWidth(colWidth);
-    
-    playerStats.getColumns().addAll(jerseyCol, nameCol, yearCol, playedCol,
-        avgPoints);
+    for (String[] stat : stats) {
+      TableColumn currentColumn = new TableColumn(stat[0]);
+      currentColumn.setCellValueFactory(new PropertyValueFactory<>(stat[1]));
+      playerStats.getColumns().add(currentColumn);
+    }
+
     playerStats.setItems(players);
     playerStats.getSortOrder().add(jerseyCol);
     
@@ -197,11 +191,11 @@ public class StatsStage extends Base {
 
     TableColumn valueCol = new TableColumn("Value");
     valueCol.setCellValueFactory(new PropertyValueFactory<>("Value"));
-    valueCol.setPrefWidth(colWidth);
+    valueCol.setPrefWidth(100);
 String hi = "";
     TableColumn rankCol = new TableColumn("Rank");
     rankCol.setCellValueFactory(new PropertyValueFactory<>("Rank" + hi));
-    rankCol.setPrefWidth(colWidth);
+    rankCol.setPrefWidth(100);
     // TableRow row = new TableRow();
     teamStatsTable.getColumns().addAll(statCol, valueCol, rankCol);
     teamStatsTable.getItems().removeAll();
@@ -264,6 +258,12 @@ hi += "hello";
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    _playerObsList = FXCollections.observableArrayList();
+    for (int i = 0; i < selected.getRoster().length; i++) {
+      _playerObsList.add(selected.getRoster()[i]);
+    }
+//    teamView = makeTeamTable(y);
+    playerView.setItems(_playerObsList);
     teamView.setItems(y);
     }
 
