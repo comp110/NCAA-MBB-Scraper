@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -67,8 +68,25 @@ public class StatsStage extends Base {
       if (teamBox.getItems().get(i).equals(selected.getName()))
         startIndex = i;
     }
+    
+
+    _playerObsList = FXCollections.observableArrayList();
+    for (int i = 0; i < selected.getRoster().length; i++) {
+      _playerObsList.add(selected.getRoster()[i]);
+    }
+    
+    Button showStats = new Button("Detailed Player Stats");
+    showStats.setOnAction((playerStatsEvent) -> {
+      Stage playerStatStage = new Stage();
+      Scene chartScene = new Scene(PlayerStatsStage.makeDetailedPlayerTable(_playerObsList));
+      chartScene.getStylesheets().add("file:assets/fextile.css");
+      playerStatStage.setTitle(selected.getName() + " Players");
+      playerStatStage.setScene(chartScene);
+      playerStatStage.show();
+    });
+    
     teamBox.getSelectionModel().select(startIndex);
-    combosHolder.getChildren().add(teamBox);
+    combosHolder.getChildren().addAll(teamBox, showStats);
     playerBox = buildPlayerBox();
     ObservableList<TeamStat> y = null;
     try {
@@ -76,10 +94,6 @@ public class StatsStage extends Base {
     } catch (IllegalArgumentException | IllegalAccessException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }
-    _playerObsList = FXCollections.observableArrayList();
-    for (int i = 0; i < selected.getRoster().length; i++) {
-      _playerObsList.add(selected.getRoster()[i]);
     }
     teamView = makeTeamTable(y);
     playerView = makePlayerTable(_playerObsList);
