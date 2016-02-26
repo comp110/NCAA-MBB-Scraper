@@ -83,6 +83,7 @@ public class Base extends Application {
     screenBounds = Screen.getPrimary().getBounds();
     // System.out.println(Screen.getPrimary().getBounds().getHeight());
     _stage = stage;
+    _stage.setResizable(false);
     _pane = new TabPane();
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
     _teams = readJson();
