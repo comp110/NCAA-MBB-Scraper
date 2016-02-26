@@ -282,7 +282,7 @@ public class Base extends Application {
     Image court = new Image("file:assets/ncaa_court.jpg");
     view = new ImageView(court);
 
-    if (800 <= screenBounds.getHeight() * .9) {
+    if (750 <= screenBounds.getHeight() * .95) {
       view.setFitWidth(1100);
       cboxGroup1.setScaleX(.9);
       cboxGroup1.setScaleY(.9);
