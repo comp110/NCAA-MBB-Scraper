@@ -149,12 +149,11 @@ public class Base extends Application {
 
     // Gives the comboboxes initial values of random team names
     // Uses do while to ensure the same team is not chosen for home and away
-    int randomHomeIndex, randomAwayIndex;
+    int randomAwayIndex;
     do {
-      randomHomeIndex = (int) Math.floor(Math.random() * _teams.length);
       randomAwayIndex = (int) Math.floor(Math.random() * _teams.length);
-    } while (randomAwayIndex == randomHomeIndex);
-    _box1.setValue(_teams[randomHomeIndex].getName());
+    } while (_teams[randomAwayIndex].getName().equals(teamMap.get(457).getName()));
+    _box1.setValue(teamMap.get(457).getName());
     _box2.setValue(_teams[randomAwayIndex].getName());
     Button run = new Button("Run Match");
     // All of the following happens when the "Run match" button is pressed
@@ -282,7 +281,7 @@ public class Base extends Application {
     Image court = new Image("file:assets/ncaa_court.jpg");
     view = new ImageView(court);
 
-    if (750 <= screenBounds.getHeight() * .95) {
+    if (800 <= screenBounds.getHeight() * .9) {
       view.setFitWidth(1100);
       cboxGroup1.setScaleX(.9);
       cboxGroup1.setScaleY(.9);
