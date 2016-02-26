@@ -32,9 +32,25 @@ public class PlayerStatsStage {
     for (String getter : getters) {
       Label insert = new Label(abbreviation.get(getter));
       System.out.println(insert.getFont());
-      width = fontloader.computeStringWidth(abbreviation.get(getter), insert.getFont());
-      System.out.println(width);
-      width += 10;
+      if (getter.equals("getYear")) {
+        width = 80;
+      } else if (getter.equals("getFullName")) {
+        double max = 0;
+        for (Player player : players) {
+          width = fontloader.computeStringWidth(player.getFullName(), insert.getFont());
+          if (width > max) {
+            max = width;
+          }
+        }
+        width = max + 35;
+      } else {
+        width = fontloader.computeStringWidth(abbreviation.get(getter), insert.getFont());
+        width += 15;
+        if (getter.equals("getFtPercent") || getter.equals("getThreePercent") || getter.equals("getFgPercent")
+            || getter.equals("getFreeThrows")) {
+          width += 10;
+        }
+      }
       insert.setTooltip(new Tooltip(getter));
       TableColumn currentColumn = new TableColumn<>();
       currentColumn.setCellValueFactory(new PropertyValueFactory<>(getter.substring(3)));
