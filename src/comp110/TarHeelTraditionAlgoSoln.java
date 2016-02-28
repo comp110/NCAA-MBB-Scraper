@@ -2,13 +2,13 @@ package comp110;
 
 import java.util.ArrayList;
 
-class CarolinaTraditionAlgoSoln extends BasketballAlgo {
+class TarHeelTraditionAlgoSoln extends BasketballAlgo {
 
   /** Instance Variables **/
   // None declared
 
   /** Constructor **/
-  CarolinaTraditionAlgoSoln() {
+  TarHeelTraditionAlgoSoln() {
     // BizarroAlgo _must_ have a 0-parameter constructor to grade.
     // Don't let this stop you from using instance variables of your
     // own design, if you'd like.
