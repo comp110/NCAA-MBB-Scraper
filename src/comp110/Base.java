@@ -50,17 +50,11 @@ public class Base extends Application {
   private Map<Integer, Team> teamMap;
   private ComboBox<String> _box1;
   private ComboBox<String> _box2;
-  private Label winner, homePointsLabel, awayPointsLabel;
+  private Label winner, awayPointsLabel, homePointsLabel;
   private boolean ran = false;
-  private Matchup _matchup;
-  private Team homeTeam, awayTeam;
-  public static double[] homeScores;
-  public static double[] awayScores;
-  public static String[] scoringFields;
-  private static double _homeTotal, _awayTotal;
-  private static ObservableList<MethodOutput> _methodOutputs;
-  private static double[] getHomeAwayScore;
-  private String _homePointsString, _awayPointsString;
+  // private Matchup _matchup;
+  private Team awayTeam, homeTeam;
+  private String _awayPointsString, _homePointsString;
   private Button getStatsButton;
   protected Rectangle2D screenBounds;
   private ImageView view2;
@@ -72,44 +66,34 @@ public class Base extends Application {
       getStats;
   private Group nodeGroup, showChartGroup;
   private ImageView view;
-  private String _awayScoreString;
   private String _homeScoreString;
+  private String _awayScoreString;
   protected Stage statsStage;
   protected Scene statsScene;
 
+  static BasketballAlgo _algo;
+
   @Override
   public void start(Stage stage) throws Exception {
-    initializeGroups();
+    this.initializeGroups();
     screenBounds = Screen.getPrimary().getBounds();
     // System.out.println(Screen.getPrimary().getBounds().getHeight());
     _stage = stage;
-    //_stage.setResizable(false);
+    // _stage.setResizable(false);
     _pane = new TabPane();
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
     _teams = readJson();
     teamMap = readJSON();
     mainPane = new Pane();
-    initializeStage();
+    this.initializeStage();
     matchupTab = new Tab();
     textStats = new Tab();
     graphStats = new Tab();
     matchupTab.setText("Matchup");
     textStats.setText("Stats");
     graphStats.setText("Graphs");
-    buildBox(mainPane);
-    setupMainPane(mainPane);
-    // Matchup m = new Matchup(teamMap.get(457), teamMap.get(193));// Max: me
-    // testing
-    // Pane2Gen
-    // getting
-    // for for FX nothing meaningful yet
-    // textStats.setContent(goo);
-    // _pane.getTabs().addAll(matchupTab, textStats, graphStats);
-    // _pane.getTabs().add(matchupTab);
-    // this.initializeStage();
-
-    // Matchup matchup = new Matchup(//GET TEAMS SOMEHOW) //Max: the TeamMap is
-    // a good idea made method for it
+    this.buildBox(mainPane);
+    this.setupMainPane(mainPane);
   }
 
   private void initializeGroups() {
@@ -139,8 +123,9 @@ public class Base extends Application {
       StatsStage creator = new StatsStage();
       Team selected = null;
       for (int i = 0; i < _teams.length; i++) {
-        if (_box1.getSelectionModel().getSelectedItem() == _teams[i].getName())
+        if (_box2.getSelectionModel().getSelectedItem() == _teams[i].getName()) {
           selected = _teams[i];
+        }
       }
       creator.makeStatsStage(selected);
     });
@@ -149,102 +134,103 @@ public class Base extends Application {
 
     // Gives the comboboxes initial values of random team names
     // Uses do while to ensure the same team is not chosen for home and away
-    int randomAwayIndex;
+    int randomAwayIndex, randomHomeIndex;
     do {
-      randomAwayIndex = (int) Math.floor(Math.random() * _teams.length);
-    } while (_teams[randomAwayIndex].getName().equals(teamMap.get(457).getName()));
-    _box1.setValue(teamMap.get(457).getName());
-    _box2.setValue(_teams[randomAwayIndex].getName());
+      randomAwayIndex = (int) (Math.random() * _teams.length);
+      randomHomeIndex = 15;
+    } while (randomHomeIndex == randomAwayIndex);
+    _box1.setValue(_teams[randomAwayIndex].getName());
+    _box2.setValue(_teams[randomHomeIndex].getName());
+
     Button run = new Button("Run Match");
     // All of the following happens when the "Run match" button is pressed
     run.setOnAction((event) -> {
       boolean boxesFilled = true;
-      String homeString = "", awayString = "";
+      String awayString = "", homeString = "";
       // tries to get names of chosen teams
       try {
-        homeString = (String) _box1.getSelectionModel().getSelectedItem().toString();
-        awayString = (String) _box2.getSelectionModel().getSelectedItem().toString();
+        awayString = _box1.getSelectionModel().getSelectedItem().toString();
+        homeString = _box2.getSelectionModel().getSelectedItem().toString();
       } catch (NullPointerException e) {
         boxesFilled = false;
       }
       // gets team object based on team name and sets up resulting label
       // accordingly
       if (!ran && boxesFilled) {
-        Team home = null, away = null;
+        Team away = null, home = null;
         for (int i = 0; i < _teams.length; i++) {
-          if (_teams[i].getName().equals(homeString))
-            home = _teams[i];
-          if (_teams[i].getName().equals(awayString))
+          if (_teams[i].getName().equals(awayString)) {
             away = _teams[i];
+          }
+          if (_teams[i].getName().equals(homeString)) {
+            home = _teams[i];
+          }
         }
         ImageView x = new ImageView();
-        _matchup = new Matchup(home, away);
-        homeTeam = home;
-        awayTeam = away;
 
-        // Adding table to its group (called scrollGroup b/c it used to be a
-        // ScrollPane)
-        _outputTable = TableViewGenerator.makeTable(_matchup);
+        Scorecard scorecard = _algo.score(away, home);
+
+        awayTeam = away;
+        homeTeam = home;
+
+        _outputTable = TableViewGenerator.makeTable(scorecard);
         _outputTable.setScaleX(.8);
         _outputTable.setScaleY(.8);
-
         scrollGroup.getChildren().add(_outputTable);
+
         scrollGroup.setLayoutX(width * .3);
         scrollGroup.setLayoutY(height * .36);
 
         // Adding the scoreboard labels to their group
         DecimalFormat df1 = new DecimalFormat("###.#");
-        double getHomeScoreOut = getHomeAwayScore[0];
-        double getAwayScoreOut = getHomeAwayScore[1];
-        _homeScoreString = Double.toString(Double.valueOf(df1.format(getHomeScoreOut)));
+        double getHomeScoreOut = scorecard.getHomeScore();
+        double getAwayScoreOut = scorecard.getAwayScore();
         _awayScoreString = Double.toString(Double.valueOf(df1.format(getAwayScoreOut)));
+        _homeScoreString = Double.toString(Double.valueOf(df1.format(getHomeScoreOut)));
 
-        scoreLabels.getChildren().removeAll(awayPointsLabel, homePointsLabel);
-        homePointsLabel = new Label(_homeScoreString);
-        homePointsLabel.getStyleClass().add("scorelabel");
+        scoreLabels.getChildren().removeAll(homePointsLabel, awayPointsLabel);
+        awayPointsLabel = new Label(_awayScoreString);
+        awayPointsLabel.getStyleClass().add("scorelabel");
 
         // Adjusts the position of the scoreboard label according to its length
         // so
         // that it is always centered under its combobox
-        if (_homeScoreString.length() == 3) {
-          homePointsLabel.setLayoutX(width * .03);
-        } else if (_homeScoreString.length() == 4) {
-          homePointsLabel.setLayoutX(width * .018);
-        } else {
-          homePointsLabel.setLayoutX(width * .006);
-        }
-        homePointsLabel.setLayoutY(height * .46);
-
-        awayPointsLabel = new Label(_awayScoreString);
-        awayPointsLabel.getStyleClass().add("scorelabel");
         if (_awayScoreString.length() == 3) {
-          awayPointsLabel.setLayoutX(width * .865);
+          awayPointsLabel.setLayoutX(width * .03);
         } else if (_awayScoreString.length() == 4) {
-          awayPointsLabel.setLayoutX(width * .853);
+          awayPointsLabel.setLayoutX(width * .018);
         } else {
-          awayPointsLabel.setLayoutX(width * .841);
+          awayPointsLabel.setLayoutX(width * .006);
         }
         awayPointsLabel.setLayoutY(height * .46);
 
+        homePointsLabel = new Label(_homeScoreString);
+        homePointsLabel.getStyleClass().add("scorelabel");
+        if (_homeScoreString.length() == 3) {
+          homePointsLabel.setLayoutX(width * .865);
+        } else if (_homeScoreString.length() == 4) {
+          homePointsLabel.setLayoutX(width * .853);
+        } else {
+          homePointsLabel.setLayoutX(width * .841);
+        }
+        homePointsLabel.setLayoutY(height * .46);
+
         // Turns the scoreboard label blue if the team won and leaves it red
         // otherwise
-        if (_matchup.getWinner() != null) {
-          if (_matchup.getWinner().getName().equals(_matchup.getHomeTeam().getName())) {
-            homePointsLabel.getStyleClass().add("winner_score_label");
-          } else {
-            awayPointsLabel.getStyleClass().add("winner_score_label");
-          }
+        if (scorecard.getWinner().getName().equals(scorecard.getHomeTeam().getName())) {
+          homePointsLabel.getStyleClass().add("winner_score_label");
+        } else {
+          awayPointsLabel.getStyleClass().add("winner_score_label");
         }
-        // mainPane.getChildren().add(awayPointsLabel);
-        // mainPane.getChildren().add(homePointsLabel);
-        scoreLabels.getChildren().addAll(awayPointsLabel, homePointsLabel);
+
+        scoreLabels.getChildren().addAll(homePointsLabel, awayPointsLabel);
 
         Button showChart = new Button("Show Chart");
         showChart.setOnAction((showGraphEvent) -> {
           Stage chartStage = new Stage();
-          Scene chartScene = new Scene(generateChart());
-          chartScene.getStylesheets().add("file:assets/fextile.css");
-          chartStage.setTitle(_matchup.getHomeTeam().getName() + " vs. " + _matchup.getAwayTeam().getName());
+          Scene chartScene = new Scene(this.generateChart(scorecard));
+          chartScene.getStylesheets().add("file:./resources/fextile.css");
+          chartStage.setTitle(scorecard.getHomeTeam().getName() + " vs. " + scorecard.getAwayTeam().getName());
           chartStage.setScene(chartScene);
           chartStage.show();
         });
@@ -262,23 +248,19 @@ public class Base extends Application {
                                   // node on
     // the screen (only works well with a plain pane)
     BackgroundFill x = new BackgroundFill(Color.LIGHTGREEN, null, null);
-    Background y = new Background(x);// need a background object which takes any
+    Background y = new Background(x);
+    // need a background object which takes any
     // subclass of background (there are others
     // besides backgroundfill
     run.setBackground(y);
 
-    // view.setLayoutX(-157);
-    // view.setLayoutY(100);
-    // view.setScaleY(_scene.getHeight() / court.getHeight());
-    // view.setScaleX(_scene.getWidth() / court.getWidth());
-    // mainPane.getChildren().addAll(_box1, _box2, run);
     nodeGroup.getChildren().addAll(run);
     matchupTab.setContent(mainPane);
   }
 
   private void initializeStage() {
-    _stage.setTitle("COMP110 PS0X - NCAA Bracket");
-    Image court = new Image("file:assets/ncaa_court.jpg");
+    _stage.setTitle("COMP110 PS04 - March Madness");
+    Image court = new Image(this.getClass().getResource("assets/ncaa_court.jpg").toString());
     view = new ImageView(court);
 
     if (750 <= screenBounds.getHeight() * .9) {
@@ -342,35 +324,21 @@ public class Base extends Application {
     _pane.setPrefSize(view.getFitWidth(), view.getFitHeight());
     view.setPreserveRatio(true);
     _pane.setPrefSize(view.getFitWidth(), view.getFitHeight());
-
-    // mainPane.setPrefWidth(view.getFitWidth());
-    // mainPane.setPrefHeight(view.getFitHeight());
-    // matchupTab.setContent(view);
-    // courtGroup.getChildren().add(matchupTab);
     courtGroup.getChildren().add(view);
-    // nodeGroup.getChildren().add(view);
 
     mainPane.getChildren().addAll(courtGroup, nodeGroup, logoGroup1, logoGroup2, scoreLabels, cboxGroup1, cboxGroup2,
         showChartGroup, scrollGroup, getStats);
 
-    // _pane.getTabs().add(matchupTab);
     Group g = new Group();
     g.getChildren().add(mainPane);
-    // _pane.setPrefHeight(800);
-    // _pane.setPrefWidth(800);
-    // g.prefHeight(800);
     _scene = new Scene(g);
-    _scene.getStylesheets().add("file:assets/fextile.css");
+    _scene.getStylesheets().add("file:resources/fextile.css");
     _stage.setScene(_scene);
     _stage.show();
-    // scales based on screen size
-
-    // _stage.setResizable(false);
-
   }
 
   public static Team[] readJson() throws FileNotFoundException {
-    JsonReader reader = new JsonReader(new FileReader("accplustop25.json"));
+    JsonReader reader = new JsonReader(new FileReader("resources/accplustop25.json"));
     Gson gson = new Gson();
     Team[] teams = gson.fromJson(reader, Team[].class);
 
@@ -383,7 +351,7 @@ public class Base extends Application {
   }
 
   private static Map<Integer, Team> readJSON() throws FileNotFoundException {
-    JsonReader reader = new JsonReader(new FileReader("accplustop25.json"));
+    JsonReader reader = new JsonReader(new FileReader("resources/accplustop25.json"));
     Gson gson = new Gson();
     Team[] teams = gson.fromJson(reader, Team[].class);
 
@@ -418,32 +386,29 @@ public class Base extends Application {
 
   }
 
-  private Pane generateChart() {
+  private Pane generateChart(Scorecard scorecard) {
     Pane pane = new Pane();
     VBox box = new VBox(5);
     NumberAxis xAxis = new NumberAxis();
     CategoryAxis yAxis = new CategoryAxis();
     BarChart<Number, String> barChart = new BarChart<Number, String>(xAxis, yAxis);
-    barChart.setTitle("Method Outputs");
+    barChart.setTitle("Scorelines");
     xAxis.setLabel("Value");
     yAxis.setLabel("");
 
     XYChart.Series homeSeries = new XYChart.Series();
-    homeSeries.setName(_matchup.getHomeTeam().getName() + " (" + _homeScoreString + ")");
+    homeSeries.setName(scorecard.getHomeTeam().getName() + " (" + _homeScoreString + ")");
 
     XYChart.Series awaySeries = new XYChart.Series();
-    awaySeries.setName(_matchup.getAwayTeam().getName() + " (" + _awayScoreString + ")");
+    awaySeries.setName(scorecard.getAwayTeam().getName() + " (" + _awayScoreString + ")");
 
-    for (MethodOutput out : _methodOutputs) {
-      homeSeries.getData().add(new XYChart.Data(out.getHomeValue(), out.getName()));
-      awaySeries.getData().add(new XYChart.Data(out.getAwayValue(), out.getName()));
+    for (Scoreline line : scorecard.getScorelines()) {
+      homeSeries.getData().add(new XYChart.Data(line.getHomeValue(), line.getLabel()));
+      awaySeries.getData().add(new XYChart.Data(line.getAwayValue(), line.getLabel()));
     }
 
-    if (_matchup.getWinner().getName().equals(_matchup.getHomeTeam().getName())) {
-      barChart.getData().addAll(homeSeries, awaySeries);
-    } else {
-      barChart.getData().addAll(awaySeries, homeSeries);
-    }
+    barChart.getData().addAll(homeSeries, awaySeries);
+
     barChart.setMinHeight(600);
     barChart.setMinWidth(790);
     box.getChildren().add(barChart);
@@ -456,29 +421,23 @@ public class Base extends Application {
     ImageView inFocus = null;
     if (o == _box1.getSelectionModel().selectedItemProperty()) {
       inFocus = view1;
-      // System.out.println("test");
-    } else if (o == _box2.getSelectionModel().selectedItemProperty())
+    } else if (o == _box2.getSelectionModel().selectedItemProperty()) {
       inFocus = view2;
-    else {
+    } else {
       System.out.println("error");
       return;
     }
     for (int i = 0; i < _teams.length; i++) {
-      if (_teams[i].getName().equals(newText))
+      if (_teams[i].getName().equals(newText)) {
         home = _teams[i];
-    }
-    if (x) {
-      System.out.println();
+      }
     }
     x = true;
-    Image team1 = new Image("file:assets/" + home.getImagePath(), 200, 200, false, true);
+
+    Image team1 = new Image(this.getClass().getResource("assets/" + home.getImagePath()).toString(), 200, 200, false,
+        true);
     inFocus.setImage(team1);
-    // inFocus.setScaleY(_scene.getHeight() / team1.getHeight());// scaling the
-    // inFocus.setScaleX(_scene.getWidth() / team1.getWidth());
-    // double xScale = 200 / team1.getWidth();
-    // double yScale = 250 / team1.getHeight();
-    // inFocus.setScaleX(xScale);
-    // inFocus.setScaleY(yScale);
+
     if (inFocus == view2) {
       inFocus.setLayoutX(width * .74);
       inFocus.setLayoutY(height * .05);
@@ -487,18 +446,20 @@ public class Base extends Application {
       inFocus.setLayoutY(height * .05);
     }
     ComboBox focusBox = null;
-    if (o == _box1.getSelectionModel().selectedItemProperty())
+    if (o == _box1.getSelectionModel().selectedItemProperty()) {
       focusBox = _box2;
-    else if (o == _box2.getSelectionModel().selectedItemProperty())
+    } else if (o == _box2.getSelectionModel().selectedItemProperty()) {
       focusBox = _box1;
+    }
     for (int i = 0; i < _box1.getItems().size(); i++) {
       if (focusBox.getItems().get(i).equals(home.getName())) {
         focusBox.getItems().remove(i);
         break;
       }
     }
-    if (old != null)
+    if (old != null) {
       focusBox.getItems().add(old);
+    }
     if (o == _box1.getSelectionModel().selectedItemProperty()) {
       for (int i = 0; i < logoGroup1.getChildren().size(); i++) {
         if (logoGroup1.getChildren().get(i) == inFocus) {
@@ -519,22 +480,6 @@ public class Base extends Application {
       logoGroup2.getChildren().add(inFocus);
     }
 
-  }
-
-  public static void setHomeScore(double score) {
-    _homeTotal = score;
-  }
-
-  public static void setAwayScore(double score) {
-    _awayTotal = score;
-  }
-
-  public static void setMethodOutputs(ObservableList<MethodOutput> methodOutputs) {
-    _methodOutputs = methodOutputs;
-  }
-
-  public static void setHomeAwayScoreOutputs(double[] homeAwayScoreOutputs) {
-    getHomeAwayScore = homeAwayScoreOutputs;
   }
 
 }
