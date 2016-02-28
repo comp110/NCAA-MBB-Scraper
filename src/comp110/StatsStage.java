@@ -1,7 +1,6 @@
 package comp110;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -10,13 +9,11 @@ import java.util.Arrays;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,7 +33,7 @@ public class StatsStage extends Base {
   private ObservableList<TeamStat> teamStats;
   private Team selected;
 
-  public void makeStatsStage(Team t){
+  public void makeStatsStage(Team t) {
     _stage = new Stage();
     _stage.setResizable(false);
     makeStatsGroup(t);
@@ -46,7 +43,7 @@ public class StatsStage extends Base {
     _stage.setScene(_scene);
     _stage.show();
   }
-  
+
   public void makeStatsGroup(Team selected) {
     this.selected = selected;
 
@@ -59,7 +56,6 @@ public class StatsStage extends Base {
     container = new VBox(10);
     combosHolder = new HBox(10);
     tablesHolder = new HBox(10);
-    
 
     teamBox = buildTeamBox();
     teamBox.getSelectionModel().selectedItemProperty().addListener(this::teamChanged);
@@ -69,25 +65,24 @@ public class StatsStage extends Base {
       if (teamBox.getItems().get(i).equals(selected.getName()))
         startIndex = i;
     }
-    
 
     _playerObsList = FXCollections.observableArrayList();
-    for (int i = 0; i < selected.getRoster().length; i++) {
-      _playerObsList.add(selected.getRoster()[i]);
+    for (int i = 0; i < selected.getRoster().size(); i++) {
+      _playerObsList.add(selected.getRoster().get(i));
     }
-    
+
     Button showStats = new Button("Detailed Player Stats");
     showStats.setOnAction((playerStatsEvent) -> {
       Stage playerStatStage = new Stage();
       playerStatStage.setResizable(false);
       Scene chartScene = new Scene(PlayerStatsStage.makeDetailedPlayerTable(_playerObsList));
-      chartScene.getStylesheets().add("file:assets/fextile.css");
-      
+      chartScene.getStylesheets().add("file:resources/fextile.css");
+
       playerStatStage.setTitle(this.selected.getName() + " Players");
       playerStatStage.setScene(chartScene);
       playerStatStage.show();
     });
-    
+
     teamBox.getSelectionModel().select(startIndex);
     combosHolder.getChildren().addAll(teamBox, showStats);
     playerBox = buildPlayerBox();
@@ -101,24 +96,18 @@ public class StatsStage extends Base {
     teamView = makeTeamTable(y);
     playerView = makePlayerTable(_playerObsList);
   }
- 
-  
+
   private TableView<Player> makePlayerTable(ObservableList<Player> players) {
     TableView<Player> playerStats = new TableView<Player>();
     int colWidth = 100;
-    
-    String[][] stats = {
-        {"Name", "FullName"},
-        {"Year", "Year"},
-        {"Played", "Played"},
-        {"Avg Points", "avgPoints"},
-        {"Avg Rebs", "avgRebs"}
-    };
-    
+
+    String[][] stats = { { "Name", "FullName" }, { "Year", "Year" }, { "Played", "Played" },
+        { "Avg Points", "avgPoints" }, { "Avg Rebs", "avgRebs" } };
+
     TableColumn jerseyCol = new TableColumn("Jersey");
     jerseyCol.setCellValueFactory(new PropertyValueFactory<>("Jersey"));
     playerStats.getColumns().add(jerseyCol);
-    
+
     for (String[] stat : stats) {
       TableColumn currentColumn = new TableColumn(stat[0]);
       currentColumn.setCellValueFactory(new PropertyValueFactory<>(stat[1]));
@@ -127,7 +116,7 @@ public class StatsStage extends Base {
 
     playerStats.setItems(players);
     playerStats.getSortOrder().add(jerseyCol);
-    
+
     return playerStats;
   }
 
@@ -142,7 +131,12 @@ public class StatsStage extends Base {
     Method[] getterMethodsDoubles = getGetters(methods);
     Method[] getterMethodsInts = getGetterI(methods);
     ArrayList<TeamStat> stats = new ArrayList<TeamStat>();
-    for (int i = 0; i < getterMethodsDoubles.length; i++){
+
+    // Add Ws and Ls up top:
+    stats.add(new TeamStat("getWins", selected.getWins(), 0));
+    stats.add(new TeamStat("getLosses", selected.getLosses(), 0));
+
+    for (int i = 0; i < getterMethodsDoubles.length; i++) {
       double value = 0;
       int rank = 0;
       try {
@@ -150,9 +144,9 @@ public class StatsStage extends Base {
       } catch (InvocationTargetException e) {
         e.printStackTrace();
       }
-      for (int j = 0; j < getterMethodsInts.length; j++){
-       // System.out.println(getterMethodsInts[j].getName());
-        if ((getterMethodsDoubles[i].getName() + "Rank").equals(getterMethodsInts[j].getName())){
+      for (int j = 0; j < getterMethodsInts.length; j++) {
+        // System.out.println(getterMethodsInts[j].getName());
+        if ((getterMethodsDoubles[i].getName() + "Rank").equals(getterMethodsInts[j].getName())) {
           try {
             rank = (int) getterMethodsInts[j].invoke(selected);
           } catch (InvocationTargetException e) {
@@ -176,7 +170,7 @@ public class StatsStage extends Base {
         filteredCount++;
       }
     }
-    
+
     return Arrays.copyOf(filtered, filteredCount);
   }
 
@@ -190,17 +184,17 @@ public class StatsStage extends Base {
         filteredCount++;
       }
     }
-    
+
     return Arrays.copyOf(filtered, filteredCount);
   }
 
   private TableView makeTeamTable(ObservableList<TeamStat> y) {
     int colWidth = 152;
-//    System.out.println(teamStats.size());
-//    for (TeamStat stat : teamStats){
-//      System.out.println(stat.stat + " g " + stat.value + " " + stat.rank);
-//    }
-   
+    // System.out.println(teamStats.size());
+    // for (TeamStat stat : teamStats){
+    // System.out.println(stat.stat + " g " + stat.value + " " + stat.rank);
+    // }
+
     TableView<TeamStat> teamStatsTable = new TableView<TeamStat>();
     TableColumn statCol = new TableColumn("Stat");
     statCol.setCellValueFactory(new PropertyValueFactory<>("Stat"));
@@ -209,7 +203,7 @@ public class StatsStage extends Base {
     TableColumn valueCol = new TableColumn("Value");
     valueCol.setCellValueFactory(new PropertyValueFactory<>("Value"));
     valueCol.setPrefWidth(100);
-String hi = "";
+    String hi = "";
     TableColumn rankCol = new TableColumn("Rank");
     rankCol.setCellValueFactory(new PropertyValueFactory<>("Rank" + hi));
     rankCol.setPrefWidth(100);
@@ -218,7 +212,7 @@ String hi = "";
     teamStatsTable.getItems().removeAll();
     teamStatsTable.setItems(y);
     teamStatsTable.getSortOrder().add(statCol);
-hi += "hello";
+    hi += "hello";
     return teamStatsTable;
   }
 
@@ -242,8 +236,8 @@ hi += "hello";
     Team selected = getSelectedTeam(teamBox.getSelectionModel().getSelectedItem());
     ObservableList<String> options;
     ArrayList<String> players = new ArrayList<String>();
-    for (int i = 0; i < selected.getRoster().length; i++) {
-      players.add(selected.getRoster()[i].getFirst() + " " + selected.getRoster()[i].getLast());
+    for (int i = 0; i < selected.getRoster().size(); i++) {
+      players.add(selected.getRoster().get(i).getFirst() + " " + selected.getRoster().get(i).getLast());
     }
     options = FXCollections.observableArrayList(players);
     p = new ComboBox<String>(options);
@@ -259,17 +253,16 @@ hi += "hello";
   }
 
   private void teamChanged(ObservableValue o, String oldText, String newText) {
-    for (int i = 0; i < _teams.length; i++){
-      if (newText.equals(_teams[i].getName())) selected = _teams[i];
+    for (int i = 0; i < _teams.length; i++) {
+      if (newText.equals(_teams[i].getName()))
+        selected = _teams[i];
     }
     if (!started) {
       started = true;
       return;
     }
-  
-    
-    System.out.println(selected.getName());
-//    System.out.println(selected.getName());
+
+    // System.out.println(selected.getName());
     ObservableList<TeamStat> y = null;
     try {
       y = setupStats();
@@ -278,12 +271,12 @@ hi += "hello";
       e.printStackTrace();
     }
     _playerObsList = FXCollections.observableArrayList();
-    for (int i = 0; i < selected.getRoster().length; i++) {
-      _playerObsList.add(selected.getRoster()[i]);
+    for (int i = 0; i < selected.getRoster().size(); i++) {
+      _playerObsList.add(selected.getRoster().get(i));
     }
-//    teamView = makeTeamTable(y);
+    // teamView = makeTeamTable(y);
     playerView.setItems(_playerObsList);
     teamView.setItems(y);
-    }
+  }
 
 }

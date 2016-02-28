@@ -22,16 +22,12 @@ public class PlayerStatsStage {
     ArrayList<String> getters = getGetters();
     HashMap<String, String> abbreviation = createAbbreviationMap();
 
-    for (Player p : players) {
-      System.out.println(p);
-    }
     FontLoader fontloader = Toolkit.getToolkit().getFontLoader();
 
     double width = 0;
     double totalWidth = 0;
     for (String getter : getters) {
       Label insert = new Label(abbreviation.get(getter));
-      System.out.println(insert.getFont());
       if (getter.equals("getYear")) {
         width = 80;
       } else if (getter.equals("getFullName")) {
@@ -57,7 +53,6 @@ public class PlayerStatsStage {
       currentColumn.setGraphic(insert);
       currentColumn.setPrefWidth(width);
       detailedStats.getColumns().add(currentColumn);
-      System.out.println(currentColumn.getWidth());
       totalWidth += width;
 
     }
