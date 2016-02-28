@@ -56,7 +56,7 @@ public class Base extends Application {
   private Team awayTeam, homeTeam;
   private String _awayPointsString, _homePointsString;
   private Button getStatsButton;
-  private Rectangle2D screenBounds;
+  protected Rectangle2D screenBounds;
   private ImageView view2;
   private ImageView view1;
   private Pane mainPane;
@@ -79,7 +79,7 @@ public class Base extends Application {
     screenBounds = Screen.getPrimary().getBounds();
     // System.out.println(Screen.getPrimary().getBounds().getHeight());
     _stage = stage;
-    _stage.setResizable(false);
+    // _stage.setResizable(false);
     _pane = new TabPane();
     _pane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
     _teams = readJson();
@@ -141,6 +141,7 @@ public class Base extends Application {
     } while (randomHomeIndex == randomAwayIndex);
     _box1.setValue(_teams[randomAwayIndex].getName());
     _box2.setValue(_teams[randomHomeIndex].getName());
+
     Button run = new Button("Run Match");
     // All of the following happens when the "Run match" button is pressed
     run.setOnAction((event) -> {
@@ -262,7 +263,7 @@ public class Base extends Application {
     Image court = new Image(this.getClass().getResource("assets/ncaa_court.jpg").toString());
     view = new ImageView(court);
 
-    if (800 <= screenBounds.getHeight() * .9) {
+    if (750 <= screenBounds.getHeight() * .9) {
       view.setFitWidth(1100);
       cboxGroup1.setScaleX(.9);
       cboxGroup1.setScaleY(.9);

@@ -35,7 +35,7 @@ public class StatsStage extends Base {
 
   public void makeStatsStage(Team t) {
     _stage = new Stage();
-    _stage.setResizable(false);
+   // _stage.setResizable(false);
     makeStatsGroup(t);
     tablesHolder.getChildren().addAll(teamView, playerView);
     container.getChildren().addAll(combosHolder, tablesHolder);
@@ -74,7 +74,7 @@ public class StatsStage extends Base {
     Button showStats = new Button("Detailed Player Stats");
     showStats.setOnAction((playerStatsEvent) -> {
       Stage playerStatStage = new Stage();
-      playerStatStage.setResizable(false);
+     // playerStatStage.setResizable(false);
       Scene chartScene = new Scene(PlayerStatsStage.makeDetailedPlayerTable(_playerObsList));
       chartScene.getStylesheets().add("file:resources/fextile.css");
 

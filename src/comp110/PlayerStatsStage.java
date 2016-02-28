@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Screen;
 
 public class PlayerStatsStage {
 
@@ -59,6 +60,9 @@ public class PlayerStatsStage {
 
     detailedStats.setItems(players);
     detailedStats.setPrefWidth(totalWidth + 33);
+    if (800 >= Screen.getPrimary().getBounds().getHeight() * .9) {
+      detailedStats.setMaxWidth(500);
+    }
     return detailedStats;
   }
 
