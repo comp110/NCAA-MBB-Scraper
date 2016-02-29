@@ -21,9 +21,9 @@ public class MatchupBackground {
 		int rankingPeriod = 114;
 		Scraper.saveToJSON("accplustop25.json", teamIds, rankingPeriod);
 		
-//		JsonReader reader = new JsonReader(new FileReader("acc.json"));
-//		Gson gson = new Gson();
-//		Team[] teams = gson.fromJson(reader, Team[].class);
+		JsonReader reader = new JsonReader(new FileReader("accplustop25.json"));
+		Gson gson = new Gson();
+		Team[] teams = gson.fromJson(reader, Team[].class);
 ////		
 //		Map<Integer, Team> teamMap= new HashMap<Integer, Team>();
 //		for (Team team : teams) {
