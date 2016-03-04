@@ -47,7 +47,7 @@ public class Base extends Application {
   private TabPane _pane;
   private Tab matchupTab, textStats, graphStats;
   protected Team[] _teams;
-  private Map<Integer, Team> teamMap;
+  static private Map<Integer, Team> teamMap;
   private ComboBox<String> _box1;
   private ComboBox<String> _box2;
   private Label winner, awayPointsLabel, homePointsLabel;
@@ -348,6 +348,10 @@ public class Base extends Application {
     }
     return teams;
 
+  }
+
+  public static Team getTeamById(int id) {
+    return teamMap.get(id);
   }
 
   private static Map<Integer, Team> readJSON() throws FileNotFoundException {
