@@ -3,8 +3,8 @@ package comp110;
 public class Game {
 
   private int _gameId;
-  private Team _home;
-  private Team _away;
+  private String _homeName, _awayName;
+  private int _homeId, _awayId;
   private int _pointsValue;
   private int _homeScore;
   private int _awayScore;
@@ -14,22 +14,26 @@ public class Game {
     _gameId = gameId;
     _homeScore = homeScore;
     _awayScore = awayScore;
+    _homeId = homeId;
+    _awayId = awayId;
     
-    _home = RunBracket.getTeam(homeId);
-    _away = RunBracket.getTeam(awayId);
+    Team home = RunBracket.getTeam(homeId);
+    Team away = RunBracket.getTeam(awayId);
+    _homeName = home.getName();
+    _awayName = away.getName();
     
     BasketballAlgo studentAlgo = new BracketChallengeAlgo();
-    _card = studentAlgo.score(_away, _home);
+    _card = studentAlgo.score(away, home);
     // Assigns 1 point for each of the 32 games in round 0, 2 for each of the 16 in round 1, etc.
     _pointsValue = (int) Math.pow(2, tourneyRound);
   }
 
-  public Team getHome() {
-    return _home;
+  public String getHomeName() {
+    return _homeName;
   }
 
-  public Team getAway() {
-    return _away;
+  public String getAwayName() {
+    return _awayName;
   }
 
   public int getPoints() {

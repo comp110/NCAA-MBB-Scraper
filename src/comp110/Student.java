@@ -17,21 +17,21 @@ public class Student {
     
     for (Game game : games) {
       // Set winner variable to the real game's winner, studentWinner to predicted winner
-      Team winner = null;
+      String winner = null;
       if (game.getHomeScore() > game.getAwayScore()) {
-        winner = game.getHome();
+        winner = game.getHomeName();
       } else { 
-        winner = game.getAway();
+        winner = game.getAwayName();
       }
       
-      Team studentWinner = null;
+      String studentWinner = null;
       if (game.getScoreCard().getHomeScore() > game.getScoreCard().getAwayScore()) {
-        studentWinner = game.getScoreCard().getHomeTeam();
+        studentWinner = game.getHomeName();
       } else {
-        studentWinner = game.getScoreCard().getAwayTeam();
+        studentWinner = game.getAwayName();
       }
       
-      if (winner == studentWinner) {
+      if (winner.equals(studentWinner)) {
         _overallScore += game.getPoints();
         _correct++;
       } else {

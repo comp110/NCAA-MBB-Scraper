@@ -67,8 +67,8 @@ public class RunBracket {
     FileOutputStream outStream = new FileOutputStream(outFile);
     OutputStreamWriter outWriter = new OutputStreamWriter(outStream, "UTF-8");
     // Pretty printing for when you need to look at the json
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    // Gson gson = new Gson();
+    // Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Gson gson = new Gson();
     gson.toJson(student, outWriter);
     outWriter.close();
   }
