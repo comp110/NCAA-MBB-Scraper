@@ -354,7 +354,7 @@ public class Base extends Application {
     return teamMap.get(id);
   }
 
-  private static Map<Integer, Team> readJSON() throws FileNotFoundException {
+  public static Map<Integer, Team> readJSON() throws FileNotFoundException {
     JsonReader reader = new JsonReader(new FileReader("resources/accplustop25.json"));
     Gson gson = new Gson();
     Team[] teams = gson.fromJson(reader, Team[].class);
