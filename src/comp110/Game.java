@@ -2,45 +2,47 @@ package comp110;
 
 public class Game {
 
-  private int id;
-  private Team home;
-  private Team away;
-  private int pointsValue;
-  private int homeScore;
-  private int awayScore;
-  private Scorecard card;
+  private int _gameId;
+  private Team _home;
+  private Team _away;
+  private int _pointsValue;
+  private int _homeScore;
+  private int _awayScore;
+  private Scorecard _card;
 
-  public Game(int id, int homeid, int awayid, int homeScore, int awayScore) {
-    this.id = id;
-    this.homeScore = homeScore;
-    this.awayScore = awayScore;
-    this.home = Base.getTeamById(homeid);
-    this.away = Base.getTeamById(awayid);
-    BracketChallengeAlgo a = new BracketChallengeAlgo();
-    card = a.score(away, home);
+  public Game(int gameId, int tourneyRound, int homeid, int awayid, int homeScore, int awayScore) {
+    _gameId = gameId;
+    _homeScore = homeScore;
+    _awayScore = awayScore;
+    _home = Base.getTeamById(homeid);
+    _away = Base.getTeamById(awayid);
+    BracketChallengeAlgo studentAlgo = new BracketChallengeAlgo();
+    _card = studentAlgo.score(_away, _home);
+    // Assigns 1 point for each of the 32 games in round 0, 2 for each of the 16 in round 1, etc.
+    _pointsValue = (int) Math.pow(2, tourneyRound);
   }
 
   public Team getHome() {
-    return home;
+    return _home;
   }
 
   public Team getAway() {
-    return away;
+    return _away;
   }
 
   public int getPoints() {
-    return pointsValue;
+    return _pointsValue;
   }
 
   public int getAwayScore() {
-    return awayScore;
+    return _awayScore;
   }
 
   public int getHomeScore() {
-    return homeScore;
+    return _homeScore;
   }
 
   public Scorecard getScoreCard() {
-    return card;
+    return _card;
   }
 }

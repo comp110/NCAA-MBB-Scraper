@@ -2,26 +2,31 @@ package comp110;
 
 public class Student {
 
-  private int overallScore;
-  private Game[] games;
+  private int _overallScore;
+  private Game[] _games;
 
   public Student(Game[] games) {
-    this.games = games;
-    overallScore = 0;
+    _games = games;
+    _overallScore = 0;
     for (Game game : games) {
+      // Set winner variable to the real game's winner, studentWinner to predicted winner
       Team winner = null;
-      if (game.getHomeScore() > game.getAwayScore())
+      if (game.getHomeScore() > game.getAwayScore()) {
         winner = game.getHome();
-      else
+      } else { 
         winner = game.getAway();
+      }
+      
       Team studentWinner = null;
-      if (game.getScoreCard().getHomeScore() > game.getScoreCard().getAwayScore())
+      if (game.getScoreCard().getHomeScore() > game.getScoreCard().getAwayScore()) {
         studentWinner = game.getScoreCard().getHomeTeam();
-      else
+      } else {
         studentWinner = game.getScoreCard().getAwayTeam();
+      }
+      
       if (winner == studentWinner)
-        overallScore += game.getPoints();
-    }
+        _overallScore += game.getPoints();
+      }
 
   }
 }
