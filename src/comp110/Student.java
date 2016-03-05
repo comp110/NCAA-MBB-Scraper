@@ -7,9 +7,9 @@ public class Student {
   private int _overallScore;
   private int _correct;
   private int _incorrect;
-  private ArrayList<Game> _games;
+  private Game[] _games;
 
-  public Student(ArrayList<Game> games) {
+  public Student(Game[] games) {
     _games = games;
     _overallScore = 0;
     _correct = 0;

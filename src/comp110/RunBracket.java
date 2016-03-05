@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class RunBracket {
   
@@ -23,7 +24,11 @@ public class RunBracket {
        // Skipping the first line to avoid parsing the headings
        csvReader.readLine();       
        
-       Student stu = new Student(getGames(csvReader));
+       ArrayList<Game> gamesList = getGames(csvReader);
+       Game[] gamesArray = new Game[gamesList.size()];
+       gamesArray = gamesList.toArray(gamesArray);
+       
+       Student stu = new Student(gamesArray);
        System.out.println("Total points: " + stu.getOverallScore());
        System.out.println("Correct predictions: " + stu.getCorrect());
        System.out.println("Incorrect preditions: " + stu.getIncorrect());
@@ -61,7 +66,9 @@ public class RunBracket {
     File outFile = new File(filename);
     FileOutputStream outStream = new FileOutputStream(outFile);
     OutputStreamWriter outWriter = new OutputStreamWriter(outStream, "UTF-8");
-    Gson gson = new Gson();
+    // Pretty printing for when you need to look at the json
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    // Gson gson = new Gson();
     gson.toJson(student, outWriter);
     outWriter.close();
   }
