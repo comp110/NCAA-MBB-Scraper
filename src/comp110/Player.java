@@ -9,6 +9,9 @@ public class Player {
   private String _first, _last, _year, _position;
   private double _fgPercent, _threePercent, _ftPercent, _avgPoints, _avgReb;
 
+  public Player() {
+  }
+
   public Player(Element row) {
     // Reads in the <td> text and stores it in the appropriate instance variable
     _jersey = Scraper.getInt(row, 0);

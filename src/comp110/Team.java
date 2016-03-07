@@ -25,6 +25,9 @@ public class Team {
 
   private String _imagePath;
 
+  public Team() {
+  }
+
   public Team(String header, int numPlayers) {
     // The team name and record are in the header in the format "$name
     // ($wins-$losses)"
@@ -116,6 +119,7 @@ public class Team {
   }
 
   public ArrayList<Player> getRoster() {
+    _rosterAccessCount++;
     return _roster;
   }
 
@@ -411,6 +415,16 @@ public class Team {
 
   public void setId(int id) {
     _id = id;
+  }
+
+  private int _rosterAccessCount = 0;
+
+  public int rosterAccessCount() {
+    return _rosterAccessCount;
+  }
+
+  public void resetRosterAccessCount() {
+    _rosterAccessCount = 0;
   }
 
 }
