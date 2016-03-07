@@ -25,7 +25,7 @@ public class Student {
       }
       
       String studentWinner = null;
-      if (game.getScoreCard().getHomeScore() > game.getScoreCard().getAwayScore()) {
+      if (game.getStudentHomeScore() > game.getStudentAwayScore()) {
         studentWinner = game.getHomeName();
       } else {
         studentWinner = game.getAwayName();
