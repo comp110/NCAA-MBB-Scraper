@@ -55,11 +55,22 @@ public class PS04BracketChallengeTests {
       _away = _teams[UNC_INDEX];
     }
     BasketballAlgo studentAlgo = new BracketChallengeAlgo();
-    BasketballAlgo answerAlgo = new BracketChallengeAlgo();
-    _key = answerAlgo.score(_away, _home);
     _away.resetRosterAccessCount();
     _home.resetRosterAccessCount();
-    _student = studentAlgo.score(_away, _home);
+    try {
+      _student = studentAlgo.score(_away, _home);
+    } catch (Exception e) {
+      String failString = "- the score method did not complete running.\n\nTo reproduce in your code, try playing:\n\nAway: "
+          + _away.getName() + "\n      vs.\nHome: " + _home.getName() + "\n\nError:\n";
+      failString += e.getClass().getSimpleName() + " - ";
+      failString += e.getMessage() + "\n";
+      for (StackTraceElement frame : e.getStackTrace()) {
+        if (frame.getClassName().contains("BracketChallengeAlgo")) {
+          failString += "at Line " + frame.getLineNumber() + " of " + frame.getFileName() + "\n";
+        }
+      }
+      Assert.fail(failString);
+    }
   }
 
   public void failIfNull() {

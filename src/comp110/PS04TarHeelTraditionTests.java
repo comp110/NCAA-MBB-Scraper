@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -52,9 +53,23 @@ public class PS04TarHeelTraditionTests {
       _home = _teams[(int) (Math.random() * _teams.length)];
       _away = _teams[UNC_INDEX];
     }
+    System.out.println("Home " + _home.getName() + " Away " + _away.getName());
     BasketballAlgo studentAlgo = new TarHeelTraditionAlgo();
     BasketballAlgo answerAlgo = new TarHeelTraditionKey();
-    _student = studentAlgo.score(_away, _home);
+    try {
+      _student = studentAlgo.score(_away, _home);
+    } catch (Exception e) {
+      String failString = "- the score method did not complete running.\n\nTo reproduce in your code, try playing:\n\nAway: "
+          + _away.getName() + "\n      vs.\nHome: " + _home.getName() + "\n\nError:\n";
+      failString += e.getClass().getSimpleName() + " - ";
+      failString += e.getMessage() + "\n";
+      for (StackTraceElement frame : e.getStackTrace()) {
+        if (frame.getClassName().contains("TarHeelTraditionAlgo")) {
+          failString += "at Line " + frame.getLineNumber() + " of " + frame.getFileName() + "\n";
+        }
+      }
+      Assert.fail(failString);
+    }
     _key = answerAlgo.score(_away, _home);
   }
 
