@@ -1,5 +1,7 @@
 package comp110;
 
+import java.util.ArrayList;
+
 public class Game {
 
   private int _gameId;
@@ -8,7 +10,9 @@ public class Game {
   private int _pointsValue;
   private int _homeScore;
   private int _awayScore;
-  private Scorecard _card;
+  private ArrayList<Scoreline> _scoreLines;
+  private int _studentHScore, _studentAScore;
+  
 
   public Game(int gameId, int tourneyRound, int homeId, int awayId, int homeScore, int awayScore) {
     _gameId = gameId;
@@ -16,6 +20,8 @@ public class Game {
     _awayScore = awayScore;
     _homeId = homeId;
     _awayId = awayId;
+    _studentHScore = 0;
+    _studentAScore = 0;
     
     Team home = RunBracket.getTeam(homeId);
     Team away = RunBracket.getTeam(awayId);
@@ -23,9 +29,15 @@ public class Game {
     _awayName = away.getName();
     
     BasketballAlgo studentAlgo = new BracketChallengeAlgo();
-    _card = studentAlgo.score(away, home);
+    Scorecard card = studentAlgo.score(away, home);
     // Assigns 1 point for each of the 32 games in round 0, 2 for each of the 16 in round 1, etc.
     _pointsValue = (int) Math.pow(2, tourneyRound);
+    
+    _scoreLines = card.getScorelines();
+    for (Scoreline line : _scoreLines){
+      _studentHScore += line.getHomeValue();
+      _studentAScore += line.getAwayValue();
+    }
   }
 
   public String getHomeName() {
@@ -48,7 +60,15 @@ public class Game {
     return _homeScore;
   }
 
-  public Scorecard getScoreCard() {
-    return _card;
+  public ArrayList<Scoreline> getScoreCard() {
+    return _scoreLines;
+  }
+  
+  public int getStudentHomeScore(){
+    return _studentHScore;
+  }
+  
+  public int getStudentAwayScore(){
+    return _studentAScore;
   }
 }
