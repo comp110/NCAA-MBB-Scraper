@@ -354,8 +354,8 @@ public class Base extends Application {
     return teamMap.get(id);
   }
 
-  public static Map<Integer, Team> readJSON() throws FileNotFoundException {
-    JsonReader reader = new JsonReader(new FileReader("resources/accplustop25.json"));
+  public static Map<Integer, Team> readJSON(String path) throws FileNotFoundException {
+    JsonReader reader = new JsonReader(new FileReader(path));
     Gson gson = new Gson();
     Team[] teams = gson.fromJson(reader, Team[].class);
 
@@ -364,7 +364,18 @@ public class Base extends Application {
       teamMap.put(team.getId(), team);
     }
     return teamMap;
+  }
 
+  public static Map<Integer, Team> readJSON() throws FileNotFoundException {
+    JsonReader reader = new JsonReader(new FileReader("resources/tournament.json"));
+    Gson gson = new Gson();
+    Team[] teams = gson.fromJson(reader, Team[].class);
+
+    Map<Integer, Team> teamMap = new HashMap<Integer, Team>();
+    for (Team team : teams) {
+      teamMap.put(team.getId(), team);
+    }
+    return teamMap;
   }
 
   private void buildBox(Pane pane) {
