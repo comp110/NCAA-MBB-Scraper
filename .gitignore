@@ -1,6 +1,5 @@
 /bin/
-bin/
-.idea/
-.settings/
-grader/
+bin/*
+.idea/*
+.settings/*
 
