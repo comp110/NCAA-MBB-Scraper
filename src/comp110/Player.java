@@ -33,7 +33,11 @@ public class Player {
     _started = Scraper.getInt(row, 6);
     // Minutes on the page are stored like 345:00
     String rawMinutes = row.child(7).text();
-    _minutes = Integer.parseInt(rawMinutes.substring(0, rawMinutes.length() - 3));
+    try {
+      _minutes = Integer.parseInt(rawMinutes.substring(0, rawMinutes.length() - 3));
+    } catch (StringIndexOutOfBoundsException sioobe) {
+      _minutes = 0;
+    }
     _fieldGoals = Scraper.getInt(row, 8);
     _fieldGoalsAttempted = Scraper.getInt(row, 9);
     _fgPercent = Scraper.getDoub(row, 10);

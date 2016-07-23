@@ -12,15 +12,34 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 
 public class Scraper {
 
   public static void main(String[] args) throws IOException {
-    int[] teamIds = { 746, 416, 732, 311, 559, 635, 175, 700, 87, 688, 260, 32, 310, 96, 419, 270, 529, 522, 697, 193,
-        51, 703, 528, 606, 140, 740, 504, 813, 460, 794, 94, 285, 665, 328, 739, 415, 107, 392, 29, 312, 157, 164, 690,
-        782, 736, 649, 277, 86, 456, 43, 457, 812, 768, 334, 306, 513, 796, 657, 556, 545, 418, 719, 693, 683, 676, 758,
-        222, 28755 };
-    saveToJSON("tournament.json", teamIds, 12260);
+    int[] teamIds = { 346, 340, 342, 810, 811, 812, 813, 817, 2915, 719, 718, 716, 711, 1068, 19651,
+        299, 294, 295, 290, 590, 198, 596, 599, 194, 196, 191, 193, 270, 272, 275, 277, 527, 521,
+        522, 523, 1014, 528, 529, 441, 440, 446, 444, 108, 109, 102, 101, 107, 104, 32, 31, 30, 37,
+        647, 439, 649, 648, 434, 432, 433, 430, 10411, 334, 331, 6, 99, 90, 94, 97, 96, 740, 741, 742,
+        559, 746, 748, 554, 556, 551, 550, 553, 234, 235, 236, 231, 147, 140, 141, 30024, 610, 617,
+        148, 149, 688, 683, 2711, 498, 136, 494, 497, 490, 493, 27, 23, 28, 29, 406, 404, 402, 400,
+        371, 370, 709, 704, 706, 700, 702, 703, 393, 392, 391, 83, 80, 81, 86, 87, 797, 796, 794, 
+        792, 14927, 7, 587, 244, 249, 248, 519, 518, 513, 1004, 514, 458, 459, 627, 626, 625, 624,
+        450, 629, 454, 456, 457, 178, 176, 175, 173, 172, 657, 654, 183, 180, 2, 650, 651, 189, 202,
+        659, 184, 14, 17, 2699, 327, 328, 201, 774, 563, 771, 204, 207, 772, 77, 72, 71, 655, 669,
+        667, 665, 664, 663, 660, 692, 693, 690, 691, 697, 694, 695, 698, 699, 540, 541, 545, 8, 26172,
+        2707, 127, 128, 129, 414, 415, 416, 418, 419, 312, 311, 310, 317, 316, 315, 314, 368, 369, 366,
+        367, 365, 363, 361, 380, 381, 386, 387, 388, 786, 782, 579, 572, 576, 575, 574, 61, 62, 66, 67,
+        68, 253, 251, 257, 254, 255, 157, 731, 732, 735, 508, 736, 739, 738, 504, 505, 502, 503, 500,
+        501, 630, 631, 632, 469, 635, 465, 639, 466, 460, 463, 169, 164, 165, 167, 1104, 2743, 9,
+        28600, 676, 646, 355, 352, 768, 769, 219, 288, 283, 285, 287, 678, 1092, 674, 1157, 670,
+        671, 261, 260, 51, 536, 534, 539, 1320, 115, 116, 111, 110, 428, 308, 301, 302, 305, 306,
+        2678, 756, 754, 562, 758, 229, 228, 222, 220, 726, 725, 721, 153, 606, 600, 603, 156, 158,
+        609, 749, 48, 47, 43, 5, 464, 474, 1356, 489, 488, 485, 483, 482, 509, 472, 473, 471, 28755
+    };
+    
+
+    saveToJSON("NCAA_MBB_2015-16.json", teamIds, 155);
   }
 
   public static void saveToJSON(String filename, int[] teamIds, int rankingPeriod) throws IOException {
@@ -70,14 +89,15 @@ public class Scraper {
     String statsUrl = "http://stats.ncaa.org/team/" + teamID + "/stats/12260";
     String rankingsUrl = "http://stats.ncaa.org/rankings/ranking_summary?academic_year=2016&division=1&org_id=" + teamID
         + "&ranking_period=" + rankingPeriod + "&sport_code=MBB";
-
+    System.out.println(rankingsUrl);
+    System.out.println(statsUrl);
     Document statsPage, rankingsPage;
     // These servers can be really slow at times so I've set timeout really high
     // and
     // set the thread to sleep between scraping the two pages
     // And if the connection does time out there are two extra tries for it to
     // work again
-    int maxTries = 3;
+    int maxTries = 10;
     int count = 1;
     while (true) {
       try {
